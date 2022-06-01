@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useContext } from "react";
 import { Link as RouterLink } from "react-router-dom";
 // @mui
 import { alpha } from "@mui/material/styles";
@@ -17,6 +17,7 @@ import MenuPopover from "../../components/MenuPopover";
 import { useNavigate } from "react-router-dom";
 import AuthService from "../../services/auth.service";
 import { useAuthContext } from "../../services/useAuthContext";
+import AuthContext from "../../services/auth-context";
 // ----------------------------------------------------------------------
 
 const MENU_OPTIONS = [
@@ -43,7 +44,7 @@ export default function AccountPopover() {
   const anchorRef = useRef(null);
   const navigate = useNavigate();
 
-  const user = useAuthContext();
+  const user = useContext(AuthContext).user;
   console.log(user);
   const account = {
     displayName: user.fullname,

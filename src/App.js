@@ -1,5 +1,5 @@
 // routes
-import { Navigate, Route, Routes } from "react-router-dom";
+import { Route, Routes, useNavigate } from "react-router-dom";
 // layouts
 import DashboardLayout from "./layouts/dashboard";
 import LogoOnlyLayout from "./layouts/LogoOnlyLayout";
@@ -16,36 +16,38 @@ import ThemeProvider from "./theme";
 // components
 import ScrollToTop from "./components/ScrollToTop";
 import { BaseOptionChartStyle } from "./components/chart/BaseOptionChart";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import AuthService from "./services/auth.service";
+import AuthContext from "./services/auth-context";
 // ----------------------------------------------------------------------
 
 export default function App() {
   const [current, setCurrent] = useState(null);
+  const navigate = useNavigate();
+  const user = useContext(AuthContext);
 
   useEffect(() => {
-    const currentUser = AuthService.getCurrentUser();
-    setCurrent(currentUser);
-  }, []);
-
+    setCurrent(user);
+    if (current === null) {
+      navigate("/login", { replace: true });
+    } else {
+      navigate("/dashboard/app", { replace: true });
+    }
+  }, [user]);
   return (
     <ThemeProvider>
       <ScrollToTop />
       <BaseOptionChartStyle />
       <Routes>
-        {current && (
-          <Route path="/" element={<DashboardLayout />}>
-            <Route path="" element={<DashboardApp />} />
-            <Route path="app" element={<DashboardApp />} />
-            <Route path="user" element={<User />} />
-            <Route path="blog" element={<Blog />} />
-            <Route path="products" element={<Products />} />
-          </Route>
-        )}
+        <Route path="/dashboard" element={<DashboardLayout />}>
+          <Route path="app" element={<DashboardApp />} />
+          <Route path="user" element={<User />} />
+          <Route path="blog" element={<Blog />} />
+          <Route path="products" element={<Products />} />
+        </Route>
         <Route path="/" element={<LogoOnlyLayout />}>
-          <Route path="" element={<Login />} />
           <Route path="login" element={<Login />} />
-          <Route path="/register" element={<Register />} />
+          <Route path="register" element={<Register />} />
         </Route>
       </Routes>
     </ThemeProvider>
