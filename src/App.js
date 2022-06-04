@@ -1,5 +1,5 @@
 // routes
-import { Navigate, Route, Routes } from "react-router-dom";
+import {  Route, Routes } from "react-router-dom";
 // layouts
 import DashboardLayout from "./layouts/dashboard";
 import LogoOnlyLayout from "./layouts/LogoOnlyLayout";
@@ -7,9 +7,10 @@ import LogoOnlyLayout from "./layouts/LogoOnlyLayout";
 import Blog from "./pages/Blog";
 import User from "./pages/User";
 import Login from "./pages/Login";
-import NotFound from "./pages/Page404";
+//import NotFound from "./pages/Page404";
 import Register from "./pages/Register";
 import Products from "./pages/Products";
+import Profile from "./pages/Profile";
 import DashboardApp from "./pages/DashboardApp";
 // theme
 import ThemeProvider from "./theme";
@@ -40,6 +41,7 @@ export default function App() {
             <Route path="user" element={<User />} />
             <Route path="blog" element={<Blog />} />
             <Route path="products" element={<Products />} />
+            <Route path="profile" element={<Profile/>} />
           </Route>
         )}
         <Route path="/" element={<LogoOnlyLayout />}>

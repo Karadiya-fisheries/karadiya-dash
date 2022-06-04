@@ -28,7 +28,7 @@ const MENU_OPTIONS = [
   {
     label: "Profile",
     icon: "eva:person-fill",
-    linkTo: "#",
+    linkTo: "/profile",
   },
   {
     label: "Settings",
@@ -48,7 +48,7 @@ export default function AccountPopover() {
   const account = {
     displayName: user.fullname,
     email: user.email,
-    photoURL: "/static/mock-images/avatars/avatar_default.jpg",
+    photoURL: "/static/mock-images/avatars/avatar_3.jpg",
   };
   const [open, setOpen] = useState(null);
 
