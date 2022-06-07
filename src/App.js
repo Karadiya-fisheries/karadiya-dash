@@ -10,7 +10,9 @@ import Login from "./pages/Login";
 //import NotFound from "./pages/Page404";
 import Register from "./pages/Register";
 import Products from "./pages/Products";
-import Profile from "./pages/Profile";
+//import Profile from "./pages/Profile";
+import Profile1 from './pages/Profile1';
+import ProfieIndex from './sections/profile1/index';
 import DashboardApp from "./pages/DashboardApp";
 // theme
 import ThemeProvider from "./theme";
@@ -41,13 +43,14 @@ export default function App() {
             <Route path="user" element={<User />} />
             <Route path="blog" element={<Blog />} />
             <Route path="products" element={<Products />} />
-            <Route path="profile" element={<Profile/>} />
+            
           </Route>
         )}
         <Route path="/" element={<LogoOnlyLayout />}>
           <Route path="" element={<Login />} />
           <Route path="login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="profile" element={<ProfieIndex/>} />
         </Route>
       </Routes>
     </ThemeProvider>
