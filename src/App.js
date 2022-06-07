@@ -42,8 +42,8 @@ export default function App() {
         <Route path="/dashboard" element={<DashboardLayout />}>
           <Route path="app" element={<DashboardApp />} />
           <Route path="user" element={<User />} />
-          <Route path="blog" element={<Blog />} />
-          <Route path="products" element={<Products />} />
+          <Route path="notices" element={<Blog />} />
+          <Route path="sales" element={<Products />} />
         </Route>
         <Route path="/" element={<LogoOnlyLayout />}>
           <Route path="login" element={<Login />} />
