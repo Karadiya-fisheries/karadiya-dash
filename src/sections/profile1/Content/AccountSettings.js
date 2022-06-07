@@ -1,4 +1,15 @@
-import { FormControl, FormLabel, Grid, Input, Select } from '@chakra-ui/react'
+import { FormControl, FormLabel, Grid, Input, Select } from '@chakra-ui/react';
+import {
+  
+  
+  InputGroup,
+  InputLeftAddon,
+  NumberDecrementStepper,
+  NumberIncrementStepper,
+  NumberInput,
+  NumberInputField,
+  NumberInputStepper,
+} from '@chakra-ui/react'
 
 function AccountSettings() {
   return (
@@ -8,11 +19,11 @@ function AccountSettings() {
     >
       <FormControl id="firstName">
         <FormLabel>First Name</FormLabel>
-        <Input focusBorderColor="brand.blue" type="text" placeholder="Tim" />
+        <Input focusBorderColor="brand.blue" type="text" placeholder="Jayodon" />
       </FormControl>
       <FormControl id="lastName">
         <FormLabel>Last Name</FormLabel>
-        <Input focusBorderColor="brand.blue" type="text" placeholder="Cook" />
+        <Input focusBorderColor="brand.blue" type="text" placeholder="Frankie" />
       </FormControl>
       <FormControl id="phoneNumber">
         <FormLabel>Phone Number</FormLabel>
@@ -27,33 +38,49 @@ function AccountSettings() {
         <Input
           focusBorderColor="brand.blue"
           type="email"
-          placeholder="tcook@apple.com"
+          placeholder="Jayodn@me.com"
         />
       </FormControl>
-      <FormControl id="city">
-        <FormLabel>City</FormLabel>
-        <Select focusBorderColor="brand.blue" placeholder="Select city">
-          <option value="california">California</option>
-          <option value="washington">Washington</option>
-          <option value="toronto">Toronto</option>
-          <option value="newyork" selected>
-            New York
+      <FormControl id="gearType">
+        <FormLabel>Gear Type</FormLabel>
+        <Select focusBorderColor="brand.blue" placeholder="Select Gear">
+          <option value="BMG">BMG</option>
+          <option value="APRS">APRS</option>
+          <option value="CRIPTO">CRIPTO</option>
+          <option value="IPJJ" selected>
+          IPJJ
           </option>
-          <option value="london">London</option>
-          <option value="netherland">Netherland</option>
-          <option value="poland">Poland</option>
+          
         </Select>
       </FormControl>
       <FormControl id="country">
-        <FormLabel>Country</FormLabel>
-        <Select focusBorderColor="brand.blue" placeholder="Select country">
+        <FormLabel>Hook Type</FormLabel>
+        <Select focusBorderColor="brand.blue" placeholder="Select Hooks type">
           <option value="america" selected>
-            America
+            short
           </option>
-          <option value="england">England</option>
-          <option value="poland">Poland</option>
+          <option value="england">long</option>
+          <option value="poland">longer</option>
         </Select>
       </FormControl>
+      <FormControl id="Hookno">
+        <FormLabel>Hook Number</FormLabel>
+        <Input
+          focusBorderColor="brand.blue"
+          type="tel"
+          placeholder="KPG4556"
+        />
+      </FormControl>
+      <FormControl>
+          <FormLabel>Size</FormLabel>
+          <NumberInput>
+            <NumberInputField placeholder="6000" />
+            <NumberInputStepper>
+              <NumberIncrementStepper />
+              <NumberDecrementStepper />
+            </NumberInputStepper>
+          </NumberInput>
+        </FormControl>
     </Grid>
   )
 }

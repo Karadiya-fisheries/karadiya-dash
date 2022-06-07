@@ -2,6 +2,7 @@ import { Link as RouterLink } from 'react-router-dom';
 // @mui
 import { styled } from '@mui/material/styles';
 import { Card, Link, Container, Typography } from '@mui/material';
+import Box from '@mui/material/Box';
 // hooks
 import useResponsive from '../hooks/useResponsive';
 // components
@@ -22,12 +23,12 @@ const HeaderStyle = styled('header')(({ theme }) => ({
   top: 0,
   zIndex: 9,
   lineHeight: 0,
-  width: '100%',
+  width: '80%',
   display: 'flex',
   alignItems: 'center',
   position: 'absolute',
   padding: theme.spacing(3),
-  justifyContent: 'space-between',
+  justifyContent: 'center',
   [theme.breakpoints.up('md')]: {
     alignItems: 'flex-start',
     padding: theme.spacing(7, 5, 0, 7),
@@ -36,15 +37,16 @@ const HeaderStyle = styled('header')(({ theme }) => ({
 
 const SectionStyle = styled(Card)(({ theme }) => ({
   width: '100%',
-  maxWidth: 464,
+  maxWidth: 500,
   display: 'flex',
-  flexDirection: 'column',
+  // minHeight: '100vh',
+  // flexDirection: 'column',
   justifyContent: 'center',
   margin: theme.spacing(2, 0, 2, 2),
 }));
 
 const ContentStyle = styled('div')(({ theme }) => ({
-  maxWidth: 480,
+  maxWidth: 300,
   margin: 'auto',
   minHeight: '100vh',
   display: 'flex',
@@ -61,13 +63,29 @@ export default function Login() {
   const mdUp = useResponsive('up', 'md');
 
   return (
+    <>
+    <Box
+      sx={{
+        width: '100%',
+        height: '100%',
+        maxWidth:900,
+       
+        display:"flex",
+        justifyContent:"center",
+        alignItems:"center",
+        flexDirection:'column',
+        margin:'auto',
+        boxShadow: 5,
+        
+      }}
+    >
     <Page title="Login">
       <RootStyle>
         <HeaderStyle>
-          <Logo />
+          {/* <Logo /> */}
 
           {smUp && (
-            <Typography variant="body2" sx={{ mt: { md: -2 } }}>
+            <Typography variant="body2" sx={{ mt: { md: -2 },ml:'60px' }}>
               Don’t have an account? {''}
               <Link variant="subtitle2" component={RouterLink} to="/register">
                 Get started
@@ -107,5 +125,7 @@ export default function Login() {
         </Container>
       </RootStyle>
     </Page>
+    </Box>
+    </>
   );
 }

@@ -18,10 +18,15 @@ import {
         templateColumns={{ base: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
         gap={6}
       >
-        <FormControl id="companyId">
-          <FormLabel>Company ID</FormLabel>
-          <InputGroup>
-            <InputLeftAddon color="gray.500">
+           <FormControl id="Harbor">
+          <FormLabel>Harbor Name</FormLabel>
+          <Input focusBorderColor="brand.blue" type="text" placeholder="Galle" />
+        </FormControl>
+        <FormControl id="WesselID">
+          <FormLabel>Wessel ID </FormLabel>
+          <Input focusBorderColor="brand.blue" type="text" placeholder="XO15677" />
+          {/* <InputGroup> */}
+            {/* <InputLeftAddon color="gray.500">
               <svg width="1em" fill="currentColor" viewBox="0 0 20 20">
                 <path
                   fillRule="evenodd"
@@ -35,11 +40,11 @@ import {
               type="text"
               placeholder="apple"
             />
-          </InputGroup>
+          </InputGroup> */}
         </FormControl>
-        <FormControl id="companyName">
-          <FormLabel>Name</FormLabel>
-          <Input focusBorderColor="brand.blue" type="text" placeholder="Apple" />
+        <FormControl id="mainLine">
+          <FormLabel>Main Line</FormLabel>
+          <Input focusBorderColor="brand.blue" type="text" placeholder="south west" />
         </FormControl>
         <FormControl id="emailCompany">
           <FormLabel>Email Address</FormLabel>

@@ -9,6 +9,7 @@ import Page from "../components/Page";
 import Logo from "../components/Logo";
 // sections
 import { RegisterForm } from "../sections/auth/register";
+import Box from '@mui/material/Box';
 //import AuthSocial from "../sections/auth/AuthSocial";
 
 // ----------------------------------------------------------------------
@@ -23,12 +24,12 @@ const HeaderStyle = styled("header")(({ theme }) => ({
   top: 0,
   zIndex: 9,
   lineHeight: 0,
-  width: "100%",
+  width: "80%",
   display: "flex",
   alignItems: "center",
   position: "absolute",
   padding: theme.spacing(3),
-  justifyContent: "space-between",
+  justifyContent: "center",
   [theme.breakpoints.up("md")]: {
     alignItems: "flex-start",
     padding: theme.spacing(7, 5, 0, 7),
@@ -36,16 +37,17 @@ const HeaderStyle = styled("header")(({ theme }) => ({
 }));
 
 const SectionStyle = styled(Card)(({ theme }) => ({
-  width: "100%",
-  maxWidth: 464,
-  display: "flex",
-  flexDirection: "column",
-  justifyContent: "center",
+  width: '100%',
+  maxWidth: 500,
+  display: 'flex',
+  // minHeight: '100vh',
+  // flexDirection: 'column',
+  justifyContent: 'center',
   margin: theme.spacing(2, 0, 2, 2),
 }));
 
 const ContentStyle = styled("div")(({ theme }) => ({
-  maxWidth: 480,
+  maxWidth: 400,
   margin: "auto",
   minHeight: "100vh",
   display: "flex",
@@ -62,12 +64,28 @@ export default function Register() {
   const mdUp = useResponsive("up", "md");
 
   return (
+    <>
+    <Box
+      sx={{
+        width: '100%',
+        height: '100%',
+        maxWidth:900,
+       
+        display:"flex",
+        justifyContent:"center",
+        alignItems:"center",
+        flexDirection:'column',
+        margin:'auto',
+        boxShadow: 5,
+        
+      }}
+    >
     <Page title="Register">
       <RootStyle>
         <HeaderStyle>
-          <Logo />
+          {/* <Logo /> */}
           {smUp && (
-            <Typography variant="body2" sx={{ mt: { md: -2 } }}>
+            <Typography variant="body2" sx={{ mt: { md: -2 },ml:'70px'}}>
               Already have an account? {""}
               <Link variant="subtitle2" component={RouterLink} to="/login">
                 Login
@@ -83,7 +101,7 @@ export default function Register() {
             </Typography> */}
             <img
               alt="register"
-              src="/static/mock-images/login4.jpg"
+              src="/static/mock-images/login5.jpg"
             />
           </SectionStyle>
         )}
@@ -128,5 +146,7 @@ export default function Register() {
         </Container>
       </RootStyle>
     </Page>
+    </Box>
+    </>
   );
 }

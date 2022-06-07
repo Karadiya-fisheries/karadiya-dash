@@ -1,8 +1,8 @@
+import React from 'react';
 import { FormControl, FormLabel, Switch } from '@chakra-ui/react'
 
-function Notifications() {
+const Signout = () => {
   return (
-    <>
     <FormControl
       display="flex"
       alignItems="center"
@@ -14,17 +14,11 @@ function Notifications() {
         cursor="pointer"
         userSelect="none"
       >
-        Receive notification emails
+        Sign Out now!!!
       </FormLabel>
       <Switch id="notificationEmails" />
     </FormControl>
-    <br />
-    
-    
-    </>
-    
-    
   )
 }
 
-export default Notifications
+export default Signout

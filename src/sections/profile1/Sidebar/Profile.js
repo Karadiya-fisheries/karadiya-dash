@@ -16,7 +16,10 @@ import {
   Text,
   useDisclosure,
   VStack,
-} from '@chakra-ui/react'
+} from '@chakra-ui/react';
+import Rating from './Rating';
+
+
 
 function Profile() {
   const [userProfile, setUserProfile] = useState(null)
@@ -92,9 +95,11 @@ function Profile() {
         <Heading as="h3" fontSize="xl" color="brand.dark">
         Jayodon Frankie
         </Heading>
+        
         <Text color="brand.gray" fontSize="sm">
           Fishery Officer
         </Text>
+        {/* <Rating/> */}
       </VStack>
     </VStack>
   )

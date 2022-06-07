@@ -4,9 +4,10 @@ import AccountSettings from './AccountSettings'
 import Actions from './Actions'
 import CompanySettings from './CompanySettings'
 import Notifications from './Nortifications'
+import Signout from './Signout'
 
 const Content = () => {
-  const tabs = ['Account Settings', 'Company Settings', 'Notifications']
+  const tabs = ['Account Settings', 'Area Settings', 'Notifications','SignOut']
 
   return (
     <Box
@@ -50,7 +51,13 @@ const Content = () => {
           </TabPanel>
           <TabPanel>
             <Notifications />
+            
           </TabPanel>
+          <TabPanel>
+            <Signout />
+            
+          </TabPanel>
+          
         </TabPanels>
       </Tabs>
 

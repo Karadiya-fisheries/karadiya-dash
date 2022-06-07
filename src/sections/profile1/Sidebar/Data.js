@@ -3,20 +3,20 @@ import { Box, Text, VStack } from '@chakra-ui/react'
 const list = [
   {
     id: 1,
-    name: 'Opportunities applied',
-    value: 32,
-    color: 'yellow',
+    name: 'License Number',
+    value: 'XS56789896',
+    color: 'cadet',
   },
   {
     id: 2,
-    name: 'Opportunities won',
-    value: 26,
-    color: 'green',
+    name: 'Wessel ID',
+    value: 'PO78976',
+    color: 'cadet',
   },
   {
     id: 3,
-    name: 'Current opportunities',
-    value: 6,
+    name: 'SkipperID',
+    value: 'APR2587466',
     color: 'cadet',
   },
 ]
