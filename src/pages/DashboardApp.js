@@ -32,7 +32,7 @@ export default function DashboardApp() {
 
         <Grid container spacing={3}>
           <Grid item xs={12} sm={6} md={3}>
-            <AppWidgetSummary title="Weekly Sales" total={714000} icon={'ic:baseline-app-registration'} />
+            <AppWidgetSummary title="Total Requests" total={714000} icon={'ic:baseline-app-registration'} />
           </Grid>
 
           <Grid item xs={12} sm={6} md={3}>

@@ -7,7 +7,7 @@ import Notifications from './Nortifications'
 import Signout from './Signout'
 
 const Content = () => {
-  const tabs = ['Account Settings', 'Area Settings', 'Notifications','SignOut']
+  const tabs = ['Account Settings', 'Area Settings']
 
   return (
     <Box

@@ -13,6 +13,7 @@ import Products from "./pages/Products";
 //import Profile from "./pages/Profile";
 import Profile1 from './pages/Profile1';
 import ProfieIndex from './sections/profile1/index';
+import EditProfile from "./sections/profile1/EditProfile/Editprofile";
 import DashboardApp from "./pages/DashboardApp";
 // theme
 import ThemeProvider from "./theme";
@@ -43,6 +44,8 @@ export default function App() {
             <Route path="user" element={<User />} />
             <Route path="blog" element={<Blog />} />
             <Route path="products" element={<Products />} />
+            <Route path="profile" element={<ProfieIndex/>} />
+             <Route path="/editprofile" element={<ProfieIndex/>} />
             
           </Route>
         )}
@@ -50,7 +53,7 @@ export default function App() {
           <Route path="" element={<Login />} />
           <Route path="login" element={<Login />} />
           <Route path="/register" element={<Register />} />
-          <Route path="profile" element={<ProfieIndex/>} />
+          
         </Route>
       </Routes>
     </ThemeProvider>

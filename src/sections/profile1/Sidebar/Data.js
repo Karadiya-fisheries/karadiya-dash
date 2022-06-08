@@ -7,14 +7,14 @@ const list = [
     value: 'XS56789896',
     color: 'cadet',
   },
+//   {
+//     id: 2,
+//     name: 'Wessel ID',
+//     value: 'PO78976',
+//     color: 'cadet',
+//   },
   {
     id: 2,
-    name: 'Wessel ID',
-    value: 'PO78976',
-    color: 'cadet',
-  },
-  {
-    id: 3,
     name: 'SkipperID',
     value: 'APR2587466',
     color: 'cadet',

@@ -24,14 +24,14 @@ const HeaderStyle = styled("header")(({ theme }) => ({
   top: 0,
   zIndex: 9,
   lineHeight: 0,
-  width: "80%",
-  display: "flex",
-  alignItems: "center",
-  position: "absolute",
+  width: '80%',
+  display: 'flex',
+  alignItems: 'center',
+  position: 'absolute',
   padding: theme.spacing(3),
-  justifyContent: "center",
-  [theme.breakpoints.up("md")]: {
-    alignItems: "flex-start",
+  justifyContent: 'center',
+  [theme.breakpoints.up('md')]: {
+    alignItems: 'flex-start',
     padding: theme.spacing(7, 5, 0, 7),
   },
 }));
@@ -44,15 +44,16 @@ const SectionStyle = styled(Card)(({ theme }) => ({
   // flexDirection: 'column',
   justifyContent: 'center',
   margin: theme.spacing(2, 0, 2, 2),
+  padding:'40px'
 }));
 
 const ContentStyle = styled("div")(({ theme }) => ({
-  maxWidth: 400,
-  margin: "auto",
-  minHeight: "100vh",
-  display: "flex",
-  justifyContent: "center",
-  flexDirection: "column",
+  maxWidth: 500,
+  margin: 'auto',
+  minHeight: '110vh',
+  display: 'flex',
+  justifyContent: 'center',
+  flexDirection: 'column',
   padding: theme.spacing(12, 0),
 }));
 
@@ -66,7 +67,7 @@ export default function Register() {
   return (
     <>
     <Box
-      sx={{
+       sx={{
         width: '100%',
         height: '100%',
         maxWidth:900,
@@ -85,7 +86,7 @@ export default function Register() {
         <HeaderStyle>
           {/* <Logo /> */}
           {smUp && (
-            <Typography variant="body2" sx={{ mt: { md: -2 },ml:'70px'}}>
+            <Typography variant="body2" sx={{ mt: { md: -2 },ml:'100px'}}>
               Already have an account? {""}
               <Link variant="subtitle2" component={RouterLink} to="/login">
                 Login
@@ -101,7 +102,7 @@ export default function Register() {
             </Typography> */}
             <img
               alt="register"
-              src="/static/mock-images/login5.jpg"
+              src="/static/mock-images/login3.jpg"
             />
           </SectionStyle>
         )}
