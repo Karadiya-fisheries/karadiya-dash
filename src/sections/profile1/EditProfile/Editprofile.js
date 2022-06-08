@@ -12,9 +12,12 @@ import {
 } from '@chakra-ui/react';
 
 import SaveProfile from './Save';
+import { ChakraProvider } from '@chakra-ui/react'
+import { theme } from './../../../theme/helpers';
 
 function EditProfile() {
   return (
+    <ChakraProvider theme={theme}>
     <Grid
       templateColumns={{ base: 'repeat(1, 1fr)', md: 'repeat(2, 1fr)' }}
       gap={6}
@@ -131,6 +134,7 @@ function EditProfile() {
         </FormControl>
         <SaveProfile/>
     </Grid>
+    </ChakraProvider>
   )
 }
 

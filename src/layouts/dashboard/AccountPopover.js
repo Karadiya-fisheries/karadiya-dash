@@ -23,7 +23,7 @@ const MENU_OPTIONS = [
   {
     label: "Home",
     icon: "eva:home-fill",
-    linkTo: "/",
+    linkTo: "/departure",
   },
   {
     label: "Profile",

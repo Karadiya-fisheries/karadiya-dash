@@ -15,6 +15,7 @@ import Profile1 from './pages/Profile1';
 import ProfieIndex from './sections/profile1/index';
 import EditProfile from "./sections/profile1/EditProfile/Editprofile";
 import DashboardApp from "./pages/DashboardApp";
+import DepartureFrom from "./sections/Departure/DepartureFrom";
 // theme
 import ThemeProvider from "./theme";
 // components
@@ -45,7 +46,8 @@ export default function App() {
             <Route path="blog" element={<Blog />} />
             <Route path="products" element={<Products />} />
             <Route path="profile" element={<ProfieIndex/>} />
-             <Route path="/editprofile" element={<ProfieIndex/>} />
+             <Route path="/editprofile" element={<EditProfile/>} />
+             <Route path="departure" element={<DepartureFrom/>} />
             
           </Route>
         )}
