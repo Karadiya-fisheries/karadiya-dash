@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { faker } from "@faker-js/faker";
 // @mui
 import { useTheme } from "@mui/material/styles";
@@ -17,12 +18,35 @@ import {
   AppCurrentSubject,
   AppConversionRates,
 } from "../sections/@dashboard/app";
+import StatService from "../services/stat.service";
 
 // ----------------------------------------------------------------------
 
 export default function DashboardApp() {
   const theme = useTheme();
+  const [userCount, setUserCount] = useState(undefined);
+  const [triplogCount, setTriplogCount] = useState(undefined);
+  const [catchCount, setCatchCount] = useState(undefined);
+  const [fishermenCount, setFishermenCount] = useState(undefined);
+  const [pendingDepartureCount, setPendingDepartureCount] = useState(undefined);
+  const [pendingTriplogCount, setPendingTriplogCount] = useState(undefined);
+  const [boatCount, setBoatCount] = useState(undefined);
 
+  useEffect(() => {
+    StatService.getAllUserCount().then((res) => setUserCount(res.data));
+    StatService.getAllFishermenCount().then((res) =>
+      setFishermenCount(res.data)
+    );
+    StatService.getAllBoatCount().then((res) => setBoatCount(res.data));
+    StatService.getTriplogCount().then((res) => setTriplogCount(res.data));
+    StatService.getCatchCount().then((res) => setCatchCount(res.data));
+    StatService.getPendingTriplogCount().then((res) =>
+      setPendingDepartureCount(res.data)
+    );
+    StatService.getPendingDepartureCount().then((res) =>
+      setPendingTriplogCount(res.data)
+    );
+  }, []);
   return (
     <Page title="Dashboard">
       <Container maxWidth="xl">
@@ -34,7 +58,7 @@ export default function DashboardApp() {
           <Grid item xs={12} sm={6} md={3}>
             <AppWidgetSummary
               title="All Users"
-              total={714000}
+              total={userCount}
               icon={"carbon:user-filled"}
             />
           </Grid>
@@ -42,7 +66,7 @@ export default function DashboardApp() {
           <Grid item xs={12} sm={6} md={3}>
             <AppWidgetSummary
               title="Registered Fishermen"
-              total={1352831}
+              total={fishermenCount}
               color="info"
               icon={"healthicons:domestic-worker"}
             />
@@ -50,9 +74,18 @@ export default function DashboardApp() {
 
           <Grid item xs={12} sm={6} md={3}>
             <AppWidgetSummary
+              title="Registered Boats"
+              total={boatCount}
+              color="info"
+              icon={"ic:baseline-directions-boat"}
+            />
+          </Grid>
+
+          <Grid item xs={12} sm={6} md={3}>
+            <AppWidgetSummary
               title="Trip Logs"
-              total={1723315}
-              color="warning"
+              total={triplogCount}
+              color="info"
               icon={"ant-design:file-text-filled"}
             />
           </Grid>
@@ -60,8 +93,8 @@ export default function DashboardApp() {
           <Grid item xs={12} sm={6} md={3}>
             <AppWidgetSummary
               title="Catch"
-              total={234}
-              color="error"
+              total={catchCount}
+              color="info"
               icon={"ion:fish"}
             />
           </Grid>
@@ -69,8 +102,8 @@ export default function DashboardApp() {
           <Grid item xs={12} sm={6} md={3}>
             <AppWidgetSummary
               title="Pending Catch Reports"
-              total={1352831}
-              color="info"
+              total={pendingTriplogCount}
+              color="warning"
               icon={"map:ice-fishing"}
             />
           </Grid>
@@ -78,8 +111,8 @@ export default function DashboardApp() {
           <Grid item xs={12} sm={6} md={3}>
             <AppWidgetSummary
               title="Pending Departure Approvels"
-              total={1352831}
-              color="info"
+              total={pendingDepartureCount}
+              color="warning"
               icon={"icon-park-outline:fishing"}
             />
           </Grid>
