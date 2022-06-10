@@ -46,7 +46,7 @@ export default function RegisterForm() {
     validationSchema: RegisterSchema,
     onSubmit: (data) => {
       AuthService.register(
-        data.firstName + data.lastName,
+        data.firstName + " " + data.lastName,
         data.email,
         data.phone,
         data.password

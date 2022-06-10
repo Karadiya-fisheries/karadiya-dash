@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useContext, useEffect } from "react";
 import { Link as RouterLink } from "react-router-dom";
 // @mui
 import { alpha } from "@mui/material/styles";
@@ -16,7 +16,6 @@ import MenuPopover from "../../components/MenuPopover";
 // mocks_
 import { useNavigate } from "react-router-dom";
 import AuthService from "../../services/auth.service";
-import { useAuthContext } from "../../services/useAuthContext";
 // ----------------------------------------------------------------------
 
 const MENU_OPTIONS = [
@@ -42,13 +41,11 @@ const MENU_OPTIONS = [
 export default function AccountPopover() {
   const anchorRef = useRef(null);
   const navigate = useNavigate();
-
-  const user = useAuthContext();
-  console.log(user);
+  const user = AuthService.getCurrentUser();
   const account = {
     displayName: user.fullname,
     email: user.email,
-    photoURL: "/static/mock-images/avatars/avatar_3.jpg",
+    photoURL: "/static/users/tharindu.jpeg",
   };
   const [open, setOpen] = useState(null);
 

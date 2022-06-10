@@ -42,7 +42,7 @@ export default function LoginForm() {
         .login(data.email, data.password)
         .then(
           () => {
-            navigate("/app", { replace: true });
+            navigate("/dashboard/app", { replace: true });
           },
           (error) => {
             const message =
