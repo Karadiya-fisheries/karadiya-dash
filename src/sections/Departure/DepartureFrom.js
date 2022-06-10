@@ -37,7 +37,7 @@ function DepartureFrom() {
           sx={{
             width: "90%",
             // height: "100vh",
-            backgroundColor: "#edeff1",
+            boxShadow: 5,
             justifyContent: "center",
             alignItems: "center",
             // flexDirection:'column',
