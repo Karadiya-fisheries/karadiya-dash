@@ -43,6 +43,7 @@ const TABLE_HEAD = [
   { id: "role", label: "Role", alignRight: false },
   { id: "isVerified", label: "Email Verified", alignRight: false },
   { id: "status", label: "Status", alignRight: false },
+  
   { id: "" },
 ];
 
