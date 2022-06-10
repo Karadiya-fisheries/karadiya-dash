@@ -10,8 +10,8 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Products from "./pages/Products";
 //import Profile from "./pages/Profile";
-import Profile1 from './pages/Profile1';
-import ProfieIndex from './sections/profile1/index';
+import Profile1 from "./pages/Profile1";
+import ProfieIndex from "./sections/profile1/index";
 import EditProfile from "./sections/profile1/EditProfile/Editprofile";
 import DashboardApp from "./pages/DashboardApp";
 import DepartureFrom from "./sections/Departure/DepartureFrom";
@@ -43,15 +43,15 @@ export default function App() {
       <ScrollToTop />
       <BaseOptionChartStyle />
       <Routes>
-          <Route path="/dashboard" element={<DashboardLayout />}>
+        <Route path="/dashboard" element={<DashboardLayout />}>
           <Route path="app" element={<DashboardApp />} />
           <Route path="user" element={<User />} />
           <Route path="notices" element={<Blog />} />
-          <Route path="sales" element={<Products />} />            
-            <Route path="profile" element={<ProfieIndex/>} />
-             <Route path="/editprofile" element={<EditProfile/>} />
-             <Route path="departure" element={<DepartureFrom/>} />
-              </Route>
+          <Route path="sales" element={<Products />} />
+          <Route path="profile" element={<ProfieIndex />} />
+          <Route path="editprofile" element={<EditProfile />} />
+          <Route path="departure" element={<DepartureFrom />} />
+        </Route>
         <Route path="/" element={<LogoOnlyLayout />}>
           <Route path="login" element={<Login />} />
           <Route path="register" element={<Register />} />
