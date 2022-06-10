@@ -40,7 +40,7 @@ export default function RegisterForm() {
       firstName: "",
       lastName: "",
       email: "",
-      phone: "",
+      phone: "", 
       password: "",
     },
     validationSchema: RegisterSchema,

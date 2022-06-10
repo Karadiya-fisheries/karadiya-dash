@@ -13,6 +13,11 @@ class StatService {
   getAllUserCount() {
     return axios.get(API_URL + "/stat/user/count");
   }
+
+  getAllUsers() {
+    return axios.get(API_URL + "/stat/user");
+  }
+
   getCatchCount() {
     return axios.get(API_URL + "/stat/catch/count");
   }

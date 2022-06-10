@@ -1,6 +1,6 @@
-import { faker } from '@faker-js/faker';
-import { sample } from 'lodash';
-
+import { faker } from "@faker-js/faker";
+import { sample } from "lodash";
+import StatService from "../services/stat.service";
 // ----------------------------------------------------------------------
 
 const users = [...Array(24)].map((_, index) => ({
@@ -9,18 +9,18 @@ const users = [...Array(24)].map((_, index) => ({
   name: faker.name.findName(),
   company: faker.company.companyName(),
   isVerified: faker.datatype.boolean(),
-  status: sample(['active', 'banned']),
+  status: sample(["active", "banned"]),
   role: sample([
-    'Leader',
-    'Hr Manager',
-    'UI Designer',
-    'UX Designer',
-    'UI/UX Designer',
-    'Project Manager',
-    'Backend Developer',
-    'Full Stack Designer',
-    'Front End Developer',
-    'Full Stack Developer',
+    "Leader",
+    "Hr Manager",
+    "UI Designer",
+    "UX Designer",
+    "UI/UX Designer",
+    "Project Manager",
+    "Backend Developer",
+    "Full Stack Designer",
+    "Front End Developer",
+    "Full Stack Developer",
   ]),
 }));
 
