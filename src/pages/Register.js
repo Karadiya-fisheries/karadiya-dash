@@ -9,7 +9,7 @@ import Page from "../components/Page";
 import Logo from "../components/Logo";
 // sections
 import { RegisterForm } from "../sections/auth/register";
-import AuthSocial from "../sections/auth/AuthSocial";
+//import AuthSocial from "../sections/auth/AuthSocial";
 
 // ----------------------------------------------------------------------
 
@@ -78,12 +78,12 @@ export default function Register() {
 
         {mdUp && (
           <SectionStyle>
-            <Typography variant="h3" sx={{ px: 5, mt: 10, mb: 5 }}>
+            {/* <Typography variant="h3" sx={{ px: 5, mt: 10, mb: 5 }}>
               For Digital Future, Manage your work with Karadiya
-            </Typography>
+            </Typography> */}
             <img
               alt="register"
-              src="/static/illustrations/illustration_register.png"
+              src="/static/mock-images/login4.jpg"
             />
           </SectionStyle>
         )}
