@@ -29,9 +29,6 @@ import {
   UserListToolbar,
   UserMoreMenu,
 } from "../sections/@dashboard/user";
-// mock
-//import USERLIST from "../_mock/user";
-import { faker } from "@faker-js/faker";
 import { sample } from "lodash";
 import StatService from "../services/stat.service";
 // ----------------------------------------------------------------------
@@ -43,7 +40,7 @@ const TABLE_HEAD = [
   { id: "role", label: "Role", alignRight: false },
   { id: "isVerified", label: "Email Verified", alignRight: false },
   { id: "status", label: "Status", alignRight: false },
-  
+
   { id: "" },
 ];
 

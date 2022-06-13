@@ -17,7 +17,6 @@ import {
   useDisclosure,
   VStack,
 } from "@chakra-ui/react";
-import Rating from "./Rating";
 
 function Profile() {
   const [userProfile, setUserProfile] = useState(null);
@@ -99,7 +98,6 @@ function Profile() {
         <Text color="brand.gray" fontSize="sm">
           Fishery Officer
         </Text>
-        {/* <Rating/> */}
       </VStack>
     </VStack>
   );

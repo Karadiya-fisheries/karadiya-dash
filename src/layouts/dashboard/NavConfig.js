@@ -32,6 +32,11 @@ const navConfig = [
     icon: getIcon("gg:profile"),
   },
   {
+    title: "Owner Profile",
+    path: "/dashboard/owner/profile",
+    icon: getIcon("gg:profile"),
+  },
+  {
     title: "Departure",
     path: "/dashboard/departure",
     icon: getIcon("eva:file-text-fill"),

@@ -23,6 +23,7 @@ import { BaseOptionChartStyle } from "./components/chart/BaseOptionChart";
 import { useContext, useEffect, useState } from "react";
 import AuthService from "./services/auth.service";
 import AuthContext from "./services/auth-context";
+import OwnerProfile from "./pages/OwnerProfile";
 // ----------------------------------------------------------------------
 
 export default function App() {
@@ -49,12 +50,14 @@ export default function App() {
           <Route path="notices" element={<Blog />} />
           <Route path="sales" element={<Products />} />
           <Route path="profile" element={<ProfieIndex />} />
+          <Route path="owner/profile" element={<OwnerProfile />} />
           <Route path="editprofile" element={<EditProfile />} />
           <Route path="departure" element={<DepartureFrom />} />
         </Route>
         <Route path="/" element={<LogoOnlyLayout />}>
           <Route path="login" element={<Login />} />
           <Route path="register" element={<Register />} />
+          <Route path="owner/profile" element={<OwnerProfile />} />
         </Route>
       </Routes>
     </ThemeProvider>
