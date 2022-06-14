@@ -1,196 +1,141 @@
-import { Stack, Box } from "@chakra-ui/react";
 import * as Yup from "yup";
-import { useEffect, useState } from "react";
-import { useFormik, Form, FormikProvider } from "formik";
+import { useState } from "react";
+import {
+  useFormik,
+  Form,
+  FormikProvider,
+  useFormikContext,
+  Field,
+} from "formik";
 import { useNavigate } from "react-router-dom";
-import AuthService from "../../../services/auth.service";
-import OwnerService from "../../../services/owner.service";
+// material
+import { Stack, Box } from "@chakra-ui/react";
 import {
   TextField,
-  FormControlLabel,
-  FormGroup,
-  InputLabel,
-  MenuItem,
-  Checkbox,
-  FormLabel,
   Typography,
+  FormControlLabel,
+  Checkbox,
+  FormGroup,
+  FormLabel,
+  Radio,
+  RadioGroup,
 } from "@mui/material";
-
 import { LoadingButton } from "@mui/lab";
-function ProfileForm() {
-  // const [owner, setOwner] = useState(null);
-  // const [inital, setInital] = useState(null);
-  // const user = AuthService.getCurrentUser();
-  // useEffect(() => {
-  //   setOwner(OwnerService.getOwnerById(user.uid));
-  //   if (owner === null) {
-  //     setInital({
-  //       FIDivision: "",
-  //       GNDivision: "",
-  //       DSDivision: "",
-  //       FDistrict: "",
-  //       Surname: "",
-  //       OtherNames: "",
-  //       NicNo: "",
-  //       FZone: "",
-  //       BoatCat: "",
-  //       NumOfBoats: "",
-  //       OccuType: "",
-  //       FOpType: "",
-  //       AssocAct: "",
-  //     });
-  //   } else {
-  //     setInital({
-  //       FIDivision: owner.FIDivision,
-  //       GNDivision: owner.GNDivision,
-  //       DSDivision: owner.DSDivision,
-  //       FDistrict: owner.FDistrict,
-  //       Surname: owner.Surname,
-  //       OtherNames: owner.OtherNames,
-  //       NicNo: owner.NicNo,
-  //       FZone: owner.FZone,
-  //       BoatCat: owner.BoatCat,
-  //       NumOfBoats: owner.NumOfBoats,
-  //       OccuType: owner.OccuType,
-  //       FOpType: owner.FOpType,
-  //       AssocAct: owner.AssocAct,
-  //     });
-  //   }
-  // }, []);
+// component
+import Iconify from "../../../components/Iconify";
 
+// ----------------------------------------------------------------------
+
+export default function BoatForm() {
   const navigate = useNavigate();
+  const BoatCat = ["IMUL", "NTRB", "MTRB", "IDAY", "NBSB", "OFRP"];
+
+  const FOpType = [
+    { label: "One Day", value: "one day" },
+    { label: "Multi Day", value: "multi day" },
+  ];
+
   const RegisterSchema = Yup.object().shape({
-    FIDivision: Yup.string().required("Fishery Division required"),
-    GNDivision: Yup.string().required("GN Division required"),
-    FDistrict: Yup.string().required("Fishery District required"),
-    DSDivision: Yup.string().required("Divisional Secretariat required"),
-    Surname: Yup.string().required("Surname required"),
-    NicNo: Yup.string().min(10, "Not Complete").required("NicNo required"),
-    FZone: Yup.string().required("Fishery Zone required"),
-    BoatCat: Yup.array().min(1, "Select atleast One type"),
-    NumOfBoats: Yup.number().required("Number of boats required"),
-    OccuType: Yup.string().required("Occupation Type required"),
-    FOpType: Yup.string().required("Fishery Operation required"),
-    AssocAct: Yup.string().required("Associate Occupation required"),
+    BoatName: Yup.string().required("Boat Name required"),
+    BoatRg: Yup.string().required("Boat Registraion No required"),
+    BoatCat: Yup.string().required("Boat Catagory required"),
+    InsuaranceNo: Yup.string().required("Insuarance No required"),
+    FOpType: Yup.array().required("Fishery Operation required"),
   });
 
   const formik = useFormik({
     initialValues: {
-      FIDivision: "",
-      GNDivision: "",
-      DSDivision: "",
-      FDistrict: "",
-      Surname: "",
-      OtherNames: "",
-      NicNo: "",
-      FZone: "",
+      BoatName: "",
+      BoatRg: "",
+      InsuaranceNo: "",
       BoatCat: "",
-      NumOfBoats: "",
-      OccuType: "",
-      FOpType: "",
-      AssocAct: "",
+      FOpType: [],
     },
     validationSchema: RegisterSchema,
-    onSubmit: (data) => {
-      console.log("hello sub");
+    onSubmit: (data, actions) => {
+      setTimeout(() => {
+        actions.setSubmitting(false);
+      }, 1000);
       console.log(data);
     },
   });
 
-  const {
-    errors,
-    touched,
-    handleSubmit,
-    isSubmitting,
-    getFieldProps,
-    handleChange,
-    handleBlur,
-  } = formik;
+  const { errors, touched, handleSubmit, isSubmitting, getFieldProps, values } =
+    formik;
 
   return (
     <FormikProvider value={formik}>
       <Form autoComplete="off" noValidate onSubmit={handleSubmit}>
         <Stack spacing={3}>
           <Box p={2} borderRadius="md" borderWidth="1px">
-            <Typography mb={2} variant="subtitle1">
-              Fishery Zone Details
-            </Typography>
             <Stack direction={"column"} spacing={4}>
               <TextField
                 fullWidth
-                onChange={handleChange}
-                onBlur={handleBlur}
-                label="Fishery Inspector Division"
-                {...getFieldProps("FIDivision")}
-                error={Boolean(touched.FIDivision && errors.FIDivision)}
-                helperText={touched.FIDivision && errors.FIDivision}
+                label="Boat Name"
+                {...getFieldProps("BoatName")}
+                error={Boolean(touched.BoatName && errors.BoatName)}
+                helperText={touched.BoatName && errors.BoatName}
               />
 
               <TextField
                 fullWidth
-                label="GN Division"
-                onChange={handleChange}
-                {...getFieldProps("GNDivision")}
-                error={Boolean(touched.GNDivision && errors.GNDivision)}
-                helperText={touched.GNDivision && errors.GNDivision}
+                label="Boat Registration No"
+                {...getFieldProps("BoatRg")}
+                error={Boolean(touched.BoatRg && errors.BoatRg)}
+                helperText={touched.BoatRg && errors.BoatRg}
               />
 
               <TextField
                 fullWidth
-                label="Divisional Secretariat Division"
-                {...getFieldProps("DSDivision")}
-                error={Boolean(touched.DSDivision && errors.DSDivision)}
-                helperText={touched.DSDivision && errors.DSDivision}
-              />
-              <TextField
-                fullWidth
-                label="Fishery District"
-                {...getFieldProps("FDistrict")}
-                error={Boolean(touched.FDistrict && errors.FDistrict)}
-                helperText={touched.FDistrict && errors.FDistrict}
+                label="Insuarance NO"
+                {...getFieldProps("InsuaranceNo")}
+                error={Boolean(touched.InsuaranceNo && errors.InsuaranceNo)}
+                helperText={touched.InsuaranceNo && errors.InsuaranceNo}
               />
             </Stack>
           </Box>
           <Box p={2} borderRadius="md" borderWidth="1px">
-            <Typography mb={2} variant="subtitle1">
-              Personal Details
-            </Typography>
             <Stack direction={"column"} spacing={4}>
-              <TextField
-                fullWidth
-                label="Surname"
-                {...getFieldProps("Surname")}
-                error={Boolean(touched.Surname && errors.Surname)}
-                helperText={touched.Surname && errors.Surname}
-              />
-              <TextField
-                fullWidth
-                label="Other Names"
-                {...getFieldProps("OtherNames")}
-                error={Boolean(touched.OtherNames && errors.OtherNames)}
-                helperText={touched.OtherNames && errors.OtherNames}
-              />
-              <TextField
-                fullWidth
-                label="NIC Number"
-                {...getFieldProps("NicNo")}
-                error={Boolean(touched.NicNo && errors.NicNo)}
-                helperText={touched.NicNo && errors.NicNo}
-              />
-            </Stack>
-          </Box>
-          <Box p={2} borderRadius="md" borderWidth="1px">
-            <Typography mb={2} variant="subtitle1">
-              Fishing Details
-            </Typography>
-            <Stack direction={"column"} spacing={4}>
-              <TextField
-                fullWidth
-                label="Number of Boats"
-                {...getFieldProps("NumOfBoats")}
-                error={Boolean(touched.NumOfBoats && errors.NumOfBoats)}
-                helperText={touched.NumOfBoats && errors.NumOfBoats}
-              />
+              <FormGroup>
+                <FormLabel id="BoatCat">Boat Catagory</FormLabel>
+                <RadioGroup
+                  aria-labelledby="BoatCat"
+                  defaultValue="Supply"
+                  name="radio-buttons-group"
+                >
+                  {BoatCat?.map((boat, index) => (
+                    <Field
+                      type="radio"
+                      name="BoatCat"
+                      value={boat}
+                      key={index}
+                      as={FormControlLabel}
+                      control={
+                        <Radio checked={values.BoatCat.includes(boat)} />
+                      }
+                      label={boat}
+                    />
+                  ))}
+                </RadioGroup>
+              </FormGroup>
+              <FormGroup>
+                <FormLabel>Nature of Fishing Operation</FormLabel>
+                {FOpType?.map((optype, index) => (
+                  <Field
+                    type="checkbox"
+                    name="FOpType"
+                    value={optype.value}
+                    key={index}
+                    as={FormControlLabel}
+                    control={
+                      <Checkbox
+                        checked={values.FOpType.includes(optype.value)}
+                      />
+                    }
+                    label={optype.label}
+                  />
+                ))}
+              </FormGroup>
             </Stack>
           </Box>
         </Stack>
@@ -198,15 +143,12 @@ function ProfileForm() {
           fullWidth
           size="large"
           type="submit"
-          onSubmit={handleSubmit}
           variant="contained"
           loading={isSubmitting}
         >
-          Save
+          Register
         </LoadingButton>
       </Form>
     </FormikProvider>
   );
 }
-
-export default ProfileForm;

@@ -26,7 +26,7 @@ import Iconify from "../../../components/Iconify";
 
 // ----------------------------------------------------------------------
 
-export default function RegisterForm() {
+export default function ProfileForm() {
   const navigate = useNavigate();
   const BoatCat = ["IMUL", "NTRB", "MTRB", "IDAY", "NBSB", "OFRP"];
   const FZone = [
@@ -178,12 +178,12 @@ export default function RegisterForm() {
               <FormGroup>
                 <FormLabel>Catagories of Boats</FormLabel>
                 <Stack direction={"row"} spacing={2}>
-                  {BoatCat?.map((name) => (
+                  {BoatCat?.map((name, index) => (
                     <Field
                       type="checkbox"
                       name="BoatCat"
                       value={name}
-                      key={name.id}
+                      key={index}
                       as={FormControlLabel}
                       control={
                         <Checkbox checked={values.BoatCat.includes(name)} />
@@ -195,12 +195,12 @@ export default function RegisterForm() {
               </FormGroup>
               <FormGroup>
                 <FormLabel>Fishing Zone</FormLabel>
-                {FZone?.map((name) => (
+                {FZone?.map((name, index) => (
                   <Field
                     type="checkbox"
                     name="FZone"
                     value={name.value}
-                    key={name.id}
+                    key={index}
                     as={FormControlLabel}
                     control={
                       <Checkbox checked={values.FZone.includes(name.value)} />
@@ -211,12 +211,12 @@ export default function RegisterForm() {
               </FormGroup>
               <FormGroup>
                 <FormLabel>Nature of Fishing Operation</FormLabel>
-                {FOpType?.map((name) => (
+                {FOpType?.map((name, index) => (
                   <Field
                     type="checkbox"
                     name="FOpType"
                     value={name.value}
-                    key={name.id}
+                    key={index}
                     as={FormControlLabel}
                     control={
                       <Checkbox checked={values.FOpType.includes(name.value)} />
@@ -232,12 +232,12 @@ export default function RegisterForm() {
                   defaultValue="Part Time"
                   name="radio-buttons-group"
                 >
-                  {OccuType?.map((name) => (
+                  {OccuType?.map((name, index) => (
                     <Field
                       type="radio"
                       name="OccuType"
                       value={name.value}
-                      key={name.id}
+                      key={index}
                       as={FormControlLabel}
                       control={
                         <Radio checked={values.OccuType.includes(name.value)} />
@@ -256,12 +256,12 @@ export default function RegisterForm() {
                   defaultValue="Supply"
                   name="radio-buttons-group"
                 >
-                  {AssocAct?.map((name) => (
+                  {AssocAct?.map((name, index) => (
                     <Field
                       type="radio"
                       name="AssocAct"
                       value={name.value}
-                      key={name.id}
+                      key={index}
                       as={FormControlLabel}
                       control={
                         <Radio checked={values.AssocAct.includes(name.value)} />
