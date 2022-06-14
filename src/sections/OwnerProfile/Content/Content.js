@@ -2,8 +2,6 @@ import { Box, Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react";
 
 import ProfileForm from "./ProfileForm";
 import BoatForm from "./BoatForm";
-import Notifications from "./Nortifications";
-import Signout from "./Signout";
 
 const Content = () => {
   const tabs = ["Profile", "Registered Boats"];
@@ -18,6 +16,7 @@ const Content = () => {
       pt={5}
       bg="white"
       rounded="md"
+      shadow={"md"}
       borderWidth={1}
       borderColor="gray.200"
       style={{ transform: "translateY(-100px)" }}
@@ -47,12 +46,6 @@ const Content = () => {
           </TabPanel>
           <TabPanel>
             <BoatForm />
-          </TabPanel>
-          <TabPanel>
-            <Notifications />
-          </TabPanel>
-          <TabPanel>
-            <Signout />
           </TabPanel>
         </TabPanels>
       </Tabs>
