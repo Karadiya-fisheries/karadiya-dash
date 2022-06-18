@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import {
   Avatar,
   AvatarBadge,
@@ -19,13 +19,16 @@ import {
 } from "@chakra-ui/react";
 import AuthService from "../../../services/auth.service";
 import StorageService from "../../../firebase/upload";
-
+import ProfileService from "../../../services/profile.service";
 function Profile() {
   const user = AuthService.getCurrentUser();
   const [userProfile, setUserProfile] = useState(null);
-
   const { isOpen, onOpen, onClose } = useDisclosure();
-
+  useEffect(() => {
+    ProfileService.getProfileById(user.uid).then((profile) => {
+      setUserProfile(profile.data);
+    });
+  }, [userProfile, user.uid]);
   const profileImage = useRef(null);
 
   const openChooseImage = () => {

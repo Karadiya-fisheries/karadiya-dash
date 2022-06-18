@@ -26,13 +26,13 @@ const navConfig = [
     path: "/dashboard/notices",
     icon: getIcon("eva:file-text-fill"),
   },
+  // {
+  //   title: "Profile",
+  //   path: "/dashboard/profile",
+  //   icon: getIcon("gg:profile"),
+  // },
   {
     title: "Profile",
-    path: "/dashboard/profile",
-    icon: getIcon("gg:profile"),
-  },
-  {
-    title: "Owner Profile",
     path: "/dashboard/owner/profile",
     icon: getIcon("gg:profile"),
   },

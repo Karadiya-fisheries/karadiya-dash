@@ -1,7 +1,6 @@
 import storage from "./firebaseConfig.js";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import profileService from "../services/profile.service.js";
-import { Alert } from "@mui/material";
 class StorageService {
   profileUploadHandler = (id, file) => {
     if (!file) {
@@ -31,8 +30,6 @@ class StorageService {
   };
 
   getImage = (image) => {
-    let { state } = this;
-
     storage
       .child(`${image}.png`)
       .getDownloadURL()

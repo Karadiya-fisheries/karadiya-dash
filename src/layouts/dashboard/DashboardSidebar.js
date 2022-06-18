@@ -1,19 +1,9 @@
 import PropTypes from "prop-types";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { Link as RouterLink, useLocation } from "react-router-dom";
 // material
 import { styled } from "@mui/material/styles";
-import {
-  Box,
-  Link,
-  Button,
-  Drawer,
-  Typography,
-  Avatar,
-  Stack,
-} from "@mui/material";
-// mock
-import account from "../../_mock/account";
+import { Box, Link, Drawer, Typography, Avatar } from "@mui/material";
 // hooks
 import useResponsive from "../../hooks/useResponsive";
 // components
@@ -23,6 +13,7 @@ import NavSection from "../../components/NavSection";
 //
 import navConfig from "./NavConfig";
 import AuthService from "../../services/auth.service";
+import ProfileService from "../../services/profile.service";
 // ----------------------------------------------------------------------
 
 const DRAWER_WIDTH = 280;
@@ -51,13 +42,20 @@ DashboardSidebar.propTypes = {
 
 export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
   const { pathname } = useLocation();
-
+  const [profile, setProfile] = useState(null);
   const isDesktop = useResponsive("up", "lg");
   const user = AuthService.getCurrentUser();
+  useEffect(() => {
+    ProfileService.getProfileById(user.uid).then((profile) => {
+      setProfile(profile.data);
+    });
+    console.log(profile);
+  }, [profile, user.uid]);
   const account = {
     displayName: user.fullname,
     email: user.email,
-    photoURL: "/static/users/tharindu.jpeg",
+    photoURL: profile,
+    role: "Boat Owner",
   };
 
   useEffect(() => {
@@ -85,7 +83,12 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
       <Box sx={{ mb: 5, mx: 2.5 }}>
         <Link underline="none" component={RouterLink} to="#">
           <AccountStyle>
-            <Avatar src={account.photoURL} alt="photoURL" />
+            <Avatar alt={user.fullname} src={account.photoURL}>
+              {user.fullname
+                .split(" ")
+                .map((n) => n[0])
+                .join("")}
+            </Avatar>
             <Box sx={{ ml: 2 }}>
               <Typography variant="subtitle2" sx={{ color: "text.primary" }}>
                 {account.displayName}
