@@ -2,10 +2,8 @@ import storage from "./firebaseConfig.js";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import profileService from "../services/profile.service.js";
 import { Alert } from "@mui/material";
-import { useState } from "react";
 class StorageService {
   profileUploadHandler = (id, file) => {
-    const [progress, setProgress] = useState(0);
     if (!file) {
       alert("Please upload an image first!");
     }
@@ -21,7 +19,6 @@ class StorageService {
         const percent = Math.round(
           (snapshot.bytesTransferred / snapshot.totalBytes) * 100
         );
-        setProgress(percent);
       },
       (err) => console.log(err),
       () => {
@@ -31,8 +28,6 @@ class StorageService {
         });
       }
     );
-
-    return <Alert severity="info">{progress} %</Alert>;
   };
 
   getImage = (image) => {

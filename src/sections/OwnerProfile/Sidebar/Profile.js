@@ -35,13 +35,12 @@ function Profile() {
   const changeProfileImage = (event) => {
     const ALLOWED_TYPES = ["image/png", "image/jpeg", "image/jpg"];
     const selected = event.target.files[0];
-
+    console.log(selected);
     if (selected && ALLOWED_TYPES.includes(selected.type)) {
       let reader = new FileReader();
       reader.onloadend = () => {
         const result = reader.result;
-        console.log(result);
-        StorageService.profileUploadHandler(user.uid, result);
+        StorageService.profileUploadHandler(user.uid, selected);
         setUserProfile(result);
       };
       return reader.readAsDataURL(selected);
@@ -57,9 +56,7 @@ function Profile() {
         name={user.fullname}
         cursor="pointer"
         onClick={openChooseImage}
-        src={
-          userProfile ? userProfile : "/static/mock-images/avatars/avatar_3.jpg"
-        }
+        src={userProfile ? userProfile : ""}
       >
         <AvatarBadge bg="brand.blue" boxSize="1em">
           <svg width="0.4em" fill="currentColor" viewBox="0 0 20 20">
