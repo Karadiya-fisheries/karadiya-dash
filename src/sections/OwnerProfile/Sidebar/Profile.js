@@ -17,11 +17,15 @@ import {
   useDisclosure,
   VStack,
 } from "@chakra-ui/react";
+import AuthService from "../../../services/auth.service";
+import StorageService from "../../../firebase/upload";
 
 function Profile() {
+  const user = AuthService.getCurrentUser();
   const [userProfile, setUserProfile] = useState(null);
 
   const { isOpen, onOpen, onClose } = useDisclosure();
+
   const profileImage = useRef(null);
 
   const openChooseImage = () => {
@@ -34,7 +38,12 @@ function Profile() {
 
     if (selected && ALLOWED_TYPES.includes(selected.type)) {
       let reader = new FileReader();
-      reader.onloadend = () => setUserProfile(reader.result);
+      reader.onloadend = () => {
+        const result = reader.result;
+        console.log(result);
+        StorageService.profileUploadHandler(user.uid, result);
+        setUserProfile(result);
+      };
       return reader.readAsDataURL(selected);
     }
 
@@ -45,7 +54,7 @@ function Profile() {
     <VStack spacing={3} py={5} borderBottomWidth={1} borderColor="brand.light">
       <Avatar
         size="2xl"
-        name="Tim Cook"
+        name={user.fullname}
         cursor="pointer"
         onClick={openChooseImage}
         src={
@@ -92,7 +101,7 @@ function Profile() {
       </Modal>
       <VStack spacing={1}>
         <Heading as="h3" fontSize="xl" color="brand.dark">
-          Jayodon Frankie
+          {user.fullname}
         </Heading>
 
         <Text color="brand.gray" fontSize="sm">
