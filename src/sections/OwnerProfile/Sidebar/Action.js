@@ -9,7 +9,7 @@ import {
 } from "@chakra-ui/react";
 
 export default function Actions() {
-  const value = "http://localhost:3000/owner/profile";
+  const value = "https://karadiya-dashboard.web.app/dashboard/owner/profile";
   const { hasCopied, onCopy } = useClipboard(value);
 
   const profileUrl = useRef(null);
