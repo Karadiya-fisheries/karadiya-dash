@@ -29,9 +29,6 @@ import {
   UserListToolbar,
   UserMoreMenu,
 } from "../sections/@dashboard/user";
-// mock
-//import USERLIST from "../_mock/user";
-import { faker } from "@faker-js/faker";
 import { sample } from "lodash";
 import StatService from "../services/stat.service";
 // ----------------------------------------------------------------------
@@ -43,7 +40,7 @@ const TABLE_HEAD = [
   { id: "role", label: "Role", alignRight: false },
   { id: "isVerified", label: "Email Verified", alignRight: false },
   { id: "status", label: "Status", alignRight: false },
-  
+
   { id: "" },
 ];
 
@@ -100,7 +97,7 @@ export default function User() {
     StatService.getAllUsers().then((users) => {
       const userlist = users.data.map((user, index) => ({
         id: user.uid,
-        avatarUrl: `/static/mock-images/avatars/avatar_${index + 1}.jpg`,
+        avatarUrl: user.profileUrl,
         name: user.fullname,
         email: user.email,
         phone: user.phone,
@@ -246,7 +243,12 @@ export default function User() {
                               alignItems="center"
                               spacing={2}
                             >
-                              <Avatar alt={name} src={avatarUrl} />
+                              <Avatar alt={name} src={avatarUrl}>
+                                {name
+                                  .split(" ")
+                                  .map((n) => n[0])
+                                  .join("")}
+                              </Avatar>
                               <Typography variant="subtitle2" noWrap>
                                 {name}
                               </Typography>
