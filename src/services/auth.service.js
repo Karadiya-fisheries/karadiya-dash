@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "https://serene-woodland-83390.herokuapp.com/api/auth/";
+const API_URL = "http://localhost:5000/api/auth/";
 
 class AuthService {
   login(email, password) {
@@ -22,7 +22,17 @@ class AuthService {
     localStorage.removeItem("user");
   }
 
-  register(fullname, email, phone, password) {
+  registerOfficer(fullname, email, phone, password, roles) {
+    return axios.post(API_URL + "signup", {
+      fullname,
+      email,
+      phone,
+      password,
+      roles,
+    });
+  }
+
+  registerUser(fullname, email, phone, password) {
     return axios.post(API_URL + "signup", {
       fullname,
       email,
