@@ -23,22 +23,32 @@ const navConfig = [
   },
   {
     title: "Notices",
-    path: "/blog",
+    path: "/dashboard/notices",
     icon: getIcon("eva:file-text-fill"),
   },
+  // {
+  //   title: "Profile",
+  //   path: "/dashboard/profile",
+  //   icon: getIcon("gg:profile"),
+  // },
   {
     title: "Profile",
-    path: "/profile",
+    path: "/dashboard/owner/profile",
     icon: getIcon("gg:profile"),
   },
   {
     title: "Departure",
-    path: "/Departure",
+    path: "/dashboard/departure",
     icon: getIcon("eva:file-text-fill"),
   },
   {
     title: "ElogBook",
-    path: "/ElogBook",
+    path: "/dashboard/elogBook",
+    icon: getIcon("eva:file-text-fill"),
+  },
+  {
+    title: "Add Officer",
+    path: "/dashboard/add_officer",
     icon: getIcon("eva:file-text-fill"),
   },
   {

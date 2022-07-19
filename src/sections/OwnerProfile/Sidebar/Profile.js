@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import {
   Avatar,
   AvatarBadge,
@@ -17,12 +17,18 @@ import {
   useDisclosure,
   VStack,
 } from "@chakra-ui/react";
-import Rating from "./Rating";
-
+import AuthService from "../../../services/auth.service";
+import StorageService from "../../../firebase/upload";
+import ProfileService from "../../../services/profile.service";
 function Profile() {
+  const user = AuthService.getCurrentUser();
   const [userProfile, setUserProfile] = useState(null);
-
   const { isOpen, onOpen, onClose } = useDisclosure();
+  useEffect(() => {
+    ProfileService.getProfileById(user.uid).then((profile) => {
+      setUserProfile(profile.data);
+    });
+  }, [userProfile, user.uid]);
   const profileImage = useRef(null);
 
   const openChooseImage = () => {
@@ -32,10 +38,14 @@ function Profile() {
   const changeProfileImage = (event) => {
     const ALLOWED_TYPES = ["image/png", "image/jpeg", "image/jpg"];
     const selected = event.target.files[0];
-
+    console.log(selected);
     if (selected && ALLOWED_TYPES.includes(selected.type)) {
       let reader = new FileReader();
-      reader.onloadend = () => setUserProfile(reader.result);
+      reader.onloadend = () => {
+        const result = reader.result;
+        StorageService.profileUploadHandler(user.uid, selected);
+        setUserProfile(result);
+      };
       return reader.readAsDataURL(selected);
     }
 
@@ -46,12 +56,10 @@ function Profile() {
     <VStack spacing={3} py={5} borderBottomWidth={1} borderColor="brand.light">
       <Avatar
         size="2xl"
-        name="Tim Cook"
+        name={user.fullname}
         cursor="pointer"
         onClick={openChooseImage}
-        src={
-          userProfile ? userProfile : "/static/mock-images/avatars/avatar_3.jpg"
-        }
+        src={userProfile ? userProfile : ""}
       >
         <AvatarBadge bg="brand.blue" boxSize="1em">
           <svg width="0.4em" fill="currentColor" viewBox="0 0 20 20">
@@ -93,13 +101,12 @@ function Profile() {
       </Modal>
       <VStack spacing={1}>
         <Heading as="h3" fontSize="xl" color="brand.dark">
-          Jayodon Frankie
+          {user.fullname}
         </Heading>
 
         <Text color="brand.gray" fontSize="sm">
-          Fishery Officer
+          Boat Owner
         </Text>
-        {/* <Rating/> */}
       </VStack>
     </VStack>
   );

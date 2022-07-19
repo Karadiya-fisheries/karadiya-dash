@@ -1,6 +1,6 @@
 import { filter } from "lodash";
 import { sentenceCase } from "change-case";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Link as RouterLink } from "react-router-dom";
 // material
 import {
@@ -29,18 +29,18 @@ import {
   UserListToolbar,
   UserMoreMenu,
 } from "../sections/@dashboard/user";
-// mock
-import USERLIST from "../_mock/user";
-
+import { sample } from "lodash";
+import StatService from "../services/stat.service";
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
   { id: "name", label: "Name", alignRight: false },
-  { id: "company", label: "Company", alignRight: false },
+  { id: "email", label: "Email", alignRight: false },
+  { id: "phone", label: "Phone", alignRight: false },
   { id: "role", label: "Role", alignRight: false },
-  { id: "isVerified", label: "Verified", alignRight: false },
+  { id: "isVerified", label: "Email Verified", alignRight: false },
   { id: "status", label: "Status", alignRight: false },
-  
+
   { id: "" },
 ];
 
@@ -79,6 +79,8 @@ function applySortFilter(array, comparator, query) {
 }
 
 export default function User() {
+  const [USERLIST, setUserList] = useState([]);
+
   const [page, setPage] = useState(0);
 
   const [order, setOrder] = useState("asc");
@@ -91,6 +93,21 @@ export default function User() {
 
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
+  useEffect(() => {
+    StatService.getAllUsers().then((users) => {
+      const userlist = users.data.map((user, index) => ({
+        id: user.uid,
+        avatarUrl: user.profileUrl,
+        name: user.fullname,
+        email: user.email,
+        phone: user.phone,
+        isVerified: user.confirm,
+        status: sample(["active", "banned"]),
+        role: sample(["User", "Fishermen", "Owner", "Officer"]),
+      }));
+      setUserList(userlist);
+    });
+  }, []);
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
@@ -196,9 +213,10 @@ export default function User() {
                       const {
                         id,
                         name,
+                        email,
+                        phone,
                         role,
                         status,
-                        company,
                         avatarUrl,
                         isVerified,
                       } = row;
@@ -225,13 +243,19 @@ export default function User() {
                               alignItems="center"
                               spacing={2}
                             >
-                              <Avatar alt={name} src={avatarUrl} />
+                              <Avatar alt={name} src={avatarUrl}>
+                                {name
+                                  .split(" ")
+                                  .map((n) => n[0])
+                                  .join("")}
+                              </Avatar>
                               <Typography variant="subtitle2" noWrap>
                                 {name}
                               </Typography>
                             </Stack>
                           </TableCell>
-                          <TableCell align="left">{company}</TableCell>
+                          <TableCell align="left">{email}</TableCell>
+                          <TableCell align="left">{phone}</TableCell>
                           <TableCell align="left">{role}</TableCell>
                           <TableCell align="left">
                             {isVerified ? "Yes" : "No"}

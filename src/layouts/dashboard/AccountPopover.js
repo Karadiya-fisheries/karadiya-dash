@@ -1,4 +1,4 @@
-import { useRef, useState, useContext, useEffect } from "react";
+import { useRef, useState, useEffect } from "react";
 import { Link as RouterLink } from "react-router-dom";
 // @mui
 import { alpha } from "@mui/material/styles";
@@ -16,18 +16,19 @@ import MenuPopover from "../../components/MenuPopover";
 // mocks_
 import { useNavigate } from "react-router-dom";
 import AuthService from "../../services/auth.service";
+import ProfileService from "../../services/profile.service";
 // ----------------------------------------------------------------------
 
 const MENU_OPTIONS = [
   {
     label: "Home",
     icon: "eva:home-fill",
-    linkTo: "/departure",
+    linkTo: "/dashboard/app",
   },
   {
     label: "Profile",
     icon: "eva:person-fill",
-    linkTo: "/profile",
+    linkTo: "/dashboard/owner/profile",
   },
   {
     label: "Settings",
@@ -41,11 +42,19 @@ const MENU_OPTIONS = [
 export default function AccountPopover() {
   const anchorRef = useRef(null);
   const navigate = useNavigate();
+  const [profile, setProfile] = useState(null);
   const user = AuthService.getCurrentUser();
+  useEffect(() => {
+    ProfileService.getProfileById(user.uid).then((profile) => {
+      setProfile(profile.data);
+    });
+    console.log(profile);
+  }, [profile, user.uid]);
   const account = {
     displayName: user.fullname,
     email: user.email,
-    photoURL: "/static/users/tharindu.jpeg",
+    photoURL: profile,
+    role: "Boat Owner",
   };
   const [open, setOpen] = useState(null);
 
@@ -82,7 +91,12 @@ export default function AccountPopover() {
           }),
         }}
       >
-        <Avatar src={account.photoURL} alt="photoURL" />
+        <Avatar alt={user.fullname} src={account.photoURL}>
+          {user.fullname
+            .split(" ")
+            .map((n) => n[0])
+            .join("")}
+        </Avatar>
       </IconButton>
 
       <MenuPopover

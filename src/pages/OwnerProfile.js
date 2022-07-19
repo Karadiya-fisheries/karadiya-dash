@@ -1,9 +1,8 @@
 import SimpleBar from "simplebar-react";
 
 import { ChakraProvider } from "@chakra-ui/react";
-import { theme } from "./../../theme/helpers";
-import Cover from "./Cover";
-import Main from "./Main";
+import { theme } from "../theme/helpers";
+import { Cover, Main } from "../sections/OwnerProfile";
 
 export default function App() {
   return (
