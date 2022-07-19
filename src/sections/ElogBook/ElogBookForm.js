@@ -1,305 +1,402 @@
-import * as React from 'react';
-import { FormControl, FormLabel, Grid, Input, Select } from "@chakra-ui/react";
+import * as Yup from "yup";
+import { useState, useEffect } from "react";
+import { useFormik, Form, FormikProvider } from "formik";
+import { useNavigate } from "react-router-dom";
 import {
-  InputGroup,
-  InputLeftAddon,
-  NumberDecrementStepper,
-  NumberIncrementStepper,
-  NumberInput,
-  NumberInputField,
-  NumberInputStepper,
-} from "@chakra-ui/react";
-import { ChakraProvider } from "@chakra-ui/react";
-import { theme } from "./../../theme/helpers";
-import Box from "@mui/material/Box";
-import Typography from "@mui/material/Typography";
+  TextField,
+  FormControlLabel,
+  Checkbox,
+  FormGroup,
+  FormLabel,
+  Radio,
+  RadioGroup,
+  Stack,
+  Box,
+  Typography,
+  Fab,
+  Divider,
+} from "@mui/material";
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DesktopDatePicker, TimePicker } from "@mui/x-date-pickers";
+import EditIcon from "@mui/icons-material/Edit";
+import { LoadingButton } from "@mui/lab";
+// component
+import Iconify from "../../components/Iconify";
+import TripLogService from "../../services/triplog.service";
 
-import Divider from '@mui/material/Divider';
-import Radio from '@mui/material/Radio';
-import RadioGroup from '@mui/material/RadioGroup';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Button from '@mui/material/Button';
+// ----------------------------------------------------------------------
 
-function ElogBookForm() {
-    const [value, setValue] = React.useState('yes');
+export default function ElogBookForm({ id }) {
+  const navigate = useNavigate();
+  const [edit, setEdit] = useState(true);
+  const [log, setLog] = useState(null);
+  const RegisterSchema = Yup.object().shape({
+    Harbor: Yup.string().required("Boat Name required"),
+    BoatRg: Yup.string().required("Boat Registraion No required"),
+    BoatCat: Yup.string().required("Boat Catagory required"),
+    InsuaranceNo: Yup.string().required("Insuarance No required"),
+    FOpType: Yup.array().required("Fishery Operation required"),
+  });
 
-  const handleChange = (event) => {
-    setValue(event.target.value);
-  };
+  useEffect(() => {
+    console.log(id);
+    setLog({
+      Harbor: id.Harbor,
+      SkipperID: id.SkipperID,
+      WesselID: id.WesselID,
+      DepartureDate: id.DepartureDate,
+      DepartureTime: id.DepartureTime,
+      GearType: id.GearType,
+      MainLine: id.MainLine,
+      BranchLine: id.Branch,
+      HookNo: id.HookNo,
+      HookType: id.HookType,
+      Depth: id.Depth,
+      Bait: id.Bait,
+      CatchRecords: id.CatchRecords,
+    });
+    console.log(log);
+  }, []);
+
+  const formik = useFormik({
+    initialValues: log,
+    enableReinitialize: true,
+    validationSchema: RegisterSchema,
+    onSubmit: (id, actions) => {
+      setTimeout(() => {
+        actions.setSubmitting(false);
+      }, 1000);
+      console.log(id);
+    },
+  });
+
+  const { errors, touched, handleSubmit, isSubmitting, getFieldProps, values } =
+    formik;
+
   return (
-    <>
-      <Typography variant="h4" component="h2" style={{ textAlign: "center" }}>
-       ElogBook Form
-      </Typography>
-      ;
-      <ChakraProvider theme={theme}>
-        <Box
-          sx={{
-            width: "90%",
-            // height: "100vh",
-            boxShadow: 5,
-            justifyContent: "center",
-            alignItems: "center",
-            // flexDirection:'column',
-            margin: "auto",
-            padding: "20px",
-          }}
-        >
-          <Grid
-            templateColumns={{ base: "repeat(1, 1fr)", md: "repeat(2, 1fr)" }}
-            gap={6}
-          >
-            <FormControl id="Wessel Id">
-              <FormLabel>Wessel ID</FormLabel>
-              <Input
-                focusBorderColor="brand.blue"
-                type="text"
-                placeholder="MP23455"
-              />
-            </FormControl>
-            <FormControl id="Skipper ID">
-              <FormLabel>Skipper Id</FormLabel>
-              <Input
-                focusBorderColor="brand.blue"
-                type="text"
-                placeholder="XO12328"
-              />
-            </FormControl>
-            <FormControl id="harbor">
-              <FormLabel>Departure Harbor </FormLabel>
-              <Select focusBorderColor="brand.blue" placeholder="Select Harbor">
-                <option value="Galle">Galle</option>
-                <option value="Matara">Matara</option>
-                <option value="Mirissa">Mirissa</option>
-                <option value="Benthota" selected>
-                  Benthota
-                </option>
-              </Select>
-            </FormControl>
-            <FormControl id="Departure Date">
-              <FormLabel>Departure Date</FormLabel>
-              <Input
-                focusBorderColor="brand.blue"
-                type="date"
-                placeholder="2022.2.9"
-              />
-            </FormControl>
-            
-            <FormControl id="Departure Time">
-              <FormLabel>Departure Time</FormLabel>
-              <Input
-                focusBorderColor="brand.blue"
-                type="time"
-                placeholder="2022.2.9"
-              />
-            </FormControl>
-            <FormControl id="Gear Type">
-              <FormLabel>Gear Type </FormLabel>
-              <Select focusBorderColor="brand.blue" placeholder="Select gear type">
-                <option value="LongLine" selected>LongLine</option>
-                <option value="Matara">Matara</option>
-                <option value="Mirissa">Mirissa</option>
-                <option value="Benthota" >
-                  Benthota
-                </option>
-              </Select>
-            </FormControl>
-            <FormControl id="main Line">
-              <FormLabel>Main Line</FormLabel>
-              <Input
-                focusBorderColor="brand.blue"
-                type="text"
-                placeholder=""
-              />
-            </FormControl>
-            <FormControl id="Branch Line">
-              <FormLabel>Brach Line</FormLabel>
-              <Input
-                focusBorderColor="brand.blue"
-                type="text"
-                placeholder=""
-              />
-            </FormControl>
-            <FormControl id="hooks">
-              <FormLabel>Number of Hooks</FormLabel>
-              <Input
-                focusBorderColor="brand.blue"
-                type="number"
-                placeholder="17"
-              />
-            </FormControl>
-            <FormControl id="Hook Type">
-              <FormLabel>Hook Type </FormLabel>
-              <Select focusBorderColor="brand.blue" placeholder="Select gear type">
-                <option value="LongLine" selected>LongLine</option>
-                <option value="Matara">Matara</option>
-                <option value="Mirissa">Mirissa</option>
-                <option value="Benthota" >
-                  Benthota
-                </option>
-              </Select>
-            </FormControl>
-            <FormControl id="depth">
-              <FormLabel>Depth(m)</FormLabel>
-              <Input
-                focusBorderColor="brand.blue"
-                type="number"
-                placeholder="17"
-              />
-            </FormControl>
-            <FormControl id="Bait">
-              <FormLabel>Bait</FormLabel>
-              <Select focusBorderColor="brand.blue" placeholder="squid">
-                <option value="Galle">Galle</option>
-                <option value="Matara">Matara</option>
-                <option value="Mirissa">Mirissa</option>
-                <option value="Benthota" >
-                  Benthota
-                </option>
-              </Select>
-            </FormControl>
-            <FormControl id="Fishing Date">
-              <FormLabel>Fishing Date</FormLabel>
-              <Input
-                focusBorderColor="brand.blue"
-                type="date"
-                placeholder="2022.2.9"
-              />
-            </FormControl>
-            <FormControl id="Fishing Time">
-              <FormLabel>Fishing Time</FormLabel>
-              <Input
-                focusBorderColor="brand.blue"
-                type="time"
-                placeholder="2022.2.9"
-              />
-            </FormControl>
-            <FormControl id="GPS point">
-              <FormLabel>GPS point</FormLabel>
-              <Select focusBorderColor="brand.blue" placeholder="start gps">
-                <option value="Galle">Galle</option>
-                <option value="Matara">Matara</option>
-                <option value="Mirissa">Mirissa</option>
-                <option value="Benthota" >
-                  Benthota
-                </option>
-              </Select>
-            </FormControl>
-            
-              {/* <Grid container spacing={2}>
-                <Grid item xs={6} md={8}>
-                  <Item>xs=6 md=8</Item>
-                </Grid>
-                <Grid item xs={6} md={4}>
-                  <Item>xs=6 md=4</Item>
-                </Grid>
-              </Grid> */}
-              
-              <FormControl id="Latitude">
-                <FormLabel>Latitude</FormLabel>
-                <Input
-                  focusBorderColor="brand.blue"
-                  type="text"
-                  placeholder="454566466"
+    <FormikProvider value={formik}>
+      <LocalizationProvider dateAdapter={AdapterDateFns}>
+        <Form autoComplete="off" noValidate onSubmit={handleSubmit}>
+          <Stack direction="column" justifyContent="space-between" spacing={3}>
+            <Typography variant="h4" gutterBottom>
+              ELogBook Record No.{id.tripId}
+            </Typography>
+            <Divider />
+            <Box>
+              <Fab
+                sx={{ m: 3, alignSelf: "right" }}
+                onClick={() => {
+                  setEdit(!edit);
+                }}
+                color={edit ? "default" : "primary"}
+                aria-label="edit"
+              >
+                <EditIcon />
+              </Fab>
+            </Box>
+            <Box p={2} border="1px solid #E2E8F0" borderRadius={1}>
+              <Typography mb={2} variant="subtitle1">
+                Departure Details
+              </Typography>
+              <Stack direction={"column"} spacing={4}>
+                <Stack direction={"row"} spacing={3}>
+                  <TextField
+                    fullWidth
+                    disabled={edit}
+                    label="Wessel ID"
+                    InputLabelProps={{ shrink: true }}
+                    {...getFieldProps("WesselID")}
+                    error={Boolean(touched.WesselID && errors.WesselID)}
+                    helperText={touched.WesselID && errors.WesselID}
+                  />
+                  <TextField
+                    fullWidth
+                    disabled={edit}
+                    label="Skipper ID"
+                    InputLabelProps={{ shrink: true }}
+                    {...getFieldProps("SkipperID")}
+                    error={Boolean(touched.SkipperID && errors.SkipperID)}
+                    helperText={touched.SkipperID && errors.SkipperID}
+                  />
+                </Stack>
+                <TextField
+                  fullWidth
+                  label="Harbor"
+                  InputLabelProps={{ shrink: true }}
+                  disabled={edit}
+                  {...getFieldProps("Harbor")}
+                  error={Boolean(touched.Harbor && errors.Harbor)}
+                  helperText={touched.Harbor && errors.Harbor}
                 />
-              </FormControl>
-              <FormControl id="Longitude">
-                <FormLabel>Longitude</FormLabel>
-                <Input
-                  focusBorderColor="brand.blue"
-                  type="text"
-                  placeholder="454566466"
+                <DesktopDatePicker
+                  label="Departure Date"
+                  inputFormat="yyyy-MM-dd"
+                  {...getFieldProps("DepartureDate")}
+                  renderInput={(params) => <TextField {...params} />}
                 />
-                </FormControl>
-                <FormControl id="fish type">
-              <FormLabel>Fish type</FormLabel>
-              <Select focusBorderColor="brand.blue" placeholder="Luna">
-              <option value="Luna">Luna</option>
-                <option value="dry fish">dry fish</option>
-                <option value="Mirissa">Mirissa</option>
-                <option value="Benthota" selected>
-                  Benthota
-                </option>
-              </Select>
-            </FormControl>
-            <FormControl id="fish type">
-              <FormLabel>Fish type</FormLabel>
-              <Select focusBorderColor="brand.blue" placeholder="Luna">
-              <option value="Luna">Luna</option>
-                <option value="dry fish">dry fish</option>
-                <option value="Mirissa">Mirissa</option>
-                <option value="Benthota" selected>
-                  Benthota
-                </option>
-              </Select>
-            </FormControl>
-             
-              
-              <FormControl id="boatTraveller">
-              <FormLabel>Boat traveler Details</FormLabel>
-              <FormLabel>Name of first passenger</FormLabel>
-              <Input
-                focusBorderColor="brand.blue"
-                type="text"
-                placeholder="Saman"
-              />
-            </FormControl>
-             
-            
-            
-            
-              <FormControl id="radioStation">
-              <FormLabel>Radio station address by Vessel</FormLabel>
-              <Select focusBorderColor="brand.blue" placeholder="Station">
-              <option value="Galle">Galle</option>
-                <option value="Matara">Matara</option>
-                <option value="Mirissa">Mirissa</option>
-                <option value="Benthota" selected>
-                  Benthota
-                </option>
-              </Select>
-            </FormControl>
-            {/* <FormControl id="radioCode">
-              <FormLabel>Radio code address by Vessel</FormLabel>
-              <Select focusBorderColor="brand.blue" placeholder="Radio Code">
-              <option value="409.6hz">409.6hz</option>
-                <option value="285.67hz">285.67hz</option>
-                <option value="860.56hz">860.56hz</option>
-                <option value="95.56hz" selected>
-                  95.56hz
-                </option>
-              </Select>
-            </FormControl> */}
-            
-            <FormControl>
-              <FormLabel>Radio code address by Vessel</FormLabel>
-              <NumberInput>
-                <NumberInputField placeholder="456.hz" />
-                <NumberInputStepper>
-                  <NumberIncrementStepper />
-                  <NumberDecrementStepper />
-                </NumberInputStepper>
-              </NumberInput>
-            </FormControl>
-            <FormControl>
-  <FormLabel id="demo-controlled-radio-buttons-group">I have a VMS device on board</FormLabel>
-  <RadioGroup
-    aria-labelledby="demo-controlled-radio-buttons-group"
-    name="controlled-radio-buttons-group"
-    value={value}
-    onChange={handleChange}
-  >
-    <FormControlLabel value="yes" control={<Radio />} label="yes" />
-    <FormControlLabel value="no" control={<Radio />} label="no" />
-  </RadioGroup>
-</FormControl>
 
-          </Grid>
-          <Button variant="contained" style={{margin: '0 auto', display: "flex",width: '30%'}}>Save</Button>
-        </Box>
-      </ChakraProvider>
-    </>
+                {/* <TimePicker
+                  label="Departure Time"
+                  inputFormat="h:m:s"
+                  {...getFieldProps("DepartureTime")}
+                  renderInput={(params) => <TextField {...params} />}
+                /> */}
+              </Stack>
+            </Box>
+
+            <Box p={2} border="1px solid #E2E8F0" borderRadius={1}>
+              <Typography mb={2} variant="subtitle1">
+                Gear Details
+              </Typography>
+              <Stack direction={"column"} spacing={4}>
+                <Stack direction={"row"} spacing={3}>
+                  <TextField
+                    fullWidth
+                    disabled={edit}
+                    InputLabelProps={{ shrink: true }}
+                    label="Main Line"
+                    {...getFieldProps("MainLine")}
+                    error={Boolean(touched.MainLine && errors.MainLine)}
+                    helperText={touched.MainLine && errors.MainLine}
+                  />
+                  <TextField
+                    fullWidth
+                    disabled={edit}
+                    InputLabelProps={{ shrink: true }}
+                    label="Branch Line"
+                    {...getFieldProps("BranchLine")}
+                    error={Boolean(touched.BranchLine && errors.BranchLine)}
+                    helperText={touched.BranchLine && errors.BranchLine}
+                  />
+                </Stack>
+                <TextField
+                  fullWidth
+                  label="No of Hooks"
+                  InputLabelProps={{ shrink: true }}
+                  disabled={edit}
+                  {...getFieldProps("HookNo")}
+                  error={Boolean(touched.HookNo && errors.HookNo)}
+                  helperText={touched.HookNo && errors.HookNo}
+                />
+
+                <TextField
+                  fullWidth
+                  label="Depth(m)"
+                  InputLabelProps={{ shrink: true }}
+                  {...getFieldProps("Depth")}
+                  error={Boolean(touched.Depth && errors.Depth)}
+                  helperText={touched.Depth && errors.Depth}
+                />
+              </Stack>
+            </Box>
+
+            <Box p={2} border="1px solid #E2E8F0" borderRadius={1}>
+              <Typography mb={2} variant="subtitle1">
+                Fishing Details
+              </Typography>
+              <Stack direction={"column"} spacing={4}>
+                <Box p={2} border="1px solid #E2E8F0" borderRadius={1}>
+                  <Typography mb={2} variant="subtitle1">
+                    Catch Details
+                  </Typography>
+                  {id.CatchRecords.map((record, index) => {
+                    return (
+                      <Stack direction={"column"} mb={1} spacing={2}>
+                        <Typography variant="subtitle1">
+                          Catch ID No.{record.CatchId} Created At{" "}
+                          {record.createdAt.substring(0, 10)}
+                        </Typography>
+                        <Divider />
+
+                        <DesktopDatePicker
+                          label="Fishing Date"
+                          inputFormat="yyyy-MM-dd"
+                          {...getFieldProps(
+                            `CatchRecords[${index}.FishingDate]`
+                          )}
+                          renderInput={(params) => <TextField {...params} />}
+                        />
+
+                        <Stack direction={"row"} spacing={3}>
+                          <Stack direction={"column"} spacing={4}>
+                            <Typography variant="subtitle2">
+                              GPS Start
+                            </Typography>
+
+                            <TextField
+                              fullWidth
+                              disabled={edit}
+                              InputLabelProps={{ shrink: true }}
+                              label="Start Latitude"
+                              {...getFieldProps(
+                                `CatchRecords[${index}.GPSPoint.start.lat]`
+                              )}
+                              error={Boolean(
+                                touched.Latitude && errors.Latitude
+                              )}
+                              helperText={touched.Latitude && errors.Latitude}
+                            />
+                            <TextField
+                              fullWidth
+                              disabled={edit}
+                              InputLabelProps={{ shrink: true }}
+                              label="Start Longitude"
+                              {...getFieldProps(
+                                `CatchRecords[${index}.GPSPoint.start.long]`
+                              )}
+                              error={Boolean(
+                                touched.BranchLine && errors.BranchLine
+                              )}
+                              helperText={
+                                touched.BranchLine && errors.BranchLine
+                              }
+                            />
+                          </Stack>
+                          <Stack direction={"column"} spacing={4}>
+                            <Typography variant="subtitle2">GPS End</Typography>
+                            <TextField
+                              fullWidth
+                              disabled={edit}
+                              InputLabelProps={{ shrink: true }}
+                              label="End Latitude"
+                              {...getFieldProps(
+                                `CatchRecords[${index}.GPSPoint.end.lat]`
+                              )}
+                              error={Boolean(
+                                touched.MainLine && errors.MainLine
+                              )}
+                              helperText={touched.MainLine && errors.MainLine}
+                            />
+                            <TextField
+                              fullWidth
+                              disabled={edit}
+                              InputLabelProps={{ shrink: true }}
+                              label="End Longitude"
+                              {...getFieldProps(
+                                `CatchRecords[${index}.GPSPoint.start.long]`
+                              )}
+                              error={Boolean(
+                                touched.BranchLine && errors.BranchLine
+                              )}
+                              helperText={
+                                touched.BranchLine && errors.BranchLine
+                              }
+                            />
+                          </Stack>
+                        </Stack>
+
+                        {record.Catch.map((recatch, index1) => {
+                          return (
+                            <Stack direction={"column"} spacing={3}>
+                              <Divider />
+                              <Typography variant="subtitle2">
+                                Fish Load No.{index1 + 1}
+                              </Typography>
+                              <TextField
+                                disabled={edit}
+                                InputLabelProps={{ shrink: true }}
+                                label="Quantity"
+                                {...getFieldProps(
+                                  `CatchRecords[${index}.Catch[${index1}.Qty]]`
+                                )}
+                                error={Boolean(
+                                  touched.BranchLine && errors.BranchLine
+                                )}
+                                helperText={
+                                  touched.BranchLine && errors.BranchLine
+                                }
+                              />
+
+                              <TextField
+                                disabled={edit}
+                                InputLabelProps={{ shrink: true }}
+                                label="Weight"
+                                {...getFieldProps(
+                                  `CatchRecords[${index}.Catch[${index1}.Weight]]`
+                                )}
+                                error={Boolean(
+                                  touched.BranchLine && errors.BranchLine
+                                )}
+                                helperText={
+                                  touched.BranchLine && errors.BranchLine
+                                }
+                              />
+                              <TextField
+                                disabled={edit}
+                                InputLabelProps={{ shrink: true }}
+                                label="Fish Type"
+                                {...getFieldProps(
+                                  `CatchRecords[${index}.Catch[${index1}.FishType]]`
+                                )}
+                                error={Boolean(
+                                  touched.BranchLine && errors.BranchLine
+                                )}
+                                helperText={
+                                  touched.BranchLine && errors.BranchLine
+                                }
+                              />
+                              <TextField
+                                disabled={edit}
+                                InputLabelProps={{ shrink: true }}
+                                label="Fish SubType"
+                                {...getFieldProps(
+                                  `CatchRecords[${index}.Catch[${index1}.FishSubType]]`
+                                )}
+                                error={Boolean(
+                                  touched.BranchLine && errors.BranchLine
+                                )}
+                                helperText={
+                                  touched.BranchLine && errors.BranchLine
+                                }
+                              />
+                            </Stack>
+                          );
+                        })}
+                      </Stack>
+                    );
+                  })}
+                </Box>
+              </Stack>
+            </Box>
+            <Stack direction="row" justifyContent="space-between" spacing={3}>
+              <LoadingButton
+                fullWidth
+                disabled={edit}
+                color={"info"}
+                size="large"
+                type="submit"
+                variant="contained"
+                loading={isSubmitting}
+              >
+                Modify
+              </LoadingButton>
+              <LoadingButton
+                fullWidth
+                disabled={edit}
+                color={"warning"}
+                size="large"
+                type="submit"
+                variant="contained"
+                loading={isSubmitting}
+              >
+                Reject
+              </LoadingButton>
+              <LoadingButton
+                fullWidth
+                disabled={edit}
+                color={"primary"}
+                size="large"
+                type="submit"
+                variant="contained"
+                loading={isSubmitting}
+              >
+                Accept
+              </LoadingButton>
+            </Stack>
+          </Stack>
+        </Form>
+      </LocalizationProvider>
+    </FormikProvider>
   );
 }
-
-export default ElogBookForm;

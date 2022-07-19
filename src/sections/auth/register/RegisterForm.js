@@ -45,25 +45,41 @@ export default function RegisterForm() {
     },
     validationSchema: RegisterSchema,
     onSubmit: (data) => {
-      AuthService.register(
-        data.firstName + " " + data.lastName,
-        data.email,
-        data.phone,
-        data.password
-      )
-        .then(
-          () => {
-            navigate("/login", { replace: true });
-          },
-          (error) => {
-            const message =
-              (error.response &&
-                error.response.data &&
-                error.response.data.message) ||
-              error.message ||
-              error.toString();
-            console.log(message);
-          }
+      if (officer) {
+        AuthService.registerOfficer(
+          data.firstName + " " + data.lastName,
+          data.email,
+          data.phone,
+          data.password,
+          ["user", "officer"]
+        )
+          .then(
+            () => {
+              setTimeout(() => {
+                navigate("/dashboard/user", { replace: true });
+              }, 7000);
+              setOpen(true);
+            },
+            (error) => {
+              const message =
+                (error.response &&
+                  error.response.data &&
+                  error.response.data.message) ||
+                error.message ||
+                error.toString();
+              setMessage(message);
+              console.log(message);
+            }
+          )
+          .catch((error) => {
+            console.log(error);
+          });
+      } else {
+        AuthService.registerUser(
+          data.firstName + " " + data.lastName,
+          data.email,
+          data.phone,
+          data.password
         )
         .catch((error) => {
           console.log(error);
