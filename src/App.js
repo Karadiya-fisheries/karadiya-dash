@@ -56,6 +56,7 @@ export default function App() {
           <Route path="editprofile" element={<EditProfile />} />
           <Route path="departure" element={<DepartureFrom />} />
           <Route path="elogbook" element={<ELogBook />} />
+          <Route path="add_officer" element={<AddOfficer />} />
         </Route>
         <Route path="/" element={<LogoOnlyLayout />}>
           <Route path="login" element={<Login />} />
