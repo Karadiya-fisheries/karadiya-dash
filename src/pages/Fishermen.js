@@ -36,15 +36,16 @@ import {
 import ElogBookForm from "../sections/ElogBook/ElogBookForm";
 import FishermenProfile from "../sections/FishermenProfile/index"
 import { sample } from "lodash";
+import FishermenService from "../services/fishermen.service";
 import TripLogService from "../services/triplog.service";
 import ColorPreview from "../components/color-utils/ColorPreview";
 import ColorManyPicker from "../components/color-utils/ColorManyPicker";
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: "fishermenId", label: "Fishermen ID", alignRight: false },
-  { id: "name", label: "Name", alignRight: false },
-  { id: "FDivision", label: "FI Division", alignRight: false },
+  { id: "FishermenId", label: "Fishermen ID", alignRight: false },
+  { id: "Surname", label: "Name", alignRight: false },
+  { id: "FIDivision", label: "FI Division", alignRight: false },
   { id: "FDistrict", label: "District", alignRight: false },
   { id: "FZone", label: "Zone", alignRight: false },
   { id: "Occupation", label: "Occupation", alignRight: false },
@@ -56,7 +57,7 @@ const TABLE_HEAD = [
 
 const dummyData = [
   {
-    fishermenId: 1001,
+    id: 1001,
     name: "Lasitha Lankajeewa",
     FDivision: "South",
     FDistrict: "Galle",
@@ -64,7 +65,7 @@ const dummyData = [
     Occupation:"fishermen"
   },
   {
-    fishermenId: 1002,
+    id: 1002,
     name: "Amal Perera",
     FDivision: "West",
     FDistrict: "Matara",
@@ -155,40 +156,40 @@ export default function ELogBook() {
   const [open, setOpen] = useState(false);
   const [key, setKey] = useState(null);
 
-  useEffect(() => {
-    // StatService.getAllUsers().then((users) => {
+  // useEffect(() => {
+  //   // StatService.getAllUsers().then((users) => {
       
-       const userlist = dummyData?.map((user, index) => ({
-        fishermenId: user.fishermenId,
-        name: user.name,
-        FDivision: user.FDivision,
-        FDistrict: user.FDistrict,
-        FZone: user.FZone,
-        Occupation:user.Occupation,
-         isVerified: user.confirm,
-         status: sample(["active", "banned"]),
-         role: sample(["User", "Fishermen", "Owner", "Officer"]),
-       }));
-       setUserList(userlist);
-    // });
-   }, []);
+  //      const userlist = dummyData?.map((user, index) => ({
+  //       fishermenId: user.fishermenId,
+  //       name: user.name,
+  //       FDivision: user.FDivision,
+  //       FDistrict: user.FDistrict,
+  //       FZone: user.FZone,
+  //       Occupation:user.Occupation,
+  //        isVerified: user.confirm,
+  //        status: sample(["active", "banned"]),
+  //        role: sample(["User", "Fishermen", "Owner", "Officer"]),
+  //      }));
+  //      setUserList(userlist);
+  //   // });
+  //  }, []);
 
-  //   useEffect(() => {
-  //     TripLogService.getTripLogs().then((triplogs) => {
-  //       const userlist = triplogs.data.map((triplog, index) => ({
-  //         id: triplog.tripId,
-  //         SkipperID: triplog.SkipperID,
-  //         isVerified: triplog.confirm,
-  //         WesselID: triplog.WesselID,
-  //         Harbor: triplog.Harbor,
-  //         DepartureDate: triplog.DepartureDate,
-  //         DepartureTime: triplog.DepartureTime,
-  //         status: sample(["viewed", "modified", "submitted"]),
-  //         record: triplog,
-  //       }));
-  //       setUserList(userlist);
-  //     });
-  //   }, []);
+    useEffect(() => {
+      FishermenService.getFishermens().then((fishermens) => {
+        console.log(fishermens);
+        const userlist = fishermens.data.map((fishermen, index) => ({
+          FishermenId: fishermen.FishermenId,
+          Surname: fishermen.Surname,
+          FIDivision: fishermen.FIDivision,
+          FDistrict: fishermen.FDistrict,
+          FZone: fishermen.FZone,
+          Occupation:fishermen.Occupation,
+          status: sample(["viewed", "modified", "submitted"]),
+          record: fishermen,
+        }));
+        setUserList(userlist);
+      });
+    }, []);
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
@@ -298,10 +299,10 @@ export default function ELogBook() {
                       )
                       .map((row) => {
                         const {
-                          id,
+                          FishermenId,
                           Occupation,
-                          name,
-                          FDivision,
+                          Surname,
+                          FIDivision,
                           FDistrict,
                           FZone,
 
@@ -310,7 +311,7 @@ export default function ELogBook() {
                           isVerified,
                           record,
                         } = row;
-                        const isItemSelected = selected.indexOf(id) !== -1;
+                        const isItemSelected = selected.indexOf(FishermenId) !== -1;
 
                         return (
                           <TableRow
@@ -319,7 +320,7 @@ export default function ELogBook() {
                               setKey(record);
                               setOpen(true);
                             }}
-                            key={id}
+                            key={FishermenId}
                             tabIndex={-1}
                             role="checkbox"
                             selected={isItemSelected}
@@ -328,7 +329,7 @@ export default function ELogBook() {
                             <TableCell padding="checkbox">
                               <Checkbox
                                 checked={isItemSelected}
-                                onChange={(event) => handleClick(event, id)}
+                                onChange={(event) => handleClick(event, FishermenId)}
                               />
                             </TableCell>
                             <TableCell
@@ -341,13 +342,13 @@ export default function ELogBook() {
                                 alignItems="center"
                                 spacing={2}
                               >
-                                <Typography variant="subtitle2" noWrap>
-                                  {id}
+                                <Typography variant="subtitle2" noWrap align="Right">
+                                  {FishermenId}
                                 </Typography>
                               </Stack>
                             </TableCell>
-                            <TableCell align="left">{name}</TableCell>
-                            <TableCell align="left">{FDivision}</TableCell>
+                            <TableCell align="left">{Surname}</TableCell>
+                            <TableCell align="left">{FIDivision}</TableCell>
                             <TableCell align="left">{FDistrict}</TableCell>
                             <TableCell align="left">{FZone}</TableCell>
                             <TableCell align="left">{Occupation}</TableCell>
