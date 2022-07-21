@@ -26,6 +26,7 @@ import AuthService from "./services/auth.service";
 import AuthContext from "./services/auth-context";
 import OwnerProfile from "./pages/OwnerProfile";
 import ELogBook from "./pages/ElogBook";
+import Fishermen from "./pages/Fishermen";
 // ----------------------------------------------------------------------
 
 export default function App() {
@@ -56,6 +57,7 @@ export default function App() {
           <Route path="editprofile" element={<EditProfile />} />
           <Route path="departure" element={<DepartureFrom />} />
           <Route path="elogbook" element={<ELogBook />} />
+          <Route path="fishermen" element={<Fishermen />} />
           <Route path="add_officer" element={<AddOfficer />} />
         </Route>
         <Route path="/" element={<LogoOnlyLayout />}>
