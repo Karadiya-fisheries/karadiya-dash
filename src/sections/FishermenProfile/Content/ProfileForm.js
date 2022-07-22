@@ -23,10 +23,9 @@ import {
 import { LoadingButton } from "@mui/lab";
 // component
 import Iconify from "../../../components/Iconify";
-import FishermenService from "../../../services/fishermen.service";
 // ----------------------------------------------------------------------
 
-export default function ProfileForm({id}) {
+export default function ProfileForm({ id }) {
   const [USERLIST, setUserList] = useState([]);
   const navigate = useNavigate();
   const [log, setLog] = useState(null);
@@ -45,12 +44,12 @@ export default function ProfileForm({id}) {
   ];
 
   const OccuType = [
-    { label: "Full Time", value: "full time" },
-    { label: "Part Time", value: "part time" },
+    { label: "Full Time", value: "Full Time" },
+    { label: "Part Time", value: "Part Time" },
   ];
   const AssocAct = [
-    { label: "Supply", value: "supply" },
-    { label: "Catch", value: "catch" },
+    { label: "Supply", value: "Supply" },
+    { label: "Catch", value: "Catch" },
   ];
 
   const RegisterSchema = Yup.object().shape({
@@ -79,35 +78,14 @@ export default function ProfileForm({id}) {
       OtherNames: id.OtherNames,
       NicNo: id.NicNo,
       NumOfBoats: id.NumOfBoats,
-      FZone: [],
-      BoatCat: ["HHII","HI3JI","FY"],
-      NumOfBoats: "",
-      OccuType: "",
-      FOpType: [],
-      AssocAct: "",
-      
+      FZone: id.FZone,
+      BoatCat: id.BoatCat,
+      OccuType: id.OccuType,
+      FOpType: id.FOpType,
+      AssocAct: id.AssocAct,
     });
     console.log(log);
   }, []);
-
-  // useEffect(() => {
-  //   FishermenService.getFishermens().then((fishermens) => {
-  //     console.log(fishermens);
-  //     const userlist = fishermens.data.map((fishermen, index) => ({
-  //       FIDivision: fishermen.FIDivision,
-  //       GNDivision: fishermen.GNDivision,
-  //       DSDivision: fishermen.DSDivision,
-  //       FDistrict: fishermen.FDistrict,
-  //       Surname: fishermen.Surname,
-  //       OtherNames: fishermen.OtherNames,
-  //       NicNo: fishermen.NicNo,
-  //       NumOfBoats: fishermen.NumOfBoats,
-  //       //status: sample(["viewed", "modified", "submitted"]),
-  //       record: fishermen,
-  //     }));
-  //     setUserList(userlist);
-  //   });
-  // }, []);
 
   const formik = useFormik({
     initialValues: log,
@@ -121,10 +99,14 @@ export default function ProfileForm({id}) {
     },
   });
 
-  
-
-
-  const { errors, touched, handleSubmit, isSubmitting, getFieldProps, values } = formik;
+  const {
+    errors,
+    touched,
+    handleSubmit,
+    isSubmitting,
+    getFieldProps,
+    setFieldValue,
+  } = formik;
 
   return (
     <FormikProvider value={formik}>
@@ -217,9 +199,7 @@ export default function ProfileForm({id}) {
                       value={name}
                       key={index}
                       as={FormControlLabel}
-                      control={
-                        <Checkbox checked={values.BoatCat.includes(name)} />
-                      }
+                      control={<Checkbox {...getFieldProps("BoatCat")} />}
                       label={name}
                     />
                   ))}
@@ -234,9 +214,7 @@ export default function ProfileForm({id}) {
                     value={name.value}
                     key={index}
                     as={FormControlLabel}
-                    control={
-                      <Checkbox checked={values.FZone.includes(name.value)} />
-                    }
+                    control={<Checkbox {...getFieldProps("FZone")} />}
                     label={name.label}
                   />
                 ))}
@@ -250,9 +228,7 @@ export default function ProfileForm({id}) {
                     value={name.value}
                     key={index}
                     as={FormControlLabel}
-                    control={
-                      <Checkbox checked={values.FOpType.includes(name.value)} />
-                    }
+                    control={<Checkbox {...getFieldProps("FOpType")} />}
                     label={name.label}
                   />
                 ))}
@@ -263,6 +239,9 @@ export default function ProfileForm({id}) {
                   aria-labelledby="OccuType"
                   defaultValue="Part Time"
                   name="radio-buttons-group"
+                  onChange={(event) => {
+                    setFieldValue("OccuType", event.currentTarget.value);
+                  }}
                 >
                   {OccuType?.map((name, index) => (
                     <Field
@@ -271,9 +250,7 @@ export default function ProfileForm({id}) {
                       value={name.value}
                       key={index}
                       as={FormControlLabel}
-                      control={
-                        <Radio checked={values.OccuType.includes(name.value)} />
-                      }
+                      control={<Radio />}
                       label={name.label}
                     />
                   ))}
@@ -285,8 +262,11 @@ export default function ProfileForm({id}) {
                 </FormLabel>
                 <RadioGroup
                   aria-labelledby="AssocAct"
-                  defaultValue="Supply"
+                  value={id.AssocAct}
                   name="radio-buttons-group"
+                  onChange={(event) => {
+                    setFieldValue("AssocAct", event.currentTarget.value);
+                  }}
                 >
                   {AssocAct?.map((name, index) => (
                     <Field
@@ -295,9 +275,7 @@ export default function ProfileForm({id}) {
                       value={name.value}
                       key={index}
                       as={FormControlLabel}
-                      control={
-                        <Radio checked={values.AssocAct.includes(name.value)} />
-                      }
+                      control={<Radio />}
                       label={name.label}
                     />
                   ))}
