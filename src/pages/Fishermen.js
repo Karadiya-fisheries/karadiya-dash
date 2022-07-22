@@ -342,7 +342,7 @@ export default function ELogBook() {
                                 alignItems="center"
                                 spacing={2}
                               >
-                                <Typography variant="subtitle2" noWrap align="Right">
+                                <Typography variant="subtitle2" noWrap align="center">
                                   {FishermenId}
                                 </Typography>
                               </Stack>
@@ -419,6 +419,7 @@ export default function ELogBook() {
                 Back
               </Fab>
             </Box>
+            {console.log(key)}
             <FishermenProfile id={key} />
           </>
         )}

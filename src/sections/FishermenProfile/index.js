@@ -5,12 +5,12 @@ import { theme } from "./../../theme/helpers";
 import Cover from "./Cover";
 import Main from "./Main";
 
-export default function App() {
+export default function App({id}) {
   return (
     <SimpleBar style={{ maxHeight: "90vh" }}>
       <ChakraProvider theme={theme}>
         <Cover />
-        <Main />
+        <Main id={id} />
       </ChakraProvider>
     </SimpleBar>
   );

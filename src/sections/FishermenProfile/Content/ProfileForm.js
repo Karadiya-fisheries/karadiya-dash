@@ -1,5 +1,5 @@
 import * as Yup from "yup";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   useFormik,
   Form,
@@ -23,11 +23,13 @@ import {
 import { LoadingButton } from "@mui/lab";
 // component
 import Iconify from "../../../components/Iconify";
-
+import FishermenService from "../../../services/fishermen.service";
 // ----------------------------------------------------------------------
 
-export default function ProfileForm() {
+export default function ProfileForm({id}) {
+  const [USERLIST, setUserList] = useState([]);
   const navigate = useNavigate();
+  const [log, setLog] = useState(null);
   const BoatCat = ["IMUL", "NTRB", "MTRB", "IDAY", "NBSB", "OFRP"];
   const FZone = [
     { label: "Internal waters", value: "internal waters" },
@@ -66,33 +68,61 @@ export default function ProfileForm() {
     AssocAct: Yup.string().required("Associate Occupation required"),
   });
 
+  useEffect(() => {
+    console.log(id);
+    setLog({
+      FIDivision: id.FIDivision,
+      GNDivision: id.GNDivision,
+      DSDivision: id.DSDivision,
+      FDistrict: id.FDistrict,
+      Surname: id.Surname,
+      OtherNames: id.OtherNames,
+      NicNo: id.NicNo,
+      NumOfBoats: id.NumOfBoats,
+      // HookNo: id.HookNo,
+      // HookType: id.HookType,
+      // Depth: id.Depth,
+      // Bait: id.Bait,
+      // CatchRecords: id.CatchRecords,
+    });
+    console.log(log);
+  }, []);
+
+  // useEffect(() => {
+  //   FishermenService.getFishermens().then((fishermens) => {
+  //     console.log(fishermens);
+  //     const userlist = fishermens.data.map((fishermen, index) => ({
+  //       FIDivision: fishermen.FIDivision,
+  //       GNDivision: fishermen.GNDivision,
+  //       DSDivision: fishermen.DSDivision,
+  //       FDistrict: fishermen.FDistrict,
+  //       Surname: fishermen.Surname,
+  //       OtherNames: fishermen.OtherNames,
+  //       NicNo: fishermen.NicNo,
+  //       NumOfBoats: fishermen.NumOfBoats,
+  //       //status: sample(["viewed", "modified", "submitted"]),
+  //       record: fishermen,
+  //     }));
+  //     setUserList(userlist);
+  //   });
+  // }, []);
+
   const formik = useFormik({
-    initialValues: {
-      FIDivision: "",
-      GNDivision: "",
-      DSDivision: "",
-      FDistrict: "",
-      Surname: "",
-      OtherNames: "",
-      NicNo: "",
-      FZone: [],
-      BoatCat: [],
-      NumOfBoats: "",
-      OccuType: "",
-      FOpType: [],
-      AssocAct: "",
-    },
+    initialValues: log,
+    enableReinitialize: true,
     validationSchema: RegisterSchema,
-    onSubmit: (data, actions) => {
+    onSubmit: (id, actions) => {
       setTimeout(() => {
         actions.setSubmitting(false);
       }, 1000);
-      console.log(data);
+      console.log(id);
     },
   });
 
-  const { errors, touched, handleSubmit, isSubmitting, getFieldProps, values } =
-    formik;
+  
+
+
+  const { errors, touched, handleSubmit, isSubmitting, getFieldProps, values } = formik;
 
   return (
     <FormikProvider value={formik}>
@@ -167,111 +197,7 @@ export default function ProfileForm() {
             <Typography mb={2} variant="subtitle1">
               Fishing Details
             </Typography>
-            <Stack direction={"column"} spacing={4}>
-              <TextField
-                fullWidth
-                label="Number of Boats"
-                {...getFieldProps("NumOfBoats")}
-                error={Boolean(touched.NumOfBoats && errors.NumOfBoats)}
-                helperText={touched.NumOfBoats && errors.NumOfBoats}
-              />
-              <FormGroup>
-                <FormLabel>Catagories of Boats</FormLabel>
-                <Stack direction={"row"} spacing={2}>
-                  {BoatCat?.map((name, index) => (
-                    <Field
-                      type="checkbox"
-                      name="BoatCat"
-                      value={name}
-                      key={index}
-                      as={FormControlLabel}
-                      control={
-                        <Checkbox checked={values.BoatCat.includes(name)} />
-                      }
-                      label={name}
-                    />
-                  ))}
-                </Stack>
-              </FormGroup>
-              <FormGroup>
-                <FormLabel>Fishing Zone</FormLabel>
-                {FZone?.map((name, index) => (
-                  <Field
-                    type="checkbox"
-                    name="FZone"
-                    value={name.value}
-                    key={index}
-                    as={FormControlLabel}
-                    control={
-                      <Checkbox checked={values.FZone.includes(name.value)} />
-                    }
-                    label={name.label}
-                  />
-                ))}
-              </FormGroup>
-              <FormGroup>
-                <FormLabel>Nature of Fishing Operation</FormLabel>
-                {FOpType?.map((name, index) => (
-                  <Field
-                    type="checkbox"
-                    name="FOpType"
-                    value={name.value}
-                    key={index}
-                    as={FormControlLabel}
-                    control={
-                      <Checkbox checked={values.FOpType.includes(name.value)} />
-                    }
-                    label={name.label}
-                  />
-                ))}
-              </FormGroup>
-              <FormGroup>
-                <FormLabel id="OccuType">Nature of Occupation</FormLabel>
-                <RadioGroup
-                  aria-labelledby="OccuType"
-                  defaultValue="Part Time"
-                  name="radio-buttons-group"
-                >
-                  {OccuType?.map((name, index) => (
-                    <Field
-                      type="radio"
-                      name="OccuType"
-                      value={name.value}
-                      key={index}
-                      as={FormControlLabel}
-                      control={
-                        <Radio checked={values.OccuType.includes(name.value)} />
-                      }
-                      label={name.label}
-                    />
-                  ))}
-                </RadioGroup>
-              </FormGroup>
-              <FormGroup>
-                <FormLabel id="AssocAct">
-                  Associate Occupational Activites
-                </FormLabel>
-                <RadioGroup
-                  aria-labelledby="AssocAct"
-                  defaultValue="Supply"
-                  name="radio-buttons-group"
-                >
-                  {AssocAct?.map((name, index) => (
-                    <Field
-                      type="radio"
-                      name="AssocAct"
-                      value={name.value}
-                      key={index}
-                      as={FormControlLabel}
-                      control={
-                        <Radio checked={values.AssocAct.includes(name.value)} />
-                      }
-                      label={name.label}
-                    />
-                  ))}
-                </RadioGroup>
-              </FormGroup>
-            </Stack>
+            
           </Box>
         </Stack>
         <LoadingButton
