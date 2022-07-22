@@ -69,7 +69,7 @@ export default function ProfileForm({id}) {
   });
 
   useEffect(() => {
-    console.log(id);
+    // console.log(id);
     setLog({
       FIDivision: id.FIDivision,
       GNDivision: id.GNDivision,
@@ -79,11 +79,13 @@ export default function ProfileForm({id}) {
       OtherNames: id.OtherNames,
       NicNo: id.NicNo,
       NumOfBoats: id.NumOfBoats,
-      // HookNo: id.HookNo,
-      // HookType: id.HookType,
-      // Depth: id.Depth,
-      // Bait: id.Bait,
-      // CatchRecords: id.CatchRecords,
+      FZone: [],
+      BoatCat: ["HHII","HI3JI","FY"],
+      NumOfBoats: "",
+      OccuType: "",
+      FOpType: [],
+      AssocAct: "",
+      
     });
     console.log(log);
   }, []);
@@ -197,7 +199,111 @@ export default function ProfileForm({id}) {
             <Typography mb={2} variant="subtitle1">
               Fishing Details
             </Typography>
-            
+            <Stack direction={"column"} spacing={4}>
+              <TextField
+                fullWidth
+                label="Number of Boats"
+                {...getFieldProps("NumOfBoats")}
+                error={Boolean(touched.NumOfBoats && errors.NumOfBoats)}
+                helperText={touched.NumOfBoats && errors.NumOfBoats}
+              />
+              <FormGroup>
+                <FormLabel>Catagories of Boats</FormLabel>
+                <Stack direction={"row"} spacing={2}>
+                  {BoatCat?.map((name, index) => (
+                    <Field
+                      type="checkbox"
+                      name="BoatCat"
+                      value={name}
+                      key={index}
+                      as={FormControlLabel}
+                      control={
+                        <Checkbox checked={values.BoatCat.includes(name)} />
+                      }
+                      label={name}
+                    />
+                  ))}
+                </Stack>
+              </FormGroup>
+              <FormGroup>
+                <FormLabel>Fishing Zone</FormLabel>
+                {FZone?.map((name, index) => (
+                  <Field
+                    type="checkbox"
+                    name="FZone"
+                    value={name.value}
+                    key={index}
+                    as={FormControlLabel}
+                    control={
+                      <Checkbox checked={values.FZone.includes(name.value)} />
+                    }
+                    label={name.label}
+                  />
+                ))}
+              </FormGroup>
+              <FormGroup>
+                <FormLabel>Nature of Fishing Operation</FormLabel>
+                {FOpType?.map((name, index) => (
+                  <Field
+                    type="checkbox"
+                    name="FOpType"
+                    value={name.value}
+                    key={index}
+                    as={FormControlLabel}
+                    control={
+                      <Checkbox checked={values.FOpType.includes(name.value)} />
+                    }
+                    label={name.label}
+                  />
+                ))}
+              </FormGroup>
+              <FormGroup>
+                <FormLabel id="OccuType">Nature of Occupation</FormLabel>
+                <RadioGroup
+                  aria-labelledby="OccuType"
+                  defaultValue="Part Time"
+                  name="radio-buttons-group"
+                >
+                  {OccuType?.map((name, index) => (
+                    <Field
+                      type="radio"
+                      name="OccuType"
+                      value={name.value}
+                      key={index}
+                      as={FormControlLabel}
+                      control={
+                        <Radio checked={values.OccuType.includes(name.value)} />
+                      }
+                      label={name.label}
+                    />
+                  ))}
+                </RadioGroup>
+              </FormGroup>
+              <FormGroup>
+                <FormLabel id="AssocAct">
+                  Associate Occupational Activites
+                </FormLabel>
+                <RadioGroup
+                  aria-labelledby="AssocAct"
+                  defaultValue="Supply"
+                  name="radio-buttons-group"
+                >
+                  {AssocAct?.map((name, index) => (
+                    <Field
+                      type="radio"
+                      name="AssocAct"
+                      value={name.value}
+                      key={index}
+                      as={FormControlLabel}
+                      control={
+                        <Radio checked={values.AssocAct.includes(name.value)} />
+                      }
+                      label={name.label}
+                    />
+                  ))}
+                </RadioGroup>
+              </FormGroup>
+            </Stack>
           </Box>
         </Stack>
         <LoadingButton
