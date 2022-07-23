@@ -7,7 +7,7 @@ const getIcon = (name) => <Iconify icon={name} width={22} height={22} />;
 
 const navConfig = [
   {
-    title: "Dashboard",
+    title: "Overview",
     path: "/dashboard/app",
     icon: getIcon("eva:pie-chart-2-fill"),
   },
@@ -44,6 +44,11 @@ const navConfig = [
   {
     title: "ElogBook",
     path: "/dashboard/elogBook",
+    icon: getIcon("eva:file-text-fill"),
+  },
+  {
+    title: "Add Officer",
+    path: "/dashboard/add_officer",
     icon: getIcon("eva:file-text-fill"),
   },
   {
