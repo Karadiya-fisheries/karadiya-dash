@@ -141,24 +141,7 @@ export default function ElogBookForm({ id }) {
                     helperText={touched.Email && errors.Email}
                   />
                 </Stack>
-                {/* <TextField
-                  fullWidth
-                  label="No of Hooks"
-                  InputLabelProps={{ shrink: true }}
-                  disabled={edit}
-                  //{...getFieldProps("HookNo")}
-                  error={Boolean(touched.HookNo && errors.HookNo)}
-                  helperText={touched.HookNo && errors.HookNo}
-                /> */}
-
-                {/* <TextField
-                  fullWidth
-                  label="Depth(m)"
-                  InputLabelProps={{ shrink: true }}
-                  //{...getFieldProps("Depth")}
-                  error={Boolean(touched.Depth && errors.Depth)}
-                  helperText={touched.Depth && errors.Depth}
-                /> */}
+                
               </Stack>
             </Box>
             <Box p={2} border="1px solid #E2E8F0" borderRadius={1}>
@@ -195,24 +178,7 @@ export default function ElogBookForm({ id }) {
                     helperText={touched.SkipperNo && errors.SkipperNo}
                   />
                 </Stack>
-                {/* <TextField
-                  fullWidth
-                  label="No of Hooks"
-                  InputLabelProps={{ shrink: true }}
-                  disabled={edit}
-                  //{...getFieldProps("HookNo")}
-                  error={Boolean(touched.HookNo && errors.HookNo)}
-                  helperText={touched.HookNo && errors.HookNo}
-                /> */}
-
-                {/* <TextField
-                  fullWidth
-                  label="Depth(m)"
-                  InputLabelProps={{ shrink: true }}
-                  //{...getFieldProps("Depth")}
-                  error={Boolean(touched.Depth && errors.Depth)}
-                  helperText={touched.Depth && errors.Depth}
-                /> */}
+                
               </Stack>
             </Box>
             <Box p={2} border="1px solid #E2E8F0" borderRadius={1}>
@@ -311,19 +277,7 @@ export default function ElogBookForm({ id }) {
                     helperText={touched.Vms && errors.Vms}
                   />
                 
-                {/* <DesktopDatePicker
-                  label="Departure Date"
-                  inputFormat="yyyy-MM-dd"
-                  //{...getFieldProps("DepartureDate")}
-                  renderInput={(params) => <TextField {...params} />}
-                /> */}
-
-                {/* <TimePicker
-                  label="Departure Time"
-                  inputFormat="h:m:s"
-                  {...getFieldProps("DepartureTime")}
-                  renderInput={(params) => <TextField {...params} />}
-                /> */}
+                
               </Stack>
             </Box>
 
@@ -397,174 +351,7 @@ export default function ElogBookForm({ id }) {
               </Stack>
             </Box>
 
-            {/* <Box p={2} border="1px solid #E2E8F0" borderRadius={1}>
-              <Typography mb={2} variant="subtitle1">
-                Fishing Details
-              </Typography>
-              <Stack direction={"column"} spacing={4}>
-                <Box p={2} border="1px solid #E2E8F0" borderRadius={1}>
-                  <Typography mb={2} variant="subtitle1">
-                    Catch Details
-                  </Typography>
-                  {id.CatchRecords.map((record, index) => {
-                    return (
-                      <Stack direction={"column"} mb={1} spacing={2}>
-                        <Typography variant="subtitle1">
-                          Catch ID No.{record.CatchId} Created At{" "}
-                          {record.createdAt.substring(0, 10)}
-                        </Typography>
-                        <Divider />
-
-                        <DesktopDatePicker
-                          label="Fishing Date"
-                          inputFormat="yyyy-MM-dd"
-                          {...getFieldProps(
-                            `CatchRecords[${index}.FishingDate]`
-                          )}
-                          renderInput={(params) => <TextField {...params} />}
-                        />
-
-                        <Stack direction={"row"} spacing={3}>
-                          <Stack direction={"column"} spacing={4}>
-                            <Typography variant="subtitle2">
-                              GPS Start
-                            </Typography>
-
-                            <TextField
-                              fullWidth
-                              disabled={edit}
-                              InputLabelProps={{ shrink: true }}
-                              label="Start Latitude"
-                              {...getFieldProps(
-                                `CatchRecords[${index}.GPSPoint.start.lat]`
-                              )}
-                              error={Boolean(
-                                touched.Latitude && errors.Latitude
-                              )}
-                              helperText={touched.Latitude && errors.Latitude}
-                            />
-                            <TextField
-                              fullWidth
-                              disabled={edit}
-                              InputLabelProps={{ shrink: true }}
-                              label="Start Longitude"
-                              {...getFieldProps(
-                                `CatchRecords[${index}.GPSPoint.start.long]`
-                              )}
-                              error={Boolean(
-                                touched.BranchLine && errors.BranchLine
-                              )}
-                              helperText={
-                                touched.BranchLine && errors.BranchLine
-                              }
-                            />
-                          </Stack>
-                          <Stack direction={"column"} spacing={4}>
-                            <Typography variant="subtitle2">GPS End</Typography>
-                            <TextField
-                              fullWidth
-                              disabled={edit}
-                              InputLabelProps={{ shrink: true }}
-                              label="End Latitude"
-                              {...getFieldProps(
-                                `CatchRecords[${index}.GPSPoint.end.lat]`
-                              )}
-                              error={Boolean(
-                                touched.MainLine && errors.MainLine
-                              )}
-                              helperText={touched.MainLine && errors.MainLine}
-                            />
-                            <TextField
-                              fullWidth
-                              disabled={edit}
-                              InputLabelProps={{ shrink: true }}
-                              label="End Longitude"
-                              {...getFieldProps(
-                                `CatchRecords[${index}.GPSPoint.start.long]`
-                              )}
-                              error={Boolean(
-                                touched.BranchLine && errors.BranchLine
-                              )}
-                              helperText={
-                                touched.BranchLine && errors.BranchLine
-                              }
-                            />
-                          </Stack>
-                        </Stack>
-
-                        {record.Catch.map((recatch, index1) => {
-                          return (
-                            <Stack direction={"column"} spacing={3}>
-                              <Divider />
-                              <Typography variant="subtitle2">
-                                Fish Load No.{index1 + 1}
-                              </Typography>
-                              <TextField
-                                disabled={edit}
-                                InputLabelProps={{ shrink: true }}
-                                label="Quantity"
-                                {...getFieldProps(
-                                  `CatchRecords[${index}.Catch[${index1}.Qty]]`
-                                )}
-                                error={Boolean(
-                                  touched.BranchLine && errors.BranchLine
-                                )}
-                                helperText={
-                                  touched.BranchLine && errors.BranchLine
-                                }
-                              />
-
-                              <TextField
-                                disabled={edit}
-                                InputLabelProps={{ shrink: true }}
-                                label="Weight"
-                                {...getFieldProps(
-                                  `CatchRecords[${index}.Catch[${index1}.Weight]]`
-                                )}
-                                error={Boolean(
-                                  touched.BranchLine && errors.BranchLine
-                                )}
-                                helperText={
-                                  touched.BranchLine && errors.BranchLine
-                                }
-                              />
-                              <TextField
-                                disabled={edit}
-                                InputLabelProps={{ shrink: true }}
-                                label="Fish Type"
-                                {...getFieldProps(
-                                  `CatchRecords[${index}.Catch[${index1}.FishType]]`
-                                )}
-                                error={Boolean(
-                                  touched.BranchLine && errors.BranchLine
-                                )}
-                                helperText={
-                                  touched.BranchLine && errors.BranchLine
-                                }
-                              />
-                              <TextField
-                                disabled={edit}
-                                InputLabelProps={{ shrink: true }}
-                                label="Fish SubType"
-                                {...getFieldProps(
-                                  `CatchRecords[${index}.Catch[${index1}.FishSubType]]`
-                                )}
-                                error={Boolean(
-                                  touched.BranchLine && errors.BranchLine
-                                )}
-                                helperText={
-                                  touched.BranchLine && errors.BranchLine
-                                }
-                              />
-                            </Stack>
-                          );
-                        })}
-                      </Stack>
-                    );
-                  })}
-                </Box>
-              </Stack>
-            </Box> */}
+           
             <Stack direction="row" justifyContent="space-between" spacing={3}>
               <LoadingButton
                 fullWidth
