@@ -4,8 +4,8 @@ import { faker } from '@faker-js/faker';
 
 const POST_TITLES = [
   'Whiteboard Templates By Industry Leaders',
-  'Tesla Cybertruck-inspired camper trailer for Tesla fans who can’t just wait for the truck!',
-  'Designify Agency Landing Page Design',
+  'Calling for quotations for procurement of stationery required by the department (deadline extended to 07.09.2022)',
+  'The official website of the Department of Fisheries won the Gold Award in the BestWeb.lk competition',
   '✨What is Done is Done ✨',
   'Fresh Prince',
   'Six Socks Studio',
