@@ -34,20 +34,20 @@ import {
   UserMoreMenu,
 } from "../sections/@dashboard/user";
 import DepartureForm from "../sections/Departure/DepartureFrom";
+//import ElogBookForm from "../sections/ElogBook/ElogBookForm";
 import { sample } from "lodash";
-import TripLogService from "../services/triplog.service";
+import DepartureService from "../services/DepartureService";
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
-  { id: "tripId", label: "Trip ID", alignRight: false },
-  { id: "WesselID", label: "Wessel ID", alignRight: false },
-  { id: "SkipperID", label: "Skipper ID", alignRight: false },
-  { id: "Harbor", label: "Harbor", alignRight: false },
-  { id: "DepartureDate", label: "Departure Date", alignRight: false },
-  { id: "DepartureTime", label: "Departure Time", alignRight: false },
+  { id: "DepartureId", label: "Departure Id", alignRight: false },
+  { id: "IMULNumber", label: "IMUL Number", alignRight: false },
+  { id: "SkipperName", label: "Skipper Name", alignRight: false },
+  { id: "DepartingPort", label: "Departing Port", alignRight: false },
+  { id: "FishingZone", label: "FishingZone", alignRight: false },
   { id: "isVerified", label: "IsAccepted", alignRight: false },
   { id: "status", label: "Status", alignRight: false },
-
+ 
   { id: "" },
 ];
 const ContentStyle = styled(Modal)(({ theme }) => ({
@@ -132,17 +132,16 @@ export default function DepartureApproval() {
   const [key, setKey] = useState(null);
 
   useEffect(() => {
-    TripLogService.getTripLogs().then((triplogs) => {
-      const userlist = triplogs.data.map((triplog, index) => ({
-        id: triplog.tripId,
-        SkipperID: triplog.SkipperID,
-        isVerified: triplog.confirm,
-        WesselID: triplog.WesselID,
-        Harbor: triplog.Harbor,
-        DepartureDate: triplog.DepartureDate,
-        DepartureTime: triplog.DepartureTime,
+    DepartureService.getDepartures().then((departures) => {
+      console.log(departures);
+      const userlist = departures.data.map((departure, index) => ({
+        DepartureId:departure.DepartureId,
+        IMULNumber:departure.Imul,
+        SkipperName:departure.SkipperName,
+        DepartingPort:departure.DepartingPort,
+        FishingZone:departure.FishingZone,
         status: sample(["viewed", "modified", "submitted"]),
-        record: triplog,
+        record: departure,
       }));
       setUserList(userlist);
     });
@@ -256,19 +255,16 @@ export default function DepartureApproval() {
                       )
                       .map((row) => {
                         const {
-                          id,
-                          SkipperID,
-                          WesselID,
-                          Harbor,
-                          DepartureDate,
-                          DepartureTime,
-
+                          DepartureId,
+                          IMULNumber,
+                          SkipperName,
+                          DepartingPort,
+                          FishingZone,
                           status,
-                          avatarUrl,
                           isVerified,
                           record,
                         } = row;
-                        const isItemSelected = selected.indexOf(id) !== -1;
+                        const isItemSelected = selected.indexOf(DepartureId) !== -1;
 
                         return (
                           <TableRow
@@ -277,7 +273,7 @@ export default function DepartureApproval() {
                               setKey(record);
                               setOpen(true);
                             }}
-                            key={id}
+                            key={DepartureId}
                             tabIndex={-1}
                             role="checkbox"
                             selected={isItemSelected}
@@ -286,7 +282,7 @@ export default function DepartureApproval() {
                             <TableCell padding="checkbox">
                               <Checkbox
                                 checked={isItemSelected}
-                                onChange={(event) => handleClick(event, id)}
+                                onChange={(event) => handleClick(event, DepartureId)}
                               />
                             </TableCell>
                             <TableCell
@@ -300,15 +296,15 @@ export default function DepartureApproval() {
                                 spacing={2}
                               >
                                 <Typography variant="subtitle2" noWrap>
-                                  {id}
+                                  {DepartureId}
                                 </Typography>
                               </Stack>
                             </TableCell>
-                            <TableCell align="left">{WesselID}</TableCell>
-                            <TableCell align="left">{SkipperID}</TableCell>
-                            <TableCell align="left">{Harbor}</TableCell>
-                            <TableCell align="left">{DepartureDate}</TableCell>
-                            <TableCell align="left">{DepartureTime}</TableCell>
+                            <TableCell align="left">{IMULNumber}</TableCell>
+                            <TableCell align="left">{SkipperName}</TableCell>
+                            <TableCell align="left">{DepartingPort}</TableCell>
+                            <TableCell align="left">{FishingZone}</TableCell>
+                            {/* <TableCell align="left">{DepartureTime}</TableCell> */}
                             <TableCell align="left">
                               {isVerified ? "Yes" : "No"}
                             </TableCell>
