@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import { Link as RouterLink } from "react-router-dom";
 // material
 import { Grid, Button, Container, Stack, Typography } from "@mui/material";
@@ -11,6 +12,7 @@ import {
 } from "../sections/@dashboard/blog";
 // mock
 import POSTS from "../_mock/blog";
+import NoticeService from "../services/notice.service";
 
 // ----------------------------------------------------------------------
 
@@ -23,8 +25,28 @@ const SORT_OPTIONS = [
 // ----------------------------------------------------------------------
 
 export default function Blog() {
+  const [newPost, setNewpost] = useState(false);
+  const [post, setPost] = useState(null);
+
+  useEffect(() => {
+    NoticeService.getNotices().then((notices) => {
+      const posts = notices.data.map((notice) => ({
+        id: notice.NoticeId,
+        cover: notice.NoticeCover,
+        title: notice.NoticeTitle,
+        view: notice.NoticeView,
+        createdAt: notice.createdAt,
+        author: {
+          name: notice.user.fullname,
+          avatarUrl: notice.user.profileUrl,
+        },
+      }));
+      setPost(posts);
+    });
+  }, []);
+
   return (
-    <Page title="Dashboard: Blog">
+    <Page title="Dashboard: Notices">
       <Container>
         <Stack
           direction="row"
@@ -37,8 +59,6 @@ export default function Blog() {
           </Typography>
           <Button
             variant="contained"
-            component={RouterLink}
-            to="#"
             startIcon={<Iconify icon="eva:plus-fill" />}
           >
             New Post
@@ -51,12 +71,12 @@ export default function Blog() {
           alignItems="center"
           justifyContent="space-between"
         >
-          <BlogPostsSearch posts={POSTS} />
+          <BlogPostsSearch posts={post} />
           <BlogPostsSort options={SORT_OPTIONS} />
         </Stack>
 
         <Grid container spacing={3}>
-          {POSTS.map((post, index) => (
+          {post.map((post, index) => (
             <BlogPostCard key={post.id} post={post} index={index} />
           ))}
         </Grid>
