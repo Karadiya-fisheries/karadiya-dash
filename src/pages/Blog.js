@@ -9,6 +9,7 @@ import {
   BlogPostCard,
   BlogPostsSort,
   BlogPostsSearch,
+  BlogCreate,
 } from "../sections/@dashboard/blog";
 // mock
 import POSTS from "../_mock/blog";
@@ -26,7 +27,7 @@ const SORT_OPTIONS = [
 
 export default function Blog() {
   const [newPost, setNewpost] = useState(false);
-  const [post, setPost] = useState(null);
+  const [post, setPost] = useState([]);
 
   useEffect(() => {
     NoticeService.getNotices().then((notices) => {
@@ -35,6 +36,8 @@ export default function Blog() {
         cover: notice.NoticeCover,
         title: notice.NoticeTitle,
         view: notice.NoticeView,
+        text: notice.NoticeText,
+        cat: notice.NoticeCat,
         createdAt: notice.createdAt,
         author: {
           name: notice.user.fullname,
@@ -47,40 +50,49 @@ export default function Blog() {
 
   return (
     <Page title="Dashboard: Notices">
-      <Container>
-        <Stack
-          direction="row"
-          alignItems="center"
-          justifyContent="space-between"
-          mb={5}
-        >
-          <Typography variant="h4" gutterBottom>
-            Notices
-          </Typography>
-          <Button
-            variant="contained"
-            startIcon={<Iconify icon="eva:plus-fill" />}
+      {!newPost ? (
+        <Container>
+          <Stack
+            direction="row"
+            alignItems="center"
+            justifyContent="space-between"
+            mb={5}
           >
-            New Post
-          </Button>
-        </Stack>
+            <Typography variant="h4" gutterBottom>
+              Notices
+            </Typography>
+            <Button
+              variant="contained"
+              startIcon={<Iconify icon="eva:plus-fill" />}
+              onClick={() => {
+                setNewpost(true);
+              }}
+            >
+              New Post
+            </Button>
+          </Stack>
 
-        <Stack
-          mb={5}
-          direction="row"
-          alignItems="center"
-          justifyContent="space-between"
-        >
-          <BlogPostsSearch posts={post} />
-          <BlogPostsSort options={SORT_OPTIONS} />
-        </Stack>
+          <Stack
+            mb={5}
+            direction="row"
+            alignItems="center"
+            justifyContent="space-between"
+          >
+            <BlogPostsSearch posts={post} />
+            <BlogPostsSort options={SORT_OPTIONS} />
+          </Stack>
 
-        <Grid container spacing={3}>
-          {post.map((post, index) => (
-            <BlogPostCard key={post.id} post={post} index={index} />
-          ))}
-        </Grid>
-      </Container>
+          <Grid container spacing={3}>
+            {post.map((post, index) => (
+              <BlogPostCard key={post.id} post={post} index={index} />
+            ))}
+          </Grid>
+        </Container>
+      ) : (
+        <Container>
+          <BlogCreate />
+        </Container>
+      )}
     </Page>
   );
 }
