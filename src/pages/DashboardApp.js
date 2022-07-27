@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { faker } from "@faker-js/faker";
 // @mui
 import { useTheme } from "@mui/material/styles";
-import { Grid, Container, Typography } from "@mui/material";
+import { Grid, Container, Typography, Divider } from "@mui/material";
 // components
 import Page from "../components/Page";
 import Iconify from "../components/Iconify";
@@ -53,7 +53,7 @@ export default function DashboardApp() {
         <Typography variant="h4" sx={{ mb: 5 }}>
           Hi, Welcome back to Karadiya
         </Typography>
-
+        <Divider sx={{ mb: 4 }} />
         <Grid container spacing={3}>
           <Grid item xs={12} sm={6} md={3}>
             <AppWidgetSummary
@@ -107,7 +107,6 @@ export default function DashboardApp() {
               icon={"map:ice-fishing"}
             />
           </Grid>
-
           <Grid item xs={12} sm={6} md={3}>
             <AppWidgetSummary
               title="Pending Departure Approvels"
@@ -117,6 +116,24 @@ export default function DashboardApp() {
             />
           </Grid>
 
+          <Grid item xs={12} md={6} lg={4}>
+            <AppOrderTimeline
+              title="My Activity"
+              list={[...Array(5)].map((_, index) => ({
+                id: faker.datatype.uuid(),
+                title: [
+                  "Add Admin #4",
+                  "Accept ELog #45",
+                  "Edit Elog #45",
+                  "Departure Approval #34",
+                  "New Sale placed #46",
+                ][index],
+                type: `order${index + 1}`,
+                time: faker.date.past(),
+              }))}
+            />
+          </Grid>
+          <Divider />
           <Grid item xs={12} md={6} lg={8}>
             <AppWebsiteVisits
               title="Fishing Trips"
@@ -225,24 +242,6 @@ export default function DashboardApp() {
                 description: faker.name.jobTitle(),
                 image: `/static/mock-images/covers/cover_${index + 1}.jpg`,
                 postedAt: faker.date.recent(),
-              }))}
-            />
-          </Grid>
-
-          <Grid item xs={12} md={6} lg={4}>
-            <AppOrderTimeline
-              title="Order Timeline"
-              list={[...Array(5)].map((_, index) => ({
-                id: faker.datatype.uuid(),
-                title: [
-                  "1983, orders, $4220",
-                  "12 Invoices have been paid",
-                  "Order #37745 from September",
-                  "New order placed #XF-2356",
-                  "New order placed #XF-2346",
-                ][index],
-                type: `order${index + 1}`,
-                time: faker.date.past(),
               }))}
             />
           </Grid>

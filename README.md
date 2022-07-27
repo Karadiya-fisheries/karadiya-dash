@@ -1,4 +1,7 @@
-# Getting Started with Create React App
+# Karadiya Project React Dashboard Admin Panel
+
+## Intro
+This project serve as dashboard panel to karadiya fisheries information mangament system, used by fishery officers and boat owners to manage,modify and update crucial information and perform primary administrative tasks
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
 
