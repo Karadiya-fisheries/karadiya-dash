@@ -24,7 +24,7 @@ import { useContext, useEffect, useState } from "react";
 import AuthService from "./services/auth.service";
 import AuthContext from "./services/auth-context";
 import OwnerProfile from "./pages/OwnerProfile";
-import { BlogPost } from "./sections/@dashboard/blog";
+import { BlogCreate, BlogPost } from "./sections/@dashboard/blog";
 // ----------------------------------------------------------------------
 
 export default function App() {
@@ -50,6 +50,7 @@ export default function App() {
           <Route path="user" element={<User />} />
           <Route path="notices" element={<Blog />} />
           <Route path="notices/view/:id" element={<BlogPost />} />
+          <Route path="notices/create" element={<BlogCreate />} />
           <Route path="sales" element={<Products />} />
           <Route path="profile" element={<ProfieIndex />} />
           <Route path="owner/profile" element={<OwnerProfile />} />

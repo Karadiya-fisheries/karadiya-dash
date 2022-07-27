@@ -28,7 +28,6 @@ export default function BlogCreate() {
         authService.getCurrentUser().user.uid,
         data.NoticeTitle,
         data.NoticeCover,
-        data,
         data.NoticeCat,
         data.NoticeText,
         0
@@ -65,6 +64,15 @@ export default function BlogCreate() {
             type="email"
             label="Notice Title"
             {...getFieldProps("NoticeTitle")}
+          />
+
+          <TextField
+            id="standard-textarea"
+            label="Text Content"
+            placeholder="Write here..."
+            {...getFieldProps("NoticeText")}
+            multiline
+            variant="standard"
           />
 
           <LoadingButton

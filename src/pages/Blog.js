@@ -50,49 +50,46 @@ export default function Blog() {
 
   return (
     <Page title="Dashboard: Notices">
-      {!newPost ? (
-        <Container>
-          <Stack
-            direction="row"
-            alignItems="center"
-            justifyContent="space-between"
-            mb={5}
+      <Container>
+        <Stack
+          direction="row"
+          alignItems="center"
+          justifyContent="space-between"
+          mb={5}
+        >
+          <Typography variant="h4" gutterBottom>
+            Notices
+          </Typography>
+          <Button
+            to={{ pathname: "/dashboard/notices/create", replace: true }}
+            variant="contained"
+            startIcon={<Iconify icon="eva:plus-fill" />}
+            component={RouterLink}
           >
-            <Typography variant="h4" gutterBottom>
-              Notices
-            </Typography>
-            <Button
-              variant="contained"
-              startIcon={<Iconify icon="eva:plus-fill" />}
-              onClick={() => {
-                setNewpost(true);
-              }}
-            >
-              New Post
-            </Button>
-          </Stack>
+            New Post
+          </Button>
+        </Stack>
 
-          <Stack
-            mb={5}
-            direction="row"
-            alignItems="center"
-            justifyContent="space-between"
-          >
-            <BlogPostsSearch posts={post} />
-            <BlogPostsSort options={SORT_OPTIONS} />
-          </Stack>
+        <Stack
+          mb={5}
+          direction="row"
+          alignItems="center"
+          justifyContent="space-between"
+        >
+          <BlogPostsSearch posts={post} />
+          <BlogPostsSort options={SORT_OPTIONS} />
+        </Stack>
 
-          <Grid container spacing={3}>
-            {post.map((post, index) => (
-              <BlogPostCard key={post.id} post={post} index={index} />
-            ))}
-          </Grid>
-        </Container>
-      ) : (
-        <Container>
-          <BlogCreate />
-        </Container>
-      )}
+        <Grid container spacing={3}>
+          {post.map((post, index) => (
+            <BlogPostCard key={post.id} post={post} index={index} />
+          ))}
+        </Grid>
+      </Container>
+
+      <Container>
+        <BlogCreate />
+      </Container>
     </Page>
   );
 }
