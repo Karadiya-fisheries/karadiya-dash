@@ -14,6 +14,18 @@ class NoticeService {
     return axios.get(BASE_URL + NoticeId);
   }
 
+  getCoverById(NoticeId) {
+    return axios.get(BASE_URL + "cover/" + NoticeId);
+  }
+
+  setCover(NoticeId, cover) {
+    return axios.post(BASE_URL + "cover/" + NoticeId, cover);
+  }
+
+  setView(NoticeId, cover) {
+    return axios.post(BASE_URL + "view/" + NoticeId, cover);
+  }
+
   updateNotice(Notice, NoticeId) {
     return axios.put(`${BASE_URL}/${NoticeId}`, Notice);
   }

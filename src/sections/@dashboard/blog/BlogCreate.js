@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { useDropzone } from "react-dropzone";
 import styled from "styled-components";
 import { styled as MuiStyle } from "@mui/material/styles";
+import StorageService from "../../../firebase/upload";
 // material
 import {
   Stack,
@@ -70,6 +71,7 @@ const ImageContainer = styled.div`
 export default function BlogCreate() {
   const navigate = useNavigate();
   const [message, setMessage] = useState(false);
+  const [cover, setCover] = useState(null);
 
   const formik = useFormik({
     initialValues: {
@@ -90,7 +92,13 @@ export default function BlogCreate() {
       })
         .then(
           (notice) => {
-            navigate("/dashboard/notices/view/" + notice.data.NoticeId, {
+            console.log(notice);
+            console.log(cover);
+            StorageService.noticeCoverUploadHandler(
+              notice.data.NoticeId,
+              cover
+            );
+            navigate("/dashboard/notices", {
               replace: true,
             });
           },
@@ -123,7 +131,7 @@ export default function BlogCreate() {
   } = useDropzone({
     accept: "image/*",
     onDrop: (acceptedFiles) => {
-      console.log(acceptedFiles);
+      setCover(acceptedFiles[0]);
     },
     maxFiles: 1,
     noClick: true,

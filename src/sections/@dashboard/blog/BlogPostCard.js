@@ -12,8 +12,9 @@ import {
   CardContent,
 } from "@mui/material";
 // utils
-import { fDate } from "../../../utils/formatTime";
+import { fDate, fToNow } from "../../../utils/formatTime";
 import { fShortenNumber } from "../../../utils/formatNumber";
+import { isToday } from "date-fns";
 //
 import SvgIconStyle from "../../../components/SvgIconStyle";
 import Iconify from "../../../components/Iconify";
@@ -67,8 +68,10 @@ BlogPostCard.propTypes = {
 
 export default function BlogPostCard({ post, index }) {
   const { id, cover, title, view, text, cat, author, createdAt } = post;
-  const latestPostLarge = index === 0;
-  const latestPost = index === 1 || index === 2;
+  const latestPostLarge = cat === "Notice";
+  const latestPost = isToday(createdAt);
+  const distanceToNow = fToNow(createdAt);
+  console.log(latestPost);
 
   const POST_INFO = [{ number: view, icon: "eva:eye-fill" }];
 
@@ -147,6 +150,13 @@ export default function BlogPostCard({ post, index }) {
             sx={{ color: "text.disabled", display: "block" }}
           >
             {fDate(createdAt)}
+          </Typography>
+          <Typography
+            gutterBottom
+            variant="caption"
+            sx={{ color: "text.disabled", display: "block" }}
+          >
+            {distanceToNow}
           </Typography>
 
           <TitleStyle
