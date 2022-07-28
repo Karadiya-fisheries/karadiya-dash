@@ -26,7 +26,6 @@ const SORT_OPTIONS = [
 // ----------------------------------------------------------------------
 
 export default function Blog() {
-  const [newPost, setNewpost] = useState(false);
   const [post, setPost] = useState([]);
 
   useEffect(() => {
@@ -85,10 +84,6 @@ export default function Blog() {
             <BlogPostCard key={post.id} post={post} index={index} />
           ))}
         </Grid>
-      </Container>
-
-      <Container>
-        <BlogCreate />
       </Container>
     </Page>
   );
