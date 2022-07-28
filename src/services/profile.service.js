@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = "http://localhost:5000/profile/";
+const BASE_URL = "https://serene-woodland-83390.herokuapp.com/profile/";
 class ProfileService {
   getProfileById(uid) {
     return axios.get(BASE_URL + uid);

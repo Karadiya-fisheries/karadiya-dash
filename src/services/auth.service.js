@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "http://localhost:5000/api/auth/";
+const API_URL = "https://serene-woodland-83390.herokuapp.com/api/auth/";
 
 class AuthService {
   login(email, password) {
