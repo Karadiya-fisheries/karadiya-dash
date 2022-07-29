@@ -32,7 +32,7 @@ class StorageService {
 
   noticeCoverUploadHandler = (id, file) => {
     if (!file) {
-      alert("Please upload an image first!");
+      return null;
     }
 
     const storageRef = ref(storage, `/Notice/${file.name}`);

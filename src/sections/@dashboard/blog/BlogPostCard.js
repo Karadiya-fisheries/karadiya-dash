@@ -71,7 +71,6 @@ export default function BlogPostCard({ post, index }) {
   const latestPostLarge = cat === "Notice";
   const latestPost = isToday(createdAt);
   const distanceToNow = fToNow(createdAt);
-  console.log(latestPost);
 
   const POST_INFO = [{ number: view, icon: "eva:eye-fill" }];
 
@@ -131,7 +130,21 @@ export default function BlogPostCard({ post, index }) {
             }}
           />
 
-          <CoverImgStyle alt={title} src={cover} />
+          <CoverImgStyle
+            alt={title}
+            src={(cover) => {
+              if (cover === "auto") {
+                if (cat === "Notice") {
+                  return "static/mock-images/covers/Notice.png";
+                }
+                if (cat === "Article") {
+                  return "static/mock-images/covers/Article.png";
+                }
+              } else {
+                return cover;
+              }
+            }}
+          />
         </CardMediaStyle>
 
         <CardContent
