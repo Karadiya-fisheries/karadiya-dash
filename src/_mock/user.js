@@ -5,7 +5,7 @@ import StatService from "../services/stat.service";
 
 const users = [...Array(24)].map((_, index) => ({
   id: faker.datatype.uuid(),
-  avatarUrl: `/static/mock-images/avatars/avatar_${index + 1}.jpg`,
+  avatarUrl: `/static/mock-images/products/product_${setIndex}.jpg`,
   name: faker.name.findName(),
   company: faker.company.companyName(),
   isVerified: faker.datatype.boolean(),
