@@ -13,12 +13,16 @@ import {
   Typography,
   Paper,
   Container,
-  Card,
+  Button,
   IconButton,
   FormControl,
   InputLabel,
   Select,
   MenuItem,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
 } from "@mui/material";
 import PhotoCamera from "@mui/icons-material/PhotoCamera";
 
@@ -71,6 +75,7 @@ const ImageContainer = styled.div`
 export default function BlogCreate() {
   const navigate = useNavigate();
   const [message, setMessage] = useState(false);
+  const [copen, setCopen] = useState(false);
   const [cover, setCover] = useState(null);
 
   const formik = useFormik({
@@ -80,9 +85,16 @@ export default function BlogCreate() {
       NoticeText: "",
     },
     onSubmit: (data, actions) => {
+      if (!cover) {
+        setCopen(!copen);
+        actions.setSubmitting(false);
+        return null;
+      }
+
       setTimeout(() => {
         actions.setSubmitting(false);
       }, 10000);
+      console.log(cover);
       NoticeService.createNotice({
         uid: authService.getCurrentUser().uid,
         NoticeTitle: data.NoticeTitle,
@@ -92,8 +104,6 @@ export default function BlogCreate() {
       })
         .then(
           (notice) => {
-            console.log(notice);
-            console.log(cover);
             StorageService.noticeCoverUploadHandler(
               notice.data.NoticeId,
               cover
@@ -212,6 +222,39 @@ export default function BlogCreate() {
               </Stack>
             </Form>
           </FormikProvider>
+          <Dialog
+            open={copen}
+            onClose={() => {
+              setCopen(!copen);
+            }}
+            aria-labelledby="alert-dialog-title"
+            aria-describedby="alert-dialog-description"
+          >
+            <DialogContent>
+              <DialogContentText id="alert-dialog-description">
+                If you don't add cover image to your post, System will show
+                standard image accordingly.
+              </DialogContentText>
+            </DialogContent>
+            <DialogActions>
+              <Button
+                onClick={() => {
+                  setCover("auto");
+                  setCopen(!copen);
+                }}
+              >
+                Skip
+              </Button>
+              <Button
+                onClick={() => {
+                  setCopen(!copen);
+                }}
+                autoFocus
+              >
+                Add cover
+              </Button>
+            </DialogActions>
+          </Dialog>
         </RegisterStyle>
       </Container>
     </Page>

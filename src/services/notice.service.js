@@ -22,8 +22,8 @@ class NoticeService {
     return axios.post(BASE_URL + "cover/" + NoticeId, cover);
   }
 
-  setView(NoticeId, cover) {
-    return axios.post(BASE_URL + "view/" + NoticeId, cover);
+  setView(NoticeId, view) {
+    return axios.post(BASE_URL + "view/" + NoticeId, view);
   }
 
   updateNotice(Notice, NoticeId) {

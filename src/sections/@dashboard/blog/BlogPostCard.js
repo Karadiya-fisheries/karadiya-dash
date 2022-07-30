@@ -18,6 +18,7 @@ import { isToday } from "date-fns";
 //
 import SvgIconStyle from "../../../components/SvgIconStyle";
 import Iconify from "../../../components/Iconify";
+import { useState } from "react";
 
 // ----------------------------------------------------------------------
 
@@ -68,10 +69,23 @@ BlogPostCard.propTypes = {
 
 export default function BlogPostCard({ post, index }) {
   const { id, cover, title, view, text, cat, author, createdAt } = post;
+  let cov;
   const latestPostLarge = cat === "Notice";
   const latestPost = isToday(createdAt);
   const distanceToNow = fToNow(createdAt);
-  console.log(latestPost);
+
+  if (!cover) {
+    cov = "";
+  } else if (cover === "auto") {
+    if (cat === "Notice") {
+      cov = "/static/mock-images/covers/Notice.png";
+    }
+    if (cat === "Article") {
+      cov = "/static/mock-images/covers/Article.jpg";
+    }
+  } else {
+    cov = cover;
+  }
 
   const POST_INFO = [{ number: view, icon: "eva:eye-fill" }];
 
@@ -131,7 +145,7 @@ export default function BlogPostCard({ post, index }) {
             }}
           />
 
-          <CoverImgStyle alt={title} src={cover} />
+          <CoverImgStyle alt={title} src={cov} />
         </CardMediaStyle>
 
         <CardContent
