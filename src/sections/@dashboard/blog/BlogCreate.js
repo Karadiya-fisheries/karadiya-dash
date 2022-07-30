@@ -88,10 +88,13 @@ export default function BlogCreate() {
       if (!cover) {
         setCopen(!copen);
         actions.setSubmitting(false);
+        return null;
       }
+
       setTimeout(() => {
         actions.setSubmitting(false);
       }, 10000);
+      console.log(cover);
       NoticeService.createNotice({
         uid: authService.getCurrentUser().uid,
         NoticeTitle: data.NoticeTitle,
@@ -237,6 +240,7 @@ export default function BlogCreate() {
               <Button
                 onClick={() => {
                   setCover("auto");
+                  setCopen(!copen);
                 }}
               >
                 Skip

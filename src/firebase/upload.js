@@ -35,6 +35,11 @@ class StorageService {
       return null;
     }
 
+    if (file === "auto") {
+      noticeService.setCover(id, { NoticeCover: "auto" });
+      return null;
+    }
+
     const storageRef = ref(storage, `/Notice/${file.name}`);
 
     // progress can be paused and resumed. It also exposes progress updates.
