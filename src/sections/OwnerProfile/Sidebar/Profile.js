@@ -105,7 +105,7 @@ function Profile() {
         </Heading>
 
         <Text color="brand.gray" fontSize="sm">
-          Boat Owner
+          {user.roles[0] === "ROLE_OWNER" ? "Boat Owner" : "Fishery Officer"}
         </Text>
       </VStack>
     </VStack>
