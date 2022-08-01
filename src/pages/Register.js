@@ -65,7 +65,7 @@ export default function Register() {
     <Page title="Register">
       <RootStyle>
         <HeaderStyle>
-          {/* <Logo /> */}
+          <Logo />
           {smUp && (
             <Typography variant="body2" sx={{ mt: { md: -2 } }}>
               Already have an account? {""}
@@ -81,10 +81,7 @@ export default function Register() {
             {/* <Typography variant="h3" sx={{ px: 5, mt: 10, mb: 5 }}>
               For Digital Future, Manage your work with Karadiya
             </Typography> */}
-            <img
-              alt="register"
-              src="/static/mock-images/login4.jpg"
-            />
+            <img alt="register" src="/static/mock-images/login4.jpg" />
           </SectionStyle>
         )}
 

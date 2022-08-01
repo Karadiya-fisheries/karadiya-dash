@@ -41,10 +41,10 @@ export default function DashboardApp() {
     StatService.getTriplogCount().then((res) => setTriplogCount(res.data));
     StatService.getCatchCount().then((res) => setCatchCount(res.data));
     StatService.getPendingTriplogCount().then((res) =>
-      setPendingDepartureCount(res.data)
+      setPendingTriplogCount(res.data)
     );
     StatService.getPendingDepartureCount().then((res) =>
-      setPendingTriplogCount(res.data)
+      setPendingDepartureCount(res.data)
     );
   }, []);
   return (

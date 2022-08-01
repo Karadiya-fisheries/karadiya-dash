@@ -59,7 +59,7 @@ export default function RegisterForm({ officer }) {
           data.email,
           data.phone,
           data.password,
-          ["user", "admin"]
+          ["admin"]
         )
           .then(
             () => {
@@ -87,7 +87,8 @@ export default function RegisterForm({ officer }) {
           data.firstName + " " + data.lastName,
           data.email,
           data.phone,
-          data.password
+          data.password,
+          ["owner"]
         )
           .then(
             () => {
