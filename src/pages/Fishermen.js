@@ -34,7 +34,7 @@ import {
   UserMoreMenu,
 } from "../sections/@dashboard/user";
 import ElogBookForm from "../sections/ElogBook/ElogBookForm";
-import FishermenProfile from "../sections/FishermenProfile/index"
+import FishermenProfile from "../sections/FishermenProfile/index";
 import { sample } from "lodash";
 import FishermenService from "../services/fishermen.service";
 import TripLogService from "../services/triplog.service";
@@ -62,7 +62,7 @@ const dummyData = [
     FDivision: "South",
     FDistrict: "Galle",
     FZone: "PG8958",
-    Occupation:"fishermen"
+    Occupation: "fishermen",
   },
   {
     id: 1002,
@@ -70,10 +70,9 @@ const dummyData = [
     FDivision: "West",
     FDistrict: "Matara",
     FZone: "PG24896",
-    Occupation:"fishermen"
+    Occupation: "fishermen",
   },
 ];
-
 
 const ContentStyle = styled(Modal)(({ theme }) => ({
   maxWidth: 480,
@@ -158,7 +157,7 @@ export default function ELogBook() {
 
   // useEffect(() => {
   //   // StatService.getAllUsers().then((users) => {
-      
+
   //      const userlist = dummyData?.map((user, index) => ({
   //       fishermenId: user.fishermenId,
   //       name: user.name,
@@ -174,22 +173,22 @@ export default function ELogBook() {
   //   // });
   //  }, []);
 
-    useEffect(() => {
-      FishermenService.getFishermens().then((fishermens) => {
-        console.log(fishermens);
-        const userlist = fishermens.data.map((fishermen, index) => ({
-          FishermenId: fishermen.FishermenId,
-          Surname: fishermen.Surname,
-          FIDivision: fishermen.FIDivision,
-          FDistrict: fishermen.FDistrict,
-          FZone: fishermen.FZone,
-          Occupation:fishermen.Occupation,
-          status: sample(["viewed", "modified", "submitted"]),
-          record: fishermen,
-        }));
-        setUserList(userlist);
-      });
-    }, []);
+  useEffect(() => {
+    FishermenService.getFishermens().then((fishermens) => {
+      console.log(fishermens);
+      const userlist = fishermens.data.map((fishermen, index) => ({
+        FishermenId: fishermen.FishermenId,
+        Surname: fishermen.Surname,
+        FIDivision: fishermen.FIDivision,
+        FDistrict: fishermen.FDistrict,
+        FZone: fishermen.FZone,
+        Occupation: fishermen.Occupation,
+        status: sample(["viewed", "modified", "submitted"]),
+        record: fishermen,
+      }));
+      setUserList(userlist);
+    });
+  }, []);
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
@@ -248,7 +247,7 @@ export default function ELogBook() {
   const isUserNotFound = filteredUsers.length === 0;
 
   return (
-    <Page title="ELogBook">
+    <Page title="Fishermen">
       <Container>
         <Stack
           direction="row"
@@ -311,7 +310,8 @@ export default function ELogBook() {
                           isVerified,
                           record,
                         } = row;
-                        const isItemSelected = selected.indexOf(FishermenId) !== -1;
+                        const isItemSelected =
+                          selected.indexOf(FishermenId) !== -1;
 
                         return (
                           <TableRow
@@ -329,7 +329,9 @@ export default function ELogBook() {
                             <TableCell padding="checkbox">
                               <Checkbox
                                 checked={isItemSelected}
-                                onChange={(event) => handleClick(event, FishermenId)}
+                                onChange={(event) =>
+                                  handleClick(event, FishermenId)
+                                }
                               />
                             </TableCell>
                             <TableCell
@@ -342,7 +344,11 @@ export default function ELogBook() {
                                 alignItems="center"
                                 spacing={2}
                               >
-                                <Typography variant="subtitle2" noWrap align="center">
+                                <Typography
+                                  variant="subtitle2"
+                                  noWrap
+                                  align="center"
+                                >
                                   {FishermenId}
                                 </Typography>
                               </Stack>

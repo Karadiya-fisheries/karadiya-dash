@@ -3,7 +3,7 @@ import { Box } from "@chakra-ui/react";
 import Actions from "./Action";
 import Data from "./Data";
 import Profile from "./Profile";
-function Sidebar() {
+function Sidebar({ id }) {
   return (
     <Box
       as="aside"
@@ -17,7 +17,7 @@ function Sidebar() {
       style={{ transform: "translateY(-100px)" }}
     >
       <Profile />
-      <Data />
+      <Data id={id} />
       {<Actions />}
     </Box>
   );
