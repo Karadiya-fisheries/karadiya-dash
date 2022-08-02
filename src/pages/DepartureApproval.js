@@ -47,7 +47,7 @@ const TABLE_HEAD = [
   { id: "FishingZone", label: "FishingZone", alignRight: false },
   { id: "isVerified", label: "IsAccepted", alignRight: false },
   { id: "status", label: "Status", alignRight: false },
- 
+
   { id: "" },
 ];
 const ContentStyle = styled(Modal)(({ theme }) => ({
@@ -113,6 +113,13 @@ function applySortFilter(array, comparator, query) {
   return stabilizedThis.map((el) => el[0]);
 }
 
+const type = {
+  name: "departure approval",
+  delete: () => {
+    console.log("deleteDeparture");
+  },
+};
+
 export default function DepartureApproval() {
   const [USERLIST, setUserList] = useState([]);
 
@@ -135,11 +142,11 @@ export default function DepartureApproval() {
     DepartureService.getDepartures().then((departures) => {
       console.log(departures);
       const userlist = departures.data.map((departure, index) => ({
-        DepartureId:departure.DepartureId,
-        IMULNumber:departure.Imul,
-        SkipperName:departure.SkipperName,
-        DepartingPort:departure.DepartingPort,
-        FishingZone:departure.FishingZone,
+        DepartureId: departure.DepartureId,
+        IMULNumber: departure.Imul,
+        SkipperName: departure.SkipperName,
+        DepartingPort: departure.DepartingPort,
+        FishingZone: departure.FishingZone,
         status: sample(["viewed", "modified", "submitted"]),
         record: departure,
       }));
@@ -204,7 +211,7 @@ export default function DepartureApproval() {
   const isUserNotFound = filteredUsers.length === 0;
 
   return (
-    <Page title="ELogBook">
+    <Page title="Departure Approval">
       <Container>
         <Stack
           direction="row"
@@ -233,6 +240,7 @@ export default function DepartureApproval() {
               numSelected={selected.length}
               filtertripId={filtertripId}
               onFiltertripId={handleFilterBytripId}
+              type={type}
             />
 
             <Scrollbar>
@@ -264,7 +272,8 @@ export default function DepartureApproval() {
                           isVerified,
                           record,
                         } = row;
-                        const isItemSelected = selected.indexOf(DepartureId) !== -1;
+                        const isItemSelected =
+                          selected.indexOf(DepartureId) !== -1;
 
                         return (
                           <TableRow
@@ -282,7 +291,9 @@ export default function DepartureApproval() {
                             <TableCell padding="checkbox">
                               <Checkbox
                                 checked={isItemSelected}
-                                onChange={(event) => handleClick(event, DepartureId)}
+                                onChange={(event) =>
+                                  handleClick(event, DepartureId)
+                                }
                               />
                             </TableCell>
                             <TableCell

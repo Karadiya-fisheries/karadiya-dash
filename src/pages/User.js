@@ -168,7 +168,7 @@ export default function User() {
   const type = {
     name: "user",
     delete: () => {
-      console.log("delete");
+      console.log("deleteUser");
     },
   };
 

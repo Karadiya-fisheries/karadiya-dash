@@ -114,6 +114,12 @@ function applySortFilter(array, comparator, query) {
   }
   return stabilizedThis.map((el) => el[0]);
 }
+const type = {
+  name: "E-Log",
+  delete: () => {
+    console.log("deleteDeparture");
+  },
+};
 
 export default function ELogBook() {
   const [USERLIST, setUserList] = useState([]);
@@ -207,7 +213,7 @@ export default function ELogBook() {
   const isUserNotFound = filteredUsers.length === 0;
 
   return (
-    <Page title="ELogBook">
+    <Page title="E-LogBook">
       <Container>
         <Stack
           direction="row"
@@ -217,7 +223,7 @@ export default function ELogBook() {
         >
           {!open && (
             <>
-              <Typography variant="h4">ELogBook</Typography>
+              <Typography variant="h4">E-LogBook</Typography>
               <Button
                 variant="contained"
                 component={RouterLink}
@@ -236,6 +242,7 @@ export default function ELogBook() {
               numSelected={selected.length}
               filtertripId={filtertripId}
               onFiltertripId={handleFilterBytripId}
+              type={type}
             />
 
             <Scrollbar>
