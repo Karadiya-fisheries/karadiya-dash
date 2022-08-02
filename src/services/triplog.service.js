@@ -15,7 +15,7 @@ class TripLogService {
   }
 
   updateTripLog(TripLog, TripLogId) {
-    return axios.put(`${BASE_URL}/${TripLogId}`, TripLog);
+    return axios.patch(`${BASE_URL}/${TripLogId}`, TripLog);
   }
 
   deleteTripLog(TripLogId) {

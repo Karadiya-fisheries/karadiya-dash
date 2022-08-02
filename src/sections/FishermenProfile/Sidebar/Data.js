@@ -1,8 +1,7 @@
 import { Box, Text, VStack } from "@chakra-ui/react";
-import authservice from "../../../services/auth.service";
 
-function Data() {
-  const user = authservice.getCurrentUser();
+function Data({ id }) {
+  const user = id.user;
   const list = [
     {
       id: 1,
@@ -18,8 +17,8 @@ function Data() {
     },
     {
       id: 3,
-      name: "Tel/Phone",
-      value: user.phone,
+      name: "City",
+      value: id.FDistrict,
       color: "cadet",
     },
   ];

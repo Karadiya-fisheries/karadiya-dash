@@ -10,6 +10,10 @@ class StatService {
   getPendingTriplogCount() {
     return axios.get(API_URL + "/query/pending/triplog/count");
   }
+
+  getIfOwner(uid) {
+    return axios.get(API_URL + "/query/user/" + uid);
+  }
   getAllUserCount() {
     return axios.get(API_URL + "/stat/user/count");
   }

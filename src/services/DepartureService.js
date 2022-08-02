@@ -15,7 +15,7 @@ class DepartureService {
   }
 
   updateDeparture(departure, departureId) {
-    return axios.put(`${BASE_URL}/${departureId}`, departure);
+    return axios.patch(`${BASE_URL}/${departureId}`, departure);
   }
 
   deleteDeparture(departureId) {

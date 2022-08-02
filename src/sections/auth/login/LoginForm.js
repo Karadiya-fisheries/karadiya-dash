@@ -18,11 +18,13 @@ import { LoadingButton } from "@mui/lab";
 // component
 import Iconify from "../../../components/Iconify";
 import authService from "../../../services/auth.service";
+import activityService from "../../../services/activity.service";
 
 // ----------------------------------------------------------------------
 
 export default function LoginForm() {
   const navigate = useNavigate();
+  const [message, setMessage] = useState(null);
   const [showPassword, setShowPassword] = useState(false);
   const [open, setOpen] = useState(false);
   const LoginSchema = Yup.object().shape({
@@ -43,7 +45,14 @@ export default function LoginForm() {
       authService
         .login(data.email, data.password)
         .then(
-          () => {
+          (user) => {
+            activityService
+              .createActivity({
+                uid: user.uid,
+                ActivityTitle: "Logged In ID(#" + user.uid + ")",
+              })
+              .then((res) => console.log(res))
+              .catch((err) => console.log(err));
             setTimeout(() => {
               navigate("/dashboard/app", { replace: true });
             }, 3000);
@@ -56,8 +65,10 @@ export default function LoginForm() {
                 error.response.data.message) ||
               error.message ||
               error.toString();
-            console.log(message);
-            return <TextField severity="warning">{message}</TextField>;
+
+            setTimeout(() => {
+              setMessage(message);
+            }, 8000);
           }
         )
         .catch((error) => {
@@ -149,6 +160,11 @@ export default function LoginForm() {
           </LoadingButton>
         </Form>
       </FormikProvider>
+      {message && (
+        <Alert severity="error" sx={{ width: "100%" }}>
+          {message}
+        </Alert>
+      )}
       <Snackbar open={open} autoHideDuration={2000}>
         <Alert severity="success" sx={{ width: "100%" }}>
           Login attempt is Successful!

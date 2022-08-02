@@ -10,6 +10,10 @@ class NoticeService {
     return axios.post(BASE_URL, notice);
   }
 
+  getNoticeWeekly() {
+    return axios.get(BASE_URL + "weekly");
+  }
+
   getNoticeById(NoticeId) {
     return axios.get(BASE_URL + NoticeId);
   }
@@ -27,7 +31,7 @@ class NoticeService {
   }
 
   updateNotice(Notice, NoticeId) {
-    return axios.put(`${BASE_URL}/${NoticeId}`, Notice);
+    return axios.patch(`${BASE_URL}/${NoticeId}`, Notice);
   }
 
   deleteNotice(NoticeId) {

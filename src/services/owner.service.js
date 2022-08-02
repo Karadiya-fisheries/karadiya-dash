@@ -6,16 +6,16 @@ class OwnerService {
     return axios.get(BASE_URL);
   }
 
-  createOwner(owner) {
-    return axios.post(BASE_URL, owner);
+  createOwner(owner, uid) {
+    return axios.post(BASE_URL, owner, uid);
   }
 
-  getOwnerById(OwnerId) {
-    return axios.get(BASE_URL + OwnerId);
+  getOwnerById(uid) {
+    return axios.get(BASE_URL + "boat/" + uid);
   }
 
   updateOwner(Owner, OwnerId) {
-    return axios.put(`${BASE_URL}/${OwnerId}`, Owner);
+    return axios.patch(`${BASE_URL}/${OwnerId}`, Owner);
   }
 
   deleteOwner(OwnerId) {

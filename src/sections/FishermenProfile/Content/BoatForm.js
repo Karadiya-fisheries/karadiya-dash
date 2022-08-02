@@ -1,31 +1,33 @@
 import * as Yup from "yup";
 import { useState } from "react";
-import { useFormik, Form, FormikProvider, Field } from "formik";
+import {
+  useFormik,
+  Form,
+  FormikProvider,
+  useFormikContext,
+  Field,
+} from "formik";
 import { useNavigate } from "react-router-dom";
 // material
 import { Stack, Box } from "@chakra-ui/react";
 import {
   TextField,
+  Typography,
   FormControlLabel,
   Checkbox,
   FormGroup,
   FormLabel,
   Radio,
   RadioGroup,
-  Alert,
 } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 // component
 import Iconify from "../../../components/Iconify";
-import boatService from "../../../services/boat.service";
-import activityService from "../../../services/activity.service";
-import authService from "../../../services/auth.service";
 
 // ----------------------------------------------------------------------
 
-export default function BoatForm({ id, boats }) {
+export default function BoatForm() {
   const navigate = useNavigate();
-  const [message, setMessage] = useState();
   const BoatCat = ["IMUL", "NTRB", "MTRB", "IDAY", "NBSB", "OFRP"];
 
   const FOpType = [
@@ -49,28 +51,12 @@ export default function BoatForm({ id, boats }) {
       BoatCat: "",
       FOpType: [],
     },
+    validationSchema: RegisterSchema,
     onSubmit: (data, actions) => {
-      const owner_id = id;
-      const boat = { ...data, owner_id };
-      const uid = authService.getCurrentUser().uid;
-      boatService
-        .createBoat(boat)
-        .then((res) => {
-          activityService
-            .createActivity({
-              uid: uid,
-              ActivityTitle:
-                "Submitted A Boat's Details ID(#" + res.data.boatId + ")",
-            })
-            .catch((err) => setMessage(err.message));
-          setMessage("Boat Successfully created.");
-        })
-        .catch((err) => {
-          setMessage(err.message);
-        });
       setTimeout(() => {
         actions.setSubmitting(false);
-      }, 5000);
+      }, 1000);
+      console.log(data);
     },
   });
 
@@ -136,13 +122,15 @@ export default function BoatForm({ id, boats }) {
                 <FormLabel>Nature of Fishing Operation</FormLabel>
                 {FOpType?.map((optype, index) => (
                   <Field
-                    type="radio"
+                    type="checkbox"
                     name="FOpType"
                     value={optype.value}
                     key={index}
                     as={FormControlLabel}
                     control={
-                      <Radio checked={values.FOpType.includes(optype.value)} />
+                      <Checkbox
+                        checked={values.FOpType.includes(optype.value)}
+                      />
                     }
                     label={optype.label}
                   />
@@ -160,11 +148,6 @@ export default function BoatForm({ id, boats }) {
         >
           Register
         </LoadingButton>
-        {message && (
-          <Alert severity="error" sx={{ width: "100%" }}>
-            {message}
-          </Alert>
-        )}
       </Form>
     </FormikProvider>
   );

@@ -81,10 +81,7 @@ export default function Register() {
             {/* <Typography variant="h3" sx={{ px: 5, mt: 10, mb: 5 }}>
               For Digital Future, Manage your work with Karadiya
             </Typography> */}
-            <img
-              alt="register"
-              src="/static/mock-images/login4.jpg"
-            />
+            <img alt="register" src="/static/mock-images/login4.jpg" />
           </SectionStyle>
         )}
 
