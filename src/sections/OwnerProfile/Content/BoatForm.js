@@ -12,6 +12,7 @@ import {
   FormLabel,
   Radio,
   RadioGroup,
+  Alert,
 } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 // component
@@ -24,6 +25,7 @@ import authService from "../../../services/auth.service";
 
 export default function BoatForm({ id, boats }) {
   const navigate = useNavigate();
+  const [message, setMessage] = useState();
   const BoatCat = ["IMUL", "NTRB", "MTRB", "IDAY", "NBSB", "OFRP"];
 
   const FOpType = [
@@ -54,14 +56,17 @@ export default function BoatForm({ id, boats }) {
       boatService
         .createBoat(boat)
         .then((res) => {
-          activityService.createActivity({
-            uid: uid,
-            ActivityTitle:
-              "Submitted A Boat's Details ID(#" + res.data.boatId + ")",
-          });
+          activityService
+            .createActivity({
+              uid: uid,
+              ActivityTitle:
+                "Submitted A Boat's Details ID(#" + res.data.boatId + ")",
+            })
+            .catch((err) => setMessage(err.message));
+          setMessage("Boat Successfully created.");
         })
         .catch((err) => {
-          console.log(err);
+          setMessage(err.message);
         });
       setTimeout(() => {
         actions.setSubmitting(false);
@@ -155,6 +160,11 @@ export default function BoatForm({ id, boats }) {
         >
           Register
         </LoadingButton>
+        {message && (
+          <Alert severity="error" sx={{ width: "100%" }}>
+            {message}
+          </Alert>
+        )}
       </Form>
     </FormikProvider>
   );
