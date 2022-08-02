@@ -18,6 +18,7 @@ import { LoadingButton } from "@mui/lab";
 // component
 import Iconify from "../../../components/Iconify";
 import authService from "../../../services/auth.service";
+import activityService from "../../../services/activity.service";
 
 // ----------------------------------------------------------------------
 
@@ -44,7 +45,14 @@ export default function LoginForm() {
       authService
         .login(data.email, data.password)
         .then(
-          () => {
+          (user) => {
+            activityService
+              .createActivity({
+                uid: user.uid,
+                ActivityTitle: "Logged In ID(#" + user.uid + ")",
+              })
+              .then((res) => console.log(res))
+              .catch((err) => console.log(err));
             setTimeout(() => {
               navigate("/dashboard/app", { replace: true });
             }, 3000);

@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = "https://serene-woodland-83390.herokuapp.com/departure";
+const BASE_URL = "http://localhost:5000/departure";
 class DepartureService {
   getDepartures() {
     return axios.get(BASE_URL);
@@ -15,7 +15,7 @@ class DepartureService {
   }
 
   updateDeparture(departure, departureId) {
-    return axios.put(`${BASE_URL}/${departureId}`, departure);
+    return axios.patch(`${BASE_URL}/${departureId}`, departure);
   }
 
   deleteDeparture(departureId) {

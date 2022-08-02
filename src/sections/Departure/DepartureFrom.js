@@ -42,31 +42,28 @@ export default function ElogBookForm({ id }) {
   useEffect(() => {
     console.log(id);
     setLog({
-      DepartureId:id.DepartureId,
-        IMULNumber:id.Imul,
-        OwnerName:id.OwnerName,
-        TelNo:id.TelNo,
-        Email:id.Email,
-        SkipperName:id.SkipperName,
-        SkipperNo:id.SkipperNo,
-        SkipperNic:id.SkipperNic,
-        DepartingPort:id.DepartingPort,
-        FishingZone:id.FishingZone,
-        MLength:id.MLength,
-        NoThrons:id.NoThrons,
-        CNetLength:id.CNetLength,
-        // CatchRecords: id.CatchRecords,
-        CEyeSize:id.CEyeSize,
-        NettingLength:id.NettingLength,
-        NetEyeSize:id.NetEyeSize,
-        LocalOpLicense:id.LocalOpLicense,
-        InterOpLicense:id.InterOpLicense,
-        RadioStation:id.RadioStation,
-        Frequency:id.Frequency,
-        Vms:id.Vms
-
-
-
+      DepartureId: id.DepartureId,
+      IMULNumber: id.Imul,
+      OwnerName: id.OwnerName,
+      TelNo: id.TelNo,
+      Email: id.Email,
+      SkipperName: id.SkipperName,
+      SkipperNo: id.SkipperNo,
+      SkipperNic: id.SkipperNic,
+      DepartingPort: id.DepartingPort,
+      FishingZone: id.FishingZone,
+      MLength: id.MLength,
+      NoThrons: id.NoThrons,
+      CNetLength: id.CNetLength,
+      // CatchRecords: id.CatchRecords,
+      CEyeSize: id.CEyeSize,
+      NettingLength: id.NettingLength,
+      NetEyeSize: id.NetEyeSize,
+      LocalOpLicense: id.LocalOpLicense,
+      InterOpLicense: id.InterOpLicense,
+      RadioStation: id.RadioStation,
+      Frequency: id.Frequency,
+      Vms: id.Vms,
     });
     console.log(log);
   }, []);
@@ -112,15 +109,15 @@ export default function ElogBookForm({ id }) {
                 Owner Details
               </Typography>
               <Stack direction={"column"} spacing={4}>
-              <TextField
-                    fullWidth
-                    disabled={edit}
-                    label="Name of the Owner"
-                    InputLabelProps={{ shrink: true }}
-                    {...getFieldProps("OwnerName")}
-                    error={Boolean(touched.IMULNumber && errors.IMULNumber)}
-                    helperText={touched.IMULNumber && errors.IMULNumber}
-                  />
+                <TextField
+                  fullWidth
+                  disabled={edit}
+                  label="Name of the Owner"
+                  InputLabelProps={{ shrink: true }}
+                  {...getFieldProps("OwnerName")}
+                  error={Boolean(touched.IMULNumber && errors.IMULNumber)}
+                  helperText={touched.IMULNumber && errors.IMULNumber}
+                />
                 <Stack direction={"row"} spacing={3}>
                   <TextField
                     fullWidth
@@ -141,7 +138,6 @@ export default function ElogBookForm({ id }) {
                     helperText={touched.Email && errors.Email}
                   />
                 </Stack>
-                
               </Stack>
             </Box>
             <Box p={2} border="1px solid #E2E8F0" borderRadius={1}>
@@ -149,7 +145,7 @@ export default function ElogBookForm({ id }) {
                 Skipper Details
               </Typography>
               <Stack direction={"column"} spacing={4}>
-              <TextField
+                <TextField
                   fullWidth
                   label="Skipper Name"
                   InputLabelProps={{ shrink: true }}
@@ -178,7 +174,6 @@ export default function ElogBookForm({ id }) {
                     helperText={touched.SkipperNo && errors.SkipperNo}
                   />
                 </Stack>
-                
               </Stack>
             </Box>
             <Box p={2} border="1px solid #E2E8F0" borderRadius={1}>
@@ -206,7 +201,7 @@ export default function ElogBookForm({ id }) {
                     helperText={touched.IMULNumber && errors.IMULNumber}
                   />
                 </Stack>
-                
+
                 <Stack direction={"row"} spacing={3}>
                   <TextField
                     fullWidth
@@ -214,7 +209,9 @@ export default function ElogBookForm({ id }) {
                     label="Departure Port"
                     InputLabelProps={{ shrink: true }}
                     {...getFieldProps("DepartingPort")}
-                    error={Boolean(touched.DepartingPort && errors.DepartingPort)}
+                    error={Boolean(
+                      touched.DepartingPort && errors.DepartingPort
+                    )}
                     helperText={touched.DepartingPort && errors.DepartingPort}
                   />
                   <TextField
@@ -234,7 +231,9 @@ export default function ElogBookForm({ id }) {
                     label="Local Operating License Number of vessel"
                     InputLabelProps={{ shrink: true }}
                     {...getFieldProps("LocalOpLicense")}
-                    error={Boolean(touched.LocalOpLicense && errors.LocalOpLicense)}
+                    error={Boolean(
+                      touched.LocalOpLicense && errors.LocalOpLicense
+                    )}
                     helperText={touched.LocalOpLicense && errors.LocalOpLicense}
                   />
                   <TextField
@@ -243,7 +242,9 @@ export default function ElogBookForm({ id }) {
                     label="Local Operating License Number of vessel"
                     InputLabelProps={{ shrink: true }}
                     {...getFieldProps("InterOpLicense")}
-                    error={Boolean(touched.InterOpLicense && errors.InterOpLicense)}
+                    error={Boolean(
+                      touched.InterOpLicense && errors.InterOpLicense
+                    )}
                     helperText={touched.InterOpLicense && errors.InterOpLicense}
                   />
                 </Stack>
@@ -268,26 +269,23 @@ export default function ElogBookForm({ id }) {
                   />
                 </Stack>
                 <TextField
-                    fullWidth
-                    disabled={edit}
-                    label="VMS Device on board(Is it working)"
-                    InputLabelProps={{ shrink: true }}
-                    {...getFieldProps("Vms")}
-                    error={Boolean(touched.Vms && errors.Vms)}
-                    helperText={touched.Vms && errors.Vms}
-                  />
-                
-                
+                  fullWidth
+                  disabled={edit}
+                  label="VMS Device on board(Is it working)"
+                  InputLabelProps={{ shrink: true }}
+                  {...getFieldProps("Vms")}
+                  error={Boolean(touched.Vms && errors.Vms)}
+                  helperText={touched.Vms && errors.Vms}
+                />
               </Stack>
             </Box>
 
-            
             <Box p={2} border="1px solid #E2E8F0" borderRadius={1}>
               <Typography mb={2} variant="subtitle1">
                 Description of carrying devices
               </Typography>
               <Stack direction={"column"} spacing={4}>
-              <Stack direction={"row"} spacing={3}>
+                <Stack direction={"row"} spacing={3}>
                   <TextField
                     fullWidth
                     disabled={edit}
@@ -334,7 +332,9 @@ export default function ElogBookForm({ id }) {
                     InputLabelProps={{ shrink: true }}
                     label="Length of Netting(meter)"
                     {...getFieldProps("NettingLength")}
-                    error={Boolean(touched.NettingLength && errors.NettingLength)}
+                    error={Boolean(
+                      touched.NettingLength && errors.NettingLength
+                    )}
                     helperText={touched.NettingLength && errors.NettingLength}
                   />
                   <TextField
@@ -347,11 +347,9 @@ export default function ElogBookForm({ id }) {
                     helperText={touched.NetEyeSize && errors.NetEyeSize}
                   />
                 </Stack>
-                
               </Stack>
             </Box>
 
-           
             <Stack direction="row" justifyContent="space-between" spacing={3}>
               <LoadingButton
                 fullWidth

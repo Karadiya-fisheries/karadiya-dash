@@ -1,5 +1,5 @@
 import * as Yup from "yup";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   useFormik,
   Form,
@@ -19,15 +19,20 @@ import {
   FormLabel,
   Radio,
   RadioGroup,
+  Alert,
 } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 // component
 import Iconify from "../../../components/Iconify";
+import OwnerService from "../../../services/owner.service";
+import activityService from "../../../services/activity.service";
+import authService from "../../../services/auth.service";
 
 // ----------------------------------------------------------------------
 
-export default function ProfileForm() {
+export default function ProfileForm({ owner }) {
   const navigate = useNavigate();
+  const [message, setMessage] = useState();
   const BoatCat = ["IMUL", "NTRB", "MTRB", "IDAY", "NBSB", "OFRP"];
   const FZone = [
     { label: "Internal waters", value: "internal waters" },
@@ -60,7 +65,7 @@ export default function ProfileForm() {
     NicNo: Yup.string().min(10, "Not Complete").required("NicNo required"),
     FZone: Yup.array().required("Fishery Zone required"),
     BoatCat: Yup.array().min(1, "Select atleast One type"),
-    NumOfBoats: Yup.number().required("Number of boats required"),
+    NumofBoats: Yup.number().required("Number of boats required"),
     OccuType: Yup.string().required("Occupation Type required"),
     FOpType: Yup.array().required("Fishery Operation required"),
     AssocAct: Yup.string().required("Associate Occupation required"),
@@ -77,17 +82,31 @@ export default function ProfileForm() {
       NicNo: "",
       FZone: [],
       BoatCat: [],
-      NumOfBoats: "",
+      NumofBoats: "",
       OccuType: "",
       FOpType: [],
       AssocAct: "",
     },
-    validationSchema: RegisterSchema,
     onSubmit: (data, actions) => {
+      const uid = authService.getCurrentUser().uid;
+      const owner = { ...data, uid };
+      OwnerService.createOwner(owner)
+        .then((res) => {
+          activityService
+            .createActivity({
+              uid: res.data.userUid,
+              ActivityTitle: "Profile Submission ID(#" + res.data.userUid + ")",
+            })
+            .catch((err) => {
+              setMessage(err.message);
+            });
+        })
+        .catch((err) => {
+          setMessage(err.message);
+        });
       setTimeout(() => {
         actions.setSubmitting(false);
-      }, 1000);
-      console.log(data);
+      }, 5000);
     },
   });
 
@@ -171,9 +190,9 @@ export default function ProfileForm() {
               <TextField
                 fullWidth
                 label="Number of Boats"
-                {...getFieldProps("NumOfBoats")}
-                error={Boolean(touched.NumOfBoats && errors.NumOfBoats)}
-                helperText={touched.NumOfBoats && errors.NumOfBoats}
+                {...getFieldProps("NumofBoats")}
+                error={Boolean(touched.NumofBoats && errors.NumofBoats)}
+                helperText={touched.NumofBoats && errors.NumofBoats}
               />
               <FormGroup>
                 <FormLabel>Catagories of Boats</FormLabel>
@@ -209,21 +228,28 @@ export default function ProfileForm() {
                   />
                 ))}
               </FormGroup>
+
               <FormGroup>
-                <FormLabel>Nature of Fishing Operation</FormLabel>
-                {FOpType?.map((name, index) => (
-                  <Field
-                    type="checkbox"
-                    name="FOpType"
-                    value={name.value}
-                    key={index}
-                    as={FormControlLabel}
-                    control={
-                      <Checkbox checked={values.FOpType.includes(name.value)} />
-                    }
-                    label={name.label}
-                  />
-                ))}
+                <FormLabel id="FOpType">Nature of Fishing Operation</FormLabel>
+                <RadioGroup
+                  aria-labelledby="FOpType"
+                  defaultValue="Multi Day"
+                  name="radio-buttons-group"
+                >
+                  {FOpType?.map((name, index) => (
+                    <Field
+                      type="radio"
+                      name="FOpType"
+                      value={name.value}
+                      key={index}
+                      as={FormControlLabel}
+                      control={
+                        <Radio checked={values.FOpType.includes(name.value)} />
+                      }
+                      label={name.label}
+                    />
+                  ))}
+                </RadioGroup>
               </FormGroup>
               <FormGroup>
                 <FormLabel id="OccuType">Nature of Occupation</FormLabel>
@@ -284,6 +310,11 @@ export default function ProfileForm() {
           Register
         </LoadingButton>
       </Form>
+      {message && (
+        <Alert severity="error" sx={{ width: "100%" }}>
+          {message}
+        </Alert>
+      )}
     </FormikProvider>
   );
 }

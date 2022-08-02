@@ -16,6 +16,7 @@ import { LoadingButton } from "@mui/lab";
 // component
 import Iconify from "../../../components/Iconify";
 import AuthService from "../../../services/auth.service";
+import ActivityService from "../../../services/activity.service";
 
 // ----------------------------------------------------------------------
 
@@ -59,10 +60,14 @@ export default function RegisterForm({ officer }) {
           data.email,
           data.phone,
           data.password,
-          ["admin"]
+          ["user", "officer"]
         )
           .then(
-            () => {
+            (user) => {
+              ActivityService.createActivity(
+                user.data.uid,
+                "Created Account ID #" + user.data.uid
+              );
               setTimeout(() => {
                 navigate("/login", { replace: true });
               }, 5000);
@@ -88,7 +93,7 @@ export default function RegisterForm({ officer }) {
           data.email,
           data.phone,
           data.password,
-          ["owner"]
+          ["user", "owner"]
         )
           .then(
             () => {

@@ -16,10 +16,13 @@ import {
 import { LoadingButton } from "@mui/lab";
 // component
 import Iconify from "../../../components/Iconify";
+import boatService from "../../../services/boat.service";
+import activityService from "../../../services/activity.service";
+import authService from "../../../services/auth.service";
 
 // ----------------------------------------------------------------------
 
-export default function BoatForm() {
+export default function BoatForm({ id, boats }) {
   const navigate = useNavigate();
   const BoatCat = ["IMUL", "NTRB", "MTRB", "IDAY", "NBSB", "OFRP"];
 
@@ -44,12 +47,25 @@ export default function BoatForm() {
       BoatCat: "",
       FOpType: [],
     },
-    validationSchema: RegisterSchema,
     onSubmit: (data, actions) => {
+      const owner_id = id;
+      const boat = { ...data, owner_id };
+      const uid = authService.getCurrentUser().uid;
+      boatService
+        .createBoat(boat)
+        .then((res) => {
+          activityService.createActivity({
+            uid: uid,
+            ActivityTitle:
+              "Submitted A Boat's Details ID(#" + res.data.boatId + ")",
+          });
+        })
+        .catch((err) => {
+          console.log(err);
+        });
       setTimeout(() => {
         actions.setSubmitting(false);
-      }, 1000);
-      console.log(data);
+      }, 5000);
     },
   });
 
@@ -115,15 +131,13 @@ export default function BoatForm() {
                 <FormLabel>Nature of Fishing Operation</FormLabel>
                 {FOpType?.map((optype, index) => (
                   <Field
-                    type="checkbox"
+                    type="radio"
                     name="FOpType"
                     value={optype.value}
                     key={index}
                     as={FormControlLabel}
                     control={
-                      <Checkbox
-                        checked={values.FOpType.includes(optype.value)}
-                      />
+                      <Radio checked={values.FOpType.includes(optype.value)} />
                     }
                     label={optype.label}
                   />

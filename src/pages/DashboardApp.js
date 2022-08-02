@@ -2,7 +2,15 @@ import { useState, useEffect } from "react";
 import { faker } from "@faker-js/faker";
 // @mui
 import { useTheme } from "@mui/material/styles";
-import { Grid, Container, Typography, Divider } from "@mui/material";
+import {
+  Grid,
+  Container,
+  Typography,
+  Divider,
+  Alert,
+  Button,
+  AlertTitle,
+} from "@mui/material";
 // components
 import Page from "../components/Page";
 import Iconify from "../components/Iconify";
@@ -19,10 +27,16 @@ import {
   AppConversionRates,
 } from "../sections/@dashboard/app";
 import StatService from "../services/stat.service";
+import authService from "../services/auth.service";
+import { useNavigate } from "react-router-dom";
+import noticeService from "../services/notice.service";
+import activityService from "../services/activity.service";
+import { fDateTime } from "../utils/formatTime";
 
 // ----------------------------------------------------------------------
 
 export default function DashboardApp() {
+  const navigate = useNavigate();
   const theme = useTheme();
   const [userCount, setUserCount] = useState(undefined);
   const [triplogCount, setTriplogCount] = useState(undefined);
@@ -31,12 +45,21 @@ export default function DashboardApp() {
   const [pendingDepartureCount, setPendingDepartureCount] = useState(undefined);
   const [pendingTriplogCount, setPendingTriplogCount] = useState(undefined);
   const [boatCount, setBoatCount] = useState(undefined);
+  const [IsOwner, setIsOwner] = useState(false);
+  const [notice, setNotice] = useState([]);
+  const [activity, setActivity] = useState([]);
 
+  const uid = authService.getCurrentUser().uid;
   useEffect(() => {
+    activityService.getActivityById(uid).then((res) => setActivity(res.data));
+    noticeService.getNoticeWeekly().then((res) => setNotice(res.data));
     StatService.getAllUserCount().then((res) => setUserCount(res.data));
     StatService.getAllFishermenCount().then((res) =>
       setFishermenCount(res.data)
     );
+    StatService.getIfOwner(uid).then((res) => {
+      setIsOwner(res.data);
+    });
     StatService.getAllBoatCount().then((res) => setBoatCount(res.data));
     StatService.getTriplogCount().then((res) => setTriplogCount(res.data));
     StatService.getCatchCount().then((res) => setCatchCount(res.data));
@@ -53,7 +76,29 @@ export default function DashboardApp() {
         <Typography variant="h4" sx={{ mb: 5 }}>
           Hi, Welcome back to Karadiya
         </Typography>
-        <Divider sx={{ mb: 4 }} />
+        <Divider sx={{ mb: 1 }} />
+        {!IsOwner && (
+          <Alert
+            variant="outlined"
+            severity="info"
+            action={
+              <Button
+                onClick={() => {
+                  navigate("/dashboard/owner/profile", { replace: true });
+                }}
+                color="inherit"
+                size="large"
+                variant="outlined"
+              >
+                Complete Profile
+              </Button>
+            }
+            sx={{ mb: 2 }}
+          >
+            <AlertTitle>Required *</AlertTitle>
+            You haven't completed your profile.
+          </Alert>
+        )}
         <Grid container spacing={3}>
           <Grid item xs={12} sm={6} md={3}>
             <AppWidgetSummary
@@ -119,17 +164,21 @@ export default function DashboardApp() {
           <Grid item xs={12} md={6} lg={4}>
             <AppOrderTimeline
               title="My Activity"
-              list={[...Array(5)].map((_, index) => ({
-                id: faker.datatype.uuid(),
-                title: [
-                  "Add Admin #4",
-                  "Accept ELog #45",
-                  "Edit Elog #45",
-                  "Departure Approval #34",
-                  "New Sale placed #46",
-                ][index],
-                type: `order${index + 1}`,
-                time: faker.date.past(),
+              list={activity.map((act, index) => ({
+                id: act.ActivityId,
+                title: act.ActivityTitle,
+                time: fDateTime(act.createdAt),
+              }))}
+            />
+          </Grid>
+          <Grid item xs={12} md={6} lg={8}>
+            <AppNewsUpdate
+              title="Weekly Notices"
+              list={notice.map((post, index) => ({
+                id: post.NoticeId,
+                title: post.NoticeTitle,
+                image: post.NoticeCover,
+                postedAt: post.createdAt,
               }))}
             />
           </Grid>
@@ -230,19 +279,6 @@ export default function DashboardApp() {
               chartColors={[...Array(6)].map(
                 () => theme.palette.text.secondary
               )}
-            />
-          </Grid>
-
-          <Grid item xs={12} md={6} lg={8}>
-            <AppNewsUpdate
-              title="News Update"
-              list={[...Array(5)].map((_, index) => ({
-                id: faker.datatype.uuid(),
-                title: faker.name.jobTitle(),
-                description: faker.name.jobTitle(),
-                image: `/static/mock-images/covers/cover_${index + 1}.jpg`,
-                postedAt: faker.date.recent(),
-              }))}
             />
           </Grid>
         </Grid>

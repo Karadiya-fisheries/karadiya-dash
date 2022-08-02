@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = "https://serene-woodland-83390.herokuapp.com/notice/";
+const BASE_URL = "http://localhost:5000/notice/";
 class NoticeService {
   getNotices() {
     return axios.get(BASE_URL);
@@ -8,6 +8,10 @@ class NoticeService {
 
   createNotice(notice) {
     return axios.post(BASE_URL, notice);
+  }
+
+  getNoticeWeekly() {
+    return axios.get(BASE_URL + "weekly");
   }
 
   getNoticeById(NoticeId) {
@@ -27,7 +31,7 @@ class NoticeService {
   }
 
   updateNotice(Notice, NoticeId) {
-    return axios.put(`${BASE_URL}/${NoticeId}`, Notice);
+    return axios.patch(`${BASE_URL}/${NoticeId}`, Notice);
   }
 
   deleteNotice(NoticeId) {

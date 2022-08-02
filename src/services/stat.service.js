@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "https://serene-woodland-83390.herokuapp.com";
+const API_URL = "http://localhost:5000";
 
 class StatService {
   getPendingDepartureCount() {
@@ -9,6 +9,10 @@ class StatService {
 
   getPendingTriplogCount() {
     return axios.get(API_URL + "/query/pending/triplog/count");
+  }
+
+  getIfOwner(uid) {
+    return axios.get(API_URL + "/query/user/" + uid);
   }
   getAllUserCount() {
     return axios.get(API_URL + "/stat/user/count");
