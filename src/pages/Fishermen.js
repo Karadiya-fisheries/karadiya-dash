@@ -245,7 +245,12 @@ export default function ELogBook() {
   );
 
   const isUserNotFound = filteredUsers.length === 0;
-
+  const type = {
+    name: "departure approval",
+    delete: () => {
+      console.log("deleteDeparture");
+    },
+  };
   return (
     <Page title="Fishermen">
       <Container>
@@ -276,6 +281,7 @@ export default function ELogBook() {
               numSelected={selected.length}
               filtertripId={filtertripId}
               onFiltertripId={handleFilterBytripId}
+              type={type}
             />
 
             <Scrollbar>

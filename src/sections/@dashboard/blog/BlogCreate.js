@@ -18,6 +18,7 @@ import {
   FormControl,
   InputLabel,
   Select,
+  Alert,
   MenuItem,
   Dialog,
   DialogActions,
@@ -32,6 +33,7 @@ import Page from "../../../components/Page";
 import Iconify from "../../../components/Iconify";
 import NoticeService from "../../../services/notice.service";
 import authService from "../../../services/auth.service";
+import activityService from "../../../services/activity.service";
 
 // ----------------------------------------------------------------------
 
@@ -94,9 +96,9 @@ export default function BlogCreate() {
       setTimeout(() => {
         actions.setSubmitting(false);
       }, 10000);
-      console.log(cover);
+      const uid = authService.getCurrentUser().uid;
       NoticeService.createNotice({
-        uid: authService.getCurrentUser().uid,
+        uid: uid,
         NoticeTitle: data.NoticeTitle,
         NoticeCat: data.NoticeCat,
         NoticeText: data.NoticeText,
@@ -104,10 +106,18 @@ export default function BlogCreate() {
       })
         .then(
           (notice) => {
+            setMessage("Notice created successfull!");
             StorageService.noticeCoverUploadHandler(
               notice.data.NoticeId,
               cover
             );
+            activityService
+              .createActivity({
+                uid: uid,
+                ActivityTitle:
+                  "Created a Notice(#" + notice.data.NoticeId + ")",
+              })
+              .catch((err) => setMessage(err.message));
             navigate("/dashboard/notices", {
               replace: true,
             });
@@ -201,7 +211,8 @@ export default function BlogCreate() {
                 </ImageContainer>
 
                 <TextField
-                  fullwidth
+                  fullwidth="true"
+                  required="true"
                   id="standard-textarea"
                   label="Text Content"
                   placeholder="Write here..."
@@ -222,6 +233,11 @@ export default function BlogCreate() {
               </Stack>
             </Form>
           </FormikProvider>
+          {message && (
+            <Alert severity="error" sx={{ width: "100%" }}>
+              {message}
+            </Alert>
+          )}
           <Dialog
             open={copen}
             onClose={() => {
