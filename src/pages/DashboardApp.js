@@ -179,6 +179,8 @@ export default function DashboardApp() {
                 title: post.NoticeTitle,
                 image: post.NoticeCover,
                 postedAt: post.createdAt,
+                cat: post.NoticeCat,
+                description: post.NoticeText,
               }))}
             />
           </Grid>

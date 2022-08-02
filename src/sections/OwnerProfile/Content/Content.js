@@ -9,12 +9,17 @@ import authService from "../../../services/auth.service";
 
 const Content = () => {
   const tabs = ["Profile", "Registered Boats"];
-  const [boats, setBoats] = useState([]);
+  const [boats, setBoats] = useState({
+    OwnerId: "",
+    boats: [],
+  });
   const uid = authService.getCurrentUser().uid;
 
   useEffect(() => {
     ownerService.getOwnerById(uid).then((res) => {
-      setBoats(res.data);
+      if (res.data.OwnerId) {
+        setBoats(res.data);
+      }
     });
   }, []);
 
