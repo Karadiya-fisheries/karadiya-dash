@@ -165,6 +165,13 @@ export default function User() {
 
   const isUserNotFound = filteredUsers.length === 0;
 
+  const type = {
+    name: "user",
+    delete: () => {
+      console.log("delete");
+    },
+  };
+
   return (
     <Page title="User">
       <Container>
@@ -192,6 +199,7 @@ export default function User() {
             numSelected={selected.length}
             filterName={filterName}
             onFilterName={handleFilterByName}
+            type={type}
           />
 
           <Scrollbar>
