@@ -99,9 +99,9 @@ export default function ShopFilterSidebar({ isOpenFilter, onOpenFilter, onCloseF
                 Category
               </Typography>
               <RadioGroup>
-                {FILTER_CATEGORY_OPTIONS.map((item) => (
+                {/* {FILTER_CATEGORY_OPTIONS.map((item) => (
                   <FormControlLabel key={item} value={item} control={<Radio />} label={item} />
-                ))}
+                ))} */}
               </RadioGroup>
             </div>
 

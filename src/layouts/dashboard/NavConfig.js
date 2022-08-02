@@ -47,6 +47,11 @@ const navConfig = [
     icon: getIcon("eva:file-text-fill"),
   },
   {
+    title: "Fishermen",
+    path: "/dashboard/fishermen",
+    icon: getIcon("eva:file-text-fill"),
+  },
+  {
     title: "Add Officer",
     path: "/dashboard/add_officer",
     icon: getIcon("eva:file-text-fill"),
