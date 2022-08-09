@@ -9,7 +9,6 @@ import Login from "./pages/Login";
 //import NotFound from "./pages/Page404";
 import Register from "./pages/Register";
 import Products from "./pages/Products";
-//import Profile from "./pages/Profile";
 import Profile1 from "./pages/Profile1";
 import ProfieIndex from "./sections/profile1/index";
 import EditProfile from "./sections/profile1/EditProfile/Editprofile";
