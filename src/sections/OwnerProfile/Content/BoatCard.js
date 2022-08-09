@@ -35,7 +35,7 @@ BoatCard.propTypes = {
 };
 
 export default function BoatCard({ boat, index }) {
-  const { id, name, cat, regno, createdAt } = boat;
+  const { boatId, BoatName, BoatCat, BoatRg, createdAt } = boat;
 
   return (
     <Grid item xs={12}>
@@ -50,7 +50,7 @@ export default function BoatCard({ boat, index }) {
           </Typography>
 
           <Typography color="inherit" variant="subtitle2" underline="hover">
-            Name: {name} #{id}
+            BoatName: {BoatName} #{boatId}
           </Typography>
           <Stack>
             <Typography
@@ -59,10 +59,10 @@ export default function BoatCard({ boat, index }) {
               variant="subtitle2"
               underline="hover"
             >
-              Registration NO: {regno}
+              Registration NO: {BoatRg}
             </Typography>
             <Typography color="inherit" paragraph="true" underline="hover">
-              Catagory: {cat}
+              BoatCatagory: {BoatCat}
             </Typography>
           </Stack>
         </CardContent>

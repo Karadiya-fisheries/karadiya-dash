@@ -16,6 +16,7 @@ import {
 } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 // component
+import BoatCard from "./BoatCard";
 import Iconify from "../../../components/Iconify";
 import boatService from "../../../services/boat.service";
 import activityService from "../../../services/activity.service";
@@ -23,10 +24,11 @@ import authService from "../../../services/auth.service";
 
 // ----------------------------------------------------------------------
 
-export default function BoatForm({ id, boats }) {
+export default function BoatForm({ id, data }) {
   const navigate = useNavigate();
   const [message, setMessage] = useState();
-  const BoatCat = ["IMUL", "NTRB", "MTRB", "IDAY", "NBSB", "OFRP"];
+
+  const BoatType = ["IMUL", "NTRB", "MTRB", "IDAY", "NBSB", "OFRP"];
 
   const FOpType = [
     { label: "One Day", value: "one day" },
@@ -36,8 +38,8 @@ export default function BoatForm({ id, boats }) {
   const RegisterSchema = Yup.object().shape({
     BoatName: Yup.string().required("Boat Name required"),
     BoatRg: Yup.string().required("Boat Registraion No required"),
-    BoatCat: Yup.string().required("Boat Catagory required"),
-    InsuaranceNo: Yup.string().required("Insuarance No required"),
+    BoatType: Yup.string().required("Boat Catagory required"),
+    InsuaranceNO: Yup.string().required("Insuarance No required"),
     FOpType: Yup.array().required("Fishery Operation required"),
   });
 
@@ -45,9 +47,9 @@ export default function BoatForm({ id, boats }) {
     initialValues: {
       BoatName: "",
       BoatRg: "",
-      InsuaranceNo: "",
-      BoatCat: "",
-      FOpType: [],
+      InsuaranceNO: "",
+      BoatType: "",
+      FOpType: "",
     },
     onSubmit: (data, actions) => {
       const owner_id = id;
@@ -78,94 +80,98 @@ export default function BoatForm({ id, boats }) {
     formik;
 
   return (
-    <FormikProvider value={formik}>
-      <Form autoComplete="off" noValidate onSubmit={handleSubmit}>
-        <Stack spacing={3}>
-          <Box p={2} borderRadius="md" borderWidth="1px">
-            <Stack direction={"column"} spacing={4}>
-              <TextField
-                fullWidth
-                label="Boat Name"
-                {...getFieldProps("BoatName")}
-                error={Boolean(touched.BoatName && errors.BoatName)}
-                helperText={touched.BoatName && errors.BoatName}
-              />
+    <>
+      <FormikProvider value={formik}>
+        <Form autoComplete="off" noValidate onSubmit={handleSubmit}>
+          <Stack spacing={3}>
+            <Box p={2} borderRadius="md" borderWidth="1px">
+              <Stack direction={"column"} spacing={4}>
+                <TextField
+                  fullWidth
+                  label="Boat Name"
+                  {...getFieldProps("BoatName")}
+                  error={Boolean(touched.BoatName && errors.BoatName)}
+                  helperText={touched.BoatName && errors.BoatName}
+                />
 
-              <TextField
-                fullWidth
-                label="Boat Registration No"
-                {...getFieldProps("BoatRg")}
-                error={Boolean(touched.BoatRg && errors.BoatRg)}
-                helperText={touched.BoatRg && errors.BoatRg}
-              />
+                <TextField
+                  fullWidth
+                  label="Boat Registration No"
+                  {...getFieldProps("BoatRg")}
+                  error={Boolean(touched.BoatRg && errors.BoatRg)}
+                  helperText={touched.BoatRg && errors.BoatRg}
+                />
 
-              <TextField
-                fullWidth
-                label="Insuarance NO"
-                {...getFieldProps("InsuaranceNo")}
-                error={Boolean(touched.InsuaranceNo && errors.InsuaranceNo)}
-                helperText={touched.InsuaranceNo && errors.InsuaranceNo}
-              />
-            </Stack>
-          </Box>
-          <Box p={2} borderRadius="md" borderWidth="1px">
-            <Stack direction={"column"} spacing={4}>
-              <FormGroup>
-                <FormLabel id="BoatCat">Boat Catagory</FormLabel>
-                <RadioGroup
-                  aria-labelledby="BoatCat"
-                  defaultValue="Supply"
-                  name="radio-buttons-group"
-                >
-                  {BoatCat?.map((boat, index) => (
+                <TextField
+                  fullWidth
+                  label="Insuarance NO"
+                  {...getFieldProps("InsuaranceNO")}
+                  error={Boolean(touched.InsuaranceNO && errors.InsuaranceNO)}
+                  helperText={touched.InsuaranceNO && errors.InsuaranceNO}
+                />
+              </Stack>
+            </Box>
+            <Box p={2} borderRadius="md" borderWidth="1px">
+              <Stack direction={"column"} spacing={4}>
+                <FormGroup>
+                  <FormLabel id="BoatType">Boat Catagory</FormLabel>
+                  <RadioGroup
+                    aria-labelledby="BoatType"
+                    defaultValue="Supply"
+                    name="radio-buttons-group"
+                  >
+                    {BoatType?.map((boat, index) => (
+                      <Field
+                        type="radio"
+                        name="BoatType"
+                        value={boat}
+                        key={index}
+                        as={FormControlLabel}
+                        control={
+                          <Radio checked={values.BoatType.includes(boat)} />
+                        }
+                        label={boat}
+                      />
+                    ))}
+                  </RadioGroup>
+                </FormGroup>
+                <FormGroup>
+                  <FormLabel>Nature of Fishing Operation</FormLabel>
+                  {FOpType?.map((optype, index) => (
                     <Field
                       type="radio"
-                      name="BoatCat"
-                      value={boat}
+                      name="FOpType"
+                      value={optype.value}
                       key={index}
                       as={FormControlLabel}
                       control={
-                        <Radio checked={values.BoatCat.includes(boat)} />
+                        <Radio
+                          checked={values.FOpType.includes(optype.value)}
+                        />
                       }
-                      label={boat}
+                      label={optype.label}
                     />
                   ))}
-                </RadioGroup>
-              </FormGroup>
-              <FormGroup>
-                <FormLabel>Nature of Fishing Operation</FormLabel>
-                {FOpType?.map((optype, index) => (
-                  <Field
-                    type="radio"
-                    name="FOpType"
-                    value={optype.value}
-                    key={index}
-                    as={FormControlLabel}
-                    control={
-                      <Radio checked={values.FOpType.includes(optype.value)} />
-                    }
-                    label={optype.label}
-                  />
-                ))}
-              </FormGroup>
-            </Stack>
-          </Box>
-        </Stack>
-        <LoadingButton
-          fullWidth
-          size="large"
-          type="submit"
-          variant="contained"
-          loading={isSubmitting}
-        >
-          Register
-        </LoadingButton>
-        {message && (
-          <Alert severity="error" sx={{ width: "100%" }}>
-            {message}
-          </Alert>
-        )}
-      </Form>
-    </FormikProvider>
+                </FormGroup>
+              </Stack>
+            </Box>
+          </Stack>
+          <LoadingButton
+            fullWidth
+            size="large"
+            type="submit"
+            variant="contained"
+            loading={isSubmitting}
+          >
+            Register
+          </LoadingButton>
+          {message && (
+            <Alert severity="error" sx={{ width: "100%" }}>
+              {message}
+            </Alert>
+          )}
+        </Form>
+      </FormikProvider>
+    </>
   );
 }

@@ -23,13 +23,11 @@ import EditIcon from "@mui/icons-material/Edit";
 import { LoadingButton } from "@mui/lab";
 // component
 import Iconify from "../../components/Iconify";
-import TripLogService from "../../services/triplog.service";
 
 // ----------------------------------------------------------------------
 
-export default function ElogBookForm({ id }) {
+export default function ElogBookForm({ id, edit }) {
   const navigate = useNavigate();
-  const [edit, setEdit] = useState(true);
   const [log, setLog] = useState(null);
   const RegisterSchema = Yup.object().shape({
     Harbor: Yup.string().required("Boat Name required"),
@@ -88,22 +86,6 @@ export default function ElogBookForm({ id }) {
       <LocalizationProvider dateAdapter={AdapterDateFns}>
         <Form autoComplete="off" noValidate onSubmit={handleSubmit}>
           <Stack direction="column" justifyContent="space-between" spacing={3}>
-            <Typography variant="h4" gutterBottom>
-              ELogBook Record No.{id.DepartureId}
-            </Typography>
-            <Divider />
-            <Box>
-              <Fab
-                sx={{ m: 3, alignSelf: "right" }}
-                onClick={() => {
-                  setEdit(!edit);
-                }}
-                color={edit ? "default" : "primary"}
-                aria-label="edit"
-              >
-                <EditIcon />
-              </Fab>
-            </Box>
             <Box p={2} border="1px solid #E2E8F0" borderRadius={1}>
               <Typography mb={2} variant="subtitle1">
                 Owner Details

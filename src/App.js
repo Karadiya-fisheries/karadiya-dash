@@ -28,6 +28,7 @@ import { BlogCreate, BlogPost } from "./sections/@dashboard/blog";
 import ELogBook from "./pages/ElogBook";
 import DepartureApproval from "./pages/DepartureApproval";
 import Fishermen from "./pages/Fishermen";
+import DepartureView from "./sections/Departure/DepartureView";
 // ----------------------------------------------------------------------
 
 export default function App() {
@@ -62,6 +63,7 @@ export default function App() {
           <Route path="elogbook" element={<ELogBook />} />
           <Route path="fishermen" element={<Fishermen />} />
           <Route path="add_officer" element={<AddOfficer />} />
+          <Route path="departure/view/:id" element={<DepartureView />} />
         </Route>
         <Route path="/" element={<LogoOnlyLayout />}>
           <Route path="login" element={<Login />} />

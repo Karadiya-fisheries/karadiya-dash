@@ -55,24 +55,24 @@ const TABLE_HEAD = [
   { id: "" },
 ];
 
-const dummyData = [
-  {
-    id: 1001,
-    name: "Lasitha Lankajeewa",
-    FDivision: "South",
-    FDistrict: "Galle",
-    FZone: "PG8958",
-    Occupation: "fishermen",
-  },
-  {
-    id: 1002,
-    name: "Amal Perera",
-    FDivision: "West",
-    FDistrict: "Matara",
-    FZone: "PG24896",
-    Occupation: "fishermen",
-  },
-];
+// const dummyData = [
+//   {
+//     id: 1001,
+//     name: "Lasitha Lankajeewa",
+//     FDivision: "South",
+//     FDistrict: "Galle",
+//     FZone: "PG8958",
+//     Occupation: "fishermen",
+//   },
+//   {
+//     id: 1002,
+//     name: "Amal Perera",
+//     FDivision: "West",
+//     FDistrict: "Matara",
+//     FZone: "PG24896",
+//     Occupation: "fishermen",
+//   },
+// ];
 
 const ContentStyle = styled(Modal)(({ theme }) => ({
   maxWidth: 480,
@@ -137,7 +137,7 @@ function applySortFilter(array, comparator, query) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-export default function ELogBook() {
+export default function Fishermen() {
   const [USERLIST, setUserList] = useState([]);
 
   const [page, setPage] = useState(0);
@@ -431,7 +431,6 @@ export default function ELogBook() {
                 Back
               </Fab>
             </Box>
-            {console.log(key)}
             <FishermenProfile id={key} />
           </>
         )}

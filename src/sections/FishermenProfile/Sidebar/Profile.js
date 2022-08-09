@@ -20,8 +20,8 @@ import {
 import AuthService from "../../../services/auth.service";
 import StorageService from "../../../firebase/upload";
 import ProfileService from "../../../services/profile.service";
-function Profile() {
-  const user = AuthService.getCurrentUser();
+function Profile({ id }) {
+  const user = id.user;
   const [userProfile, setUserProfile] = useState(null);
   const { isOpen, onOpen, onClose } = useDisclosure();
   useEffect(() => {

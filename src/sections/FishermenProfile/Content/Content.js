@@ -3,8 +3,8 @@ import { Box, Tab, TabList, TabPanel, TabPanels, Tabs } from "@chakra-ui/react";
 import ProfileForm from "./ProfileForm";
 import BoatForm from "./BoatForm";
 
-const Content = ({id}) => {
-  const tabs = ["Profile", "Registered Boats"];
+const Content = ({ id }) => {
+  const tabs = ["Profile"];
 
   return (
     <Box
@@ -43,9 +43,6 @@ const Content = ({id}) => {
         <TabPanels px={3} mt={5}>
           <TabPanel>
             <ProfileForm id={id} />
-          </TabPanel>
-          <TabPanel>
-            <BoatForm />
           </TabPanel>
         </TabPanels>
       </Tabs>
