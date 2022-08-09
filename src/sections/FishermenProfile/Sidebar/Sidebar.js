@@ -16,7 +16,7 @@ function Sidebar({ id }) {
       borderColor="brand.light"
       style={{ transform: "translateY(-100px)" }}
     >
-      <Profile />
+      <Profile id={id} />
       <Data id={id} />
       {<Actions />}
     </Box>

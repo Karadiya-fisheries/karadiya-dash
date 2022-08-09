@@ -1,7 +1,7 @@
 import { filter } from "lodash";
 import { sentenceCase } from "change-case";
 import { useState, useEffect } from "react";
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
 // material
 import {
   Card,
@@ -33,8 +33,6 @@ import {
   UserListToolbar,
   UserMoreMenu,
 } from "../sections/@dashboard/user";
-import DepartureForm from "../sections/Departure/DepartureFrom";
-//import ElogBookForm from "../sections/ElogBook/ElogBookForm";
 import { sample } from "lodash";
 import DepartureService from "../services/DepartureService";
 // ----------------------------------------------------------------------
@@ -121,6 +119,7 @@ const type = {
 };
 
 export default function DepartureApproval() {
+  const navigate = useNavigate();
   const [USERLIST, setUserList] = useState([]);
 
   const [page, setPage] = useState(0);
@@ -148,7 +147,6 @@ export default function DepartureApproval() {
         DepartingPort: departure.DepartingPort,
         FishingZone: departure.FishingZone,
         status: sample(["viewed", "modified", "submitted"]),
-        record: departure,
       }));
       setUserList(userlist);
     });
@@ -219,173 +217,143 @@ export default function DepartureApproval() {
           justifyContent="space-between"
           mb={5}
         >
-          {!open && (
-            <>
-              <Typography variant="h4">Departure Approvals</Typography>
-              <Button
-                variant="contained"
-                component={RouterLink}
-                to="#"
-                startIcon={<Iconify icon="eva:plus-fill" />}
-              >
-                New Log
-              </Button>
-            </>
-          )}
+          <>
+            <Typography variant="h4">Departure Approvals</Typography>
+            <Button
+              variant="contained"
+              component={RouterLink}
+              to="#"
+              startIcon={<Iconify icon="eva:plus-fill" />}
+            >
+              New Log
+            </Button>
+          </>
         </Stack>
 
-        {!open ? (
-          <Card>
-            <UserListToolbar
-              numSelected={selected.length}
-              filtertripId={filtertripId}
-              onFiltertripId={handleFilterBytripId}
-              type={type}
-            />
+        <Card>
+          <UserListToolbar
+            numSelected={selected.length}
+            filtertripId={filtertripId}
+            onFiltertripId={handleFilterBytripId}
+            type={type}
+          />
 
-            <Scrollbar>
-              <TableContainer sx={{ minWidth: 800 }}>
-                <Table>
-                  <UserListHead
-                    order={order}
-                    orderBy={orderBy}
-                    headLabel={TABLE_HEAD}
-                    rowCount={USERLIST.length}
-                    numSelected={selected.length}
-                    onRequestSort={handleRequestSort}
-                    onSelectAllClick={handleSelectAllClick}
-                  />
-                  <TableBody>
-                    {filteredUsers
-                      .slice(
-                        page * rowsPerPage,
-                        page * rowsPerPage + rowsPerPage
-                      )
-                      .map((row) => {
-                        const {
-                          DepartureId,
-                          IMULNumber,
-                          SkipperName,
-                          DepartingPort,
-                          FishingZone,
-                          status,
-                          isVerified,
-                          record,
-                        } = row;
-                        const isItemSelected =
-                          selected.indexOf(DepartureId) !== -1;
+          <Scrollbar>
+            <TableContainer sx={{ minWidth: 800 }}>
+              <Table>
+                <UserListHead
+                  order={order}
+                  orderBy={orderBy}
+                  headLabel={TABLE_HEAD}
+                  rowCount={USERLIST.length}
+                  numSelected={selected.length}
+                  onRequestSort={handleRequestSort}
+                  onSelectAllClick={handleSelectAllClick}
+                />
+                <TableBody>
+                  {filteredUsers
+                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                    .map((row) => {
+                      const {
+                        DepartureId,
+                        IMULNumber,
+                        SkipperName,
+                        DepartingPort,
+                        FishingZone,
+                        status,
+                        isVerified,
+                      } = row;
+                      const isItemSelected =
+                        selected.indexOf(DepartureId) !== -1;
 
-                        return (
-                          <TableRow
-                            hover
-                            onClick={() => {
-                              setKey(record);
-                              setOpen(true);
-                            }}
-                            key={DepartureId}
-                            tabIndex={-1}
-                            role="checkbox"
-                            selected={isItemSelected}
-                            aria-checked={isItemSelected}
-                          >
-                            <TableCell padding="checkbox">
-                              <Checkbox
-                                checked={isItemSelected}
-                                onChange={(event) =>
-                                  handleClick(event, DepartureId)
-                                }
-                              />
-                            </TableCell>
-                            <TableCell
-                              component="th"
-                              scope="row"
-                              padding="none"
+                      return (
+                        <TableRow
+                          hover
+                          onClick={() => {
+                            navigate(
+                              "/dashboard/departure/view/" + DepartureId
+                            );
+                          }}
+                          key={DepartureId}
+                          tabIndex={-1}
+                          role="checkbox"
+                          selected={isItemSelected}
+                          aria-checked={isItemSelected}
+                        >
+                          <TableCell padding="checkbox">
+                            <Checkbox
+                              checked={isItemSelected}
+                              onChange={(event) =>
+                                handleClick(event, DepartureId)
+                              }
+                            />
+                          </TableCell>
+                          <TableCell component="th" scope="row" padding="none">
+                            <Stack
+                              direction="row"
+                              alignItems="center"
+                              spacing={2}
                             >
-                              <Stack
-                                direction="row"
-                                alignItems="center"
-                                spacing={2}
-                              >
-                                <Typography variant="subtitle2" noWrap>
-                                  {DepartureId}
-                                </Typography>
-                              </Stack>
-                            </TableCell>
-                            <TableCell align="left">{IMULNumber}</TableCell>
-                            <TableCell align="left">{SkipperName}</TableCell>
-                            <TableCell align="left">{DepartingPort}</TableCell>
-                            <TableCell align="left">{FishingZone}</TableCell>
-                            {/* <TableCell align="left">{DepartureTime}</TableCell> */}
-                            <TableCell align="left">
-                              {isVerified ? "Yes" : "No"}
-                            </TableCell>
-                            <TableCell align="left">
-                              <Label
-                                variant="ghost"
-                                color={
-                                  (status === "banned" && "error") || "success"
-                                }
-                              >
-                                {sentenceCase(status)}
-                              </Label>
-                            </TableCell>
+                              <Typography variant="subtitle2" noWrap>
+                                {DepartureId}
+                              </Typography>
+                            </Stack>
+                          </TableCell>
+                          <TableCell align="left">{IMULNumber}</TableCell>
+                          <TableCell align="left">{SkipperName}</TableCell>
+                          <TableCell align="left">{DepartingPort}</TableCell>
+                          <TableCell align="left">{FishingZone}</TableCell>
+                          {/* <TableCell align="left">{DepartureTime}</TableCell> */}
+                          <TableCell align="left">
+                            {isVerified ? "Yes" : "No"}
+                          </TableCell>
+                          <TableCell align="left">
+                            <Label
+                              variant="ghost"
+                              color={
+                                (status === "banned" && "error") || "success"
+                              }
+                            >
+                              {sentenceCase(status)}
+                            </Label>
+                          </TableCell>
 
-                            <TableCell align="right">
-                              <UserMoreMenu />
-                            </TableCell>
-                          </TableRow>
-                        );
-                      })}
-                    {emptyRows > 0 && (
-                      <TableRow style={{ height: 53 * emptyRows }}>
-                        <TableCell colSpan={6} />
-                      </TableRow>
-                    )}
-                  </TableBody>
-
-                  {isUserNotFound && (
-                    <TableBody>
-                      <TableRow>
-                        <TableCell align="center" colSpan={6} sx={{ py: 3 }}>
-                          <SearchNotFound searchQuery={filtertripId} />
-                        </TableCell>
-                      </TableRow>
-                    </TableBody>
+                          <TableCell align="right">
+                            <UserMoreMenu />
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })}
+                  {emptyRows > 0 && (
+                    <TableRow style={{ height: 53 * emptyRows }}>
+                      <TableCell colSpan={6} />
+                    </TableRow>
                   )}
-                </Table>
-              </TableContainer>
-            </Scrollbar>
+                </TableBody>
 
-            <TablePagination
-              rowsPerPageOptions={[5, 10, 25]}
-              component="div"
-              count={USERLIST.length}
-              rowsPerPage={rowsPerPage}
-              page={page}
-              onPageChange={handleChangePage}
-              onRowsPerPageChange={handleChangeRowsPerPage}
-            />
-          </Card>
-        ) : (
-          <>
-            <Box>
-              <Fab
-                sx={{ m: 3, alignSelf: "right" }}
-                onClick={() => {
-                  setOpen(false);
-                }}
-                variant="extended"
-                size="medium"
-                color="primary"
-                aria-label="edit"
-              >
-                <ArrowBackIosIcon sx={{ mr: 1 }} />
-                Back
-              </Fab>
-            </Box>
-            <DepartureForm id={key} />
-          </>
-        )}
+                {isUserNotFound && (
+                  <TableBody>
+                    <TableRow>
+                      <TableCell align="center" colSpan={6} sx={{ py: 3 }}>
+                        <SearchNotFound searchQuery={filtertripId} />
+                      </TableCell>
+                    </TableRow>
+                  </TableBody>
+                )}
+              </Table>
+            </TableContainer>
+          </Scrollbar>
+
+          <TablePagination
+            rowsPerPageOptions={[5, 10, 25]}
+            component="div"
+            count={USERLIST.length}
+            rowsPerPage={rowsPerPage}
+            page={page}
+            onPageChange={handleChangePage}
+            onRowsPerPageChange={handleChangeRowsPerPage}
+          />
+        </Card>
       </Container>
     </Page>
   );

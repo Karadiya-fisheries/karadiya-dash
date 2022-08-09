@@ -30,7 +30,7 @@ import authService from "../../../services/auth.service";
 
 // ----------------------------------------------------------------------
 
-export default function ProfileForm({ owner }) {
+export default function ProfileForm({ data }) {
   const navigate = useNavigate();
   const [message, setMessage] = useState();
   const BoatCat = ["IMUL", "NTRB", "MTRB", "IDAY", "NBSB", "OFRP"];
