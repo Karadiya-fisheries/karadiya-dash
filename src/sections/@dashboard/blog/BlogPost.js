@@ -68,7 +68,7 @@ export default function BlogPost() {
           setCover("/static/mock-images/covers/Article.jpg");
         }
       } else {
-        setCover(post.data.NoticeCover);
+        setCover(notice.data.NoticeCover);
       }
 
       noticeService
@@ -134,7 +134,6 @@ export default function BlogPost() {
                     aria-label="delete"
                     onClick={() => {
                       noticeService.deleteNotice(post.NoticeId).then((res) => {
-                        console.log(res);
                         navigate("/dashboard/notices", {
                           replace: true,
                         });

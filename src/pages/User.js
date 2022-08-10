@@ -173,7 +173,7 @@ export default function User() {
   };
 
   return (
-    <Page title="User">
+    <Page title="Users">
       <Container>
         <Stack
           direction="row"
@@ -182,7 +182,7 @@ export default function User() {
           mb={5}
         >
           <Typography variant="h4" gutterBottom>
-            User
+            Users
           </Typography>
           <Button
             variant="contained"

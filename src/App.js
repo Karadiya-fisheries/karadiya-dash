@@ -29,6 +29,7 @@ import ELogBook from "./pages/ElogBook";
 import DepartureApproval from "./pages/DepartureApproval";
 import Fishermen from "./pages/Fishermen";
 import DepartureView from "./sections/Departure/DepartureView";
+import Activity from "./pages/Activity";
 // ----------------------------------------------------------------------
 
 export default function App() {
@@ -64,6 +65,7 @@ export default function App() {
           <Route path="fishermen" element={<Fishermen />} />
           <Route path="add_officer" element={<AddOfficer />} />
           <Route path="departure/view/:id" element={<DepartureView />} />
+          <Route path="myactivity" element={<Activity />} />
         </Route>
         <Route path="/" element={<LogoOnlyLayout />}>
           <Route path="login" element={<Login />} />

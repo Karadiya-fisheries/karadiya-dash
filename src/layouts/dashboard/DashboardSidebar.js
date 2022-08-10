@@ -2,7 +2,7 @@ import PropTypes from "prop-types";
 import { useEffect, useState } from "react";
 import { Link as RouterLink, useLocation } from "react-router-dom";
 // material
-import { styled } from "@mui/material/styles";
+import { alpha, styled } from "@mui/material/styles";
 import { Box, Link, Drawer, Typography, Avatar } from "@mui/material";
 // hooks
 import useResponsive from "../../hooks/useResponsive";
@@ -30,7 +30,7 @@ const AccountStyle = styled("div")(({ theme }) => ({
   alignItems: "center",
   padding: theme.spacing(2, 2.5),
   borderRadius: Number(theme.shape.borderRadius) * 1.5,
-  backgroundColor: theme.palette.grey[500_12],
+  backgroundColor: theme.palette.grey[500_24],
 }));
 
 // ----------------------------------------------------------------------
@@ -55,7 +55,7 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
     displayName: user.fullname,
     email: user.email,
     photoURL: profile,
-    role: "Boat Owner",
+    role: user.roles[1] === "ROLE_OWNER" ? "Boat Owner" : "Fishery Officer",
   };
 
   useEffect(() => {
@@ -76,12 +76,14 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
         },
       }}
     >
-      <Box sx={{ px: 2.5, py: 3, display: "inline-flex" }}>
-        {/* <Logo /> */}
-      </Box>
+      <Box sx={{ mt: 1, ml: 1, display: "inline-flex" }}>{/* <Logo /> */}</Box>
 
       <Box sx={{ mb: 5, mx: 2.5 }}>
-        <Link underline="none" component={RouterLink} to="#">
+        <Link
+          underline="none"
+          component={RouterLink}
+          to="/dashboard/myactivity"
+        >
           <AccountStyle>
             <Avatar alt={user.fullname} src={account.photoURL}>
               {user.fullname
@@ -128,7 +130,10 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
           PaperProps={{
             sx: {
               width: DRAWER_WIDTH,
-              bgcolor: "background.default",
+              bgcolor: (theme) => {
+                return alpha(theme.palette.info.lighter, 0.8);
+              },
+              borderRightWidth: 2,
               borderRightStyle: "dashed",
             },
           }}
