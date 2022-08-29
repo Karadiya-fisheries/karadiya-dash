@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { faker } from "@faker-js/faker";
 // @mui
 import { useTheme } from "@mui/material/styles";
@@ -28,6 +28,7 @@ import {
 } from "../sections/@dashboard/app";
 import StatService from "../services/stat.service";
 import authService from "../services/auth.service";
+import { SocketContext } from "../services/socket.context";
 import { useNavigate } from "react-router-dom";
 import noticeService from "../services/notice.service";
 import activityService from "../services/activity.service";
@@ -51,6 +52,17 @@ export default function DashboardApp() {
   const [activity, setActivity] = useState([{ createdAt: "2000-01-01" }]);
 
   const uid = authService.getCurrentUser().uid;
+  const socket = useContext(SocketContext);
+  socket.on("notify", (arg) => {
+    console.log(arg);
+    if (arg) {
+      socket.emit("getNotification", {
+        id: uid,
+        sid: socket.id,
+      });
+    }
+  });
+
   useEffect(() => {
     activityService
       .getActivityById(uid)

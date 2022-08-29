@@ -105,7 +105,7 @@ function Profile({ id }) {
         </Heading>
 
         <Text color="brand.gray" fontSize="sm">
-          Boat Owner
+          Fisherman
         </Text>
       </VStack>
     </VStack>

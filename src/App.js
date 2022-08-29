@@ -1,4 +1,5 @@
 import { Route, Routes, useNavigate } from "react-router-dom";
+
 // layouts
 import DashboardLayout from "./layouts/dashboard";
 import LogoOnlyLayout from "./layouts/LogoOnlyLayout";
@@ -30,6 +31,7 @@ import DepartureApproval from "./pages/DepartureApproval";
 import Fishermen from "./pages/Fishermen";
 import DepartureView from "./sections/Departure/DepartureView";
 import Activity from "./pages/Activity";
+import Chat from "./pages/Chat";
 // ----------------------------------------------------------------------
 
 export default function App() {
@@ -45,6 +47,7 @@ export default function App() {
       navigate("/dashboard/app", { replace: true });
     }
   }, [user]);
+
   return (
     <ThemeProvider>
       <ScrollToTop />
@@ -66,6 +69,7 @@ export default function App() {
           <Route path="add_officer" element={<AddOfficer />} />
           <Route path="departure/view/:id" element={<DepartureView />} />
           <Route path="myactivity" element={<Activity />} />
+          <Route path="chat/:id" element={<Chat />} />
         </Route>
         <Route path="/" element={<LogoOnlyLayout />}>
           <Route path="login" element={<Login />} />

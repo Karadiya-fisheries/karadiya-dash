@@ -53,7 +53,7 @@ export default function RegisterForm({ officer }) {
       password: "",
     },
     validationSchema: RegisterSchema,
-    onSubmit: (data) => {
+    onSubmit: (data, actions) => {
       if (officer) {
         AuthService.registerOfficer(
           data.firstName + " " + data.lastName,
@@ -109,8 +109,8 @@ export default function RegisterForm({ officer }) {
                   error.response.data.message) ||
                 error.message ||
                 error.toString();
+              actions.setSubmitting(false);
               setMessage(message);
-              console.log(message);
             }
           )
           .catch((error) => {

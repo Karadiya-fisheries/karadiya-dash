@@ -1,6 +1,6 @@
 import { filter } from "lodash";
 import { sentenceCase } from "change-case";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { Link as RouterLink } from "react-router-dom";
 // material
 import {
@@ -8,6 +8,7 @@ import {
   Table,
   Stack,
   Avatar,
+  Badge,
   Button,
   Checkbox,
   TableRow,
@@ -18,6 +19,7 @@ import {
   TableContainer,
   TablePagination,
 } from "@mui/material";
+import { styled } from "@mui/material/styles";
 // components
 import Page from "../components/Page";
 import Label from "../components/Label";
@@ -30,6 +32,7 @@ import {
   UserMoreMenu,
 } from "../sections/@dashboard/user";
 import { sample } from "lodash";
+import { SocketContext } from "../services/socket.context";
 import StatService from "../services/stat.service";
 // ----------------------------------------------------------------------
 
@@ -39,12 +42,38 @@ const TABLE_HEAD = [
   { id: "phone", label: "Phone", alignRight: false },
   { id: "role", label: "Role", alignRight: false },
   { id: "isVerified", label: "Email Verified", alignRight: false },
-  { id: "status", label: "Status", alignRight: false },
 
   { id: "" },
 ];
 
 // ----------------------------------------------------------------------
+
+const StyledBadge = styled(Badge)(({ theme }) => ({
+  "& .MuiBadge-badge": {
+    boxShadow: `0 0 0 2px ${theme.palette.background.paper}`,
+    "&::after": {
+      position: "absolute",
+      top: 0,
+      left: 0,
+      width: "100%",
+      height: "100%",
+      borderRadius: "50%",
+      animation: "ripple 1.2s infinite ease-in-out",
+      border: "1px solid currentColor",
+      content: '""',
+    },
+  },
+  "@keyframes ripple": {
+    "0%": {
+      transform: "scale(.8)",
+      opacity: 1,
+    },
+    "100%": {
+      transform: "scale(2.4)",
+      opacity: 0,
+    },
+  },
+}));
 
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
@@ -80,6 +109,7 @@ function applySortFilter(array, comparator, query) {
 
 export default function User() {
   const [USERLIST, setUserList] = useState([]);
+  const [online, setOnline] = useState([]);
 
   const [page, setPage] = useState(0);
 
@@ -93,7 +123,13 @@ export default function User() {
 
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
+  const socket = useContext(SocketContext);
+
   useEffect(() => {
+    socket.on("checkOnline", (arg) => {
+      console.log(arg);
+      setOnline(arg);
+    });
     StatService.getAllUsers().then((users) => {
       const userlist = users.data.map((user, index) => ({
         id: user.uid,
@@ -102,12 +138,15 @@ export default function User() {
         email: user.email,
         phone: user.phone,
         isVerified: user.confirm,
-        status: sample(["active", "banned"]),
-        role: sample(["User", "Fishermen", "Owner", "Officer"]),
+        role: !user.roles[1]
+          ? "Fisherman"
+          : user.roles[1].name === "owner"
+          ? "Boat Owner"
+          : "Fishery Officer",
       }));
       setUserList(userlist);
     });
-  }, []);
+  }, [socket, online]);
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
@@ -224,7 +263,6 @@ export default function User() {
                         email,
                         phone,
                         role,
-                        status,
                         avatarUrl,
                         isVerified,
                       } = row;
@@ -251,12 +289,25 @@ export default function User() {
                               alignItems="center"
                               spacing={2}
                             >
-                              <Avatar alt={name} src={avatarUrl}>
-                                {name
-                                  .split(" ")
-                                  .map((n) => n[0])
-                                  .join("")}
-                              </Avatar>
+                              <StyledBadge
+                                sx={{
+                                  color: "#44b700",
+                                }}
+                                overlap="circular"
+                                anchorOrigin={{
+                                  vertical: "bottom",
+                                  horizontal: "right",
+                                }}
+                                variant="dot"
+                              >
+                                <Avatar alt={name} src={avatarUrl}>
+                                  {name
+                                    .split(" ")
+                                    .map((n) => n[0])
+                                    .join("")}
+                                </Avatar>
+                              </StyledBadge>
+
                               <Typography variant="subtitle2" noWrap>
                                 {name}
                               </Typography>
@@ -268,19 +319,9 @@ export default function User() {
                           <TableCell align="left">
                             {isVerified ? "Yes" : "No"}
                           </TableCell>
-                          <TableCell align="left">
-                            <Label
-                              variant="ghost"
-                              color={
-                                (status === "banned" && "error") || "success"
-                              }
-                            >
-                              {sentenceCase(status)}
-                            </Label>
-                          </TableCell>
 
                           <TableCell align="right">
-                            <UserMoreMenu />
+                            <UserMoreMenu id={id} />
                           </TableCell>
                         </TableRow>
                       );

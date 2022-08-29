@@ -5,7 +5,7 @@ import { styled } from "@mui/material/styles";
 //
 import DashboardNavbar from "./DashboardNavbar";
 import DashboardSidebar from "./DashboardSidebar";
-
+import { SocketContext, socket } from "../../services/socket.context";
 // ----------------------------------------------------------------------
 
 const APP_BAR_MOBILE = 64;
@@ -23,7 +23,7 @@ const MainStyle = styled("div")(({ theme }) => ({
   minHeight: "100%",
   paddingTop: APP_BAR_MOBILE + 24,
   paddingBottom: theme.spacing(10),
-  backgroundColor: theme.palette.grey[200],
+  backgroundColor: theme.palette.grey[100],
   [theme.breakpoints.up("lg")]: {
     paddingTop: APP_BAR_DESKTOP + 24,
     paddingLeft: theme.spacing(2),
@@ -37,15 +37,17 @@ export default function DashboardLayout() {
   const [open, setOpen] = useState(false);
 
   return (
-    <RootStyle>
-      <DashboardNavbar onOpenSidebar={() => setOpen(true)} />
-      <DashboardSidebar
-        isOpenSidebar={open}
-        onCloseSidebar={() => setOpen(false)}
-      />
-      <MainStyle>
-        <Outlet />
-      </MainStyle>
-    </RootStyle>
+    <SocketContext.Provider value={socket}>
+      <RootStyle>
+        <DashboardNavbar onOpenSidebar={() => setOpen(true)} />
+        <DashboardSidebar
+          isOpenSidebar={open}
+          onCloseSidebar={() => setOpen(false)}
+        />
+        <MainStyle>
+          <Outlet />
+        </MainStyle>
+      </RootStyle>
+    </SocketContext.Provider>
   );
 }

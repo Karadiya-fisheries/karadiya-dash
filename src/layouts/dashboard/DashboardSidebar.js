@@ -76,7 +76,9 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
         },
       }}
     >
-      <Box sx={{ mt: 1, ml: 1, display: "inline-flex" }}>{/* <Logo /> */}</Box>
+      <Box sx={{ mt: 1, ml: 1, display: "inline-flex" }}>
+        <Logo />
+      </Box>
 
       <Box sx={{ mb: 5, mx: 2.5 }}>
         <Link
@@ -116,7 +118,12 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
           open={isOpenSidebar}
           onClose={onCloseSidebar}
           PaperProps={{
-            sx: { width: DRAWER_WIDTH },
+            sx: {
+              width: DRAWER_WIDTH,
+              bgcolor: (theme) => {
+                return theme.palette.info.lighter;
+              },
+            },
           }}
         >
           {renderContent}
@@ -130,9 +137,11 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
           PaperProps={{
             sx: {
               width: DRAWER_WIDTH,
-              bgcolor: (theme) => {
-                return alpha(theme.palette.info.lighter, 0.8);
-              },
+              backgroundImage: (theme) =>
+                `linear-gradient(90deg, ${alpha(
+                  theme.palette.info.lighter,
+                  0.5
+                )} 25%, ${alpha(theme.palette.info.main, 0.5)} 100%)`,
               borderRightWidth: 2,
               borderRightStyle: "dashed",
             },
