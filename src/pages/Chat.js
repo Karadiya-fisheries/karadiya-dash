@@ -114,7 +114,7 @@ export default function Chat() {
       setTimeout(() => {
         actions.resetForm();
         actions.setSubmitting(false);
-      }, 2000);
+      }, 1000);
     },
   });
 
