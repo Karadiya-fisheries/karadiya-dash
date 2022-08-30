@@ -32,18 +32,31 @@ export default function AppNewsUpdate({ title, subheader, list, ...other }) {
   return (
     <Card {...other}>
       <CardHeader title={title} subheader={subheader} />
-
       <Scrollbar>
-        <Stack spacing={3} sx={{ p: 3, pr: 0 }}>
-          {list.map((news) => (
-            <NewsItem key={news.id} news={news} />
-          ))}
-        </Stack>
+        {list.length !== 0 ? (
+          <Stack spacing={3} sx={{ p: 3, pr: 0 }}>
+            {list.map((news) => (
+              <NewsItem key={news.id} news={news} />
+            ))}
+          </Stack>
+        ) : (
+          <Stack spacing={3} sx={{ p: 3, pr: 0 }}>
+            <Typography variant="subtitle1">
+              There is no recent notices
+            </Typography>
+          </Stack>
+        )}
       </Scrollbar>
 
       <Divider />
 
-      <Box sx={{ p: 2, textAlign: "right" }}>
+      <Box
+        sx={{
+          p: 2,
+          textAlign: "right",
+          backgroundColor: (theme) => theme.palette.info.light,
+        }}
+      >
         <Button
           onClick={() => {
             navigate("/dashboard/notices", { replace: true });
@@ -93,7 +106,6 @@ function NewsItem({ news }) {
         src={cover}
         sx={{ width: 48, height: 48, borderRadius: 1.5, flexShrink: 0 }}
       />
-
       <Box sx={{ minWidth: 240, flexGrow: 1 }}>
         <Link
           to={{ pathname: "/dashboard/notices/view/" + id, replace: true }}

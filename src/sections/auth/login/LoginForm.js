@@ -41,7 +41,7 @@ export default function LoginForm() {
       remember: true,
     },
     validationSchema: LoginSchema,
-    onSubmit: (data) => {
+    onSubmit: (data, actions) => {
       authService
         .login(data.email, data.password)
         .then(
@@ -65,10 +65,8 @@ export default function LoginForm() {
                 error.response.data.message) ||
               error.message ||
               error.toString();
-
-            setTimeout(() => {
-              setMessage(message);
-            }, 8000);
+            actions.setSubmitting(false);
+            setMessage(message);
           }
         )
         .catch((error) => {

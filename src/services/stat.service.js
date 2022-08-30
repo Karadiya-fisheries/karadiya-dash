@@ -22,6 +22,10 @@ class StatService {
     return axios.get(API_URL + "/stat/user");
   }
 
+  getUserById(id) {
+    return axios.get(API_URL + "/stat/user/" + id);
+  }
+
   getCatchCount() {
     return axios.get(API_URL + "/stat/catch/count");
   }

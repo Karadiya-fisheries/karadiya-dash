@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { faker } from "@faker-js/faker";
 // @mui
 import { useTheme } from "@mui/material/styles";
@@ -28,10 +28,12 @@ import {
 } from "../sections/@dashboard/app";
 import StatService from "../services/stat.service";
 import authService from "../services/auth.service";
+import { SocketContext } from "../services/socket.context";
 import { useNavigate } from "react-router-dom";
 import noticeService from "../services/notice.service";
 import activityService from "../services/activity.service";
 import { fDateTime } from "../utils/formatTime";
+import { parseISO } from "date-fns";
 
 // ----------------------------------------------------------------------
 
@@ -46,12 +48,25 @@ export default function DashboardApp() {
   const [pendingTriplogCount, setPendingTriplogCount] = useState(undefined);
   const [boatCount, setBoatCount] = useState(undefined);
   const [IsOwner, setIsOwner] = useState(false);
-  const [notice, setNotice] = useState([]);
-  const [activity, setActivity] = useState([]);
+  const [notice, setNotice] = useState([{ createdAt: "2000-01-01" }]);
+  const [activity, setActivity] = useState([{ createdAt: "2000-01-01" }]);
 
   const uid = authService.getCurrentUser().uid;
+  const socket = useContext(SocketContext);
+  socket.on("notify", (arg) => {
+    console.log(arg);
+    if (arg) {
+      socket.emit("getNotification", {
+        id: uid,
+        sid: socket.id,
+      });
+    }
+  });
+
   useEffect(() => {
-    activityService.getActivityById(uid).then((res) => setActivity(res.data));
+    activityService
+      .getActivityById(uid)
+      .then((res) => setActivity(res.data.slice(-5)));
     noticeService.getNoticeWeekly().then((res) => setNotice(res.data));
     StatService.getAllUserCount().then((res) => setUserCount(res.data));
     StatService.getAllFishermenCount().then((res) =>
@@ -167,7 +182,7 @@ export default function DashboardApp() {
               list={activity.map((act, index) => ({
                 id: act.ActivityId,
                 title: act.ActivityTitle,
-                time: fDateTime(act.createdAt),
+                time: fDateTime(parseISO(act.createdAt)),
               }))}
             />
           </Grid>
@@ -178,7 +193,7 @@ export default function DashboardApp() {
                 id: post.NoticeId,
                 title: post.NoticeTitle,
                 image: post.NoticeCover,
-                postedAt: post.createdAt,
+                postedAt: parseISO(post.createdAt),
                 cat: post.NoticeCat,
                 description: post.NoticeText,
               }))}

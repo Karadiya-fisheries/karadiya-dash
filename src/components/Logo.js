@@ -24,8 +24,8 @@ export default function Logo({ disabledLink = false, sx }) {
   const logo = (
     <Box
       component="img"
-      src="/log.png"
-      sx={{ width: "auto", height: 40, ...sx }}
+      src="/karadiya.png"
+      sx={{ width: "auto", height: 80, ...sx, mb: 1 }}
     />
   );
 
