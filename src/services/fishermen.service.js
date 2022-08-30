@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = "http://localhost:5000/fishermen";
+const BASE_URL = "https://serene-woodland-83390.herokuapp.com/fishermen";
 class FishermenService {
   getFishermens() {
     return axios.get(BASE_URL);
