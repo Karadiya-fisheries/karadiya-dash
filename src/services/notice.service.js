@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = "https://serene-woodland-83390.herokuapp.com/notice/";
+const BASE_URL = "http://localhost:5000/notice/";
 class NoticeService {
   getNotices() {
     return axios.get(BASE_URL);

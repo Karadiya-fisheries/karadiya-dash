@@ -9,6 +9,16 @@ import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import * as React from "react";
 import LotForm from "./LotForm";
+import { Paper } from "@mui/material";
+import { styled as MuiStyle } from "@mui/material/styles";
+
+const RegisterStyle = MuiStyle(Paper)(({ theme }) => ({
+  maxWidth: 640,
+  padding: theme.spacing(2, 2),
+  alignItems: "center",
+  justifyContent: "space-between",
+  mb: 5,
+}));
 
 export default function CatchList({ catchRecords }) {
   const [expanded, setExpanded] = React.useState(false);
@@ -33,8 +43,7 @@ export default function CatchList({ catchRecords }) {
 }
 
 const Lot = ({ expanded, handleChange, CatchRecord, id }) => {
-  const [load, setLoad] = React.useState({});
-
+  const [load, setLoad] = React.useState(0);
   return (
     <Accordion
       expanded={expanded === "panel" + id}
@@ -52,7 +61,7 @@ const Lot = ({ expanded, handleChange, CatchRecord, id }) => {
       </AccordionSummary>
       <AccordionDetails>
         <div>
-          <FormControl sx={{ m: 1, minWidth: 80 }}>
+          <FormControl sx={{ mx: 4, mb: 4 }}>
             <InputLabel id="demo-simple-select-autowidth-label">
               Fish Load
             </InputLabel>
@@ -63,6 +72,7 @@ const Lot = ({ expanded, handleChange, CatchRecord, id }) => {
               onChange={(e) => {
                 setLoad(e.target.value);
               }}
+              defaultValue={0}
               autoWidth
               label="Fish Load"
             >
@@ -73,7 +83,12 @@ const Lot = ({ expanded, handleChange, CatchRecord, id }) => {
           </FormControl>
         </div>
 
-        <LotForm load={load} catchId={CatchRecord.CatchId} ownerId={} />
+        <RegisterStyle elevation={5}>
+          <LotForm
+            load={CatchRecord.Catch[load]}
+            catchId={CatchRecord.CatchId}
+          />
+        </RegisterStyle>
       </AccordionDetails>
     </Accordion>
   );

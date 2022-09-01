@@ -24,17 +24,28 @@ import {
   DialogActions,
   DialogContent,
   DialogContentText,
+  Box,
+  Grid,
+  Slider,
+  Input,
 } from "@mui/material";
 import PhotoCamera from "@mui/icons-material/PhotoCamera";
-
+import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import { DateTimePicker } from "@mui/x-date-pickers";
 import { LoadingButton } from "@mui/lab";
 // components
-import Page from "../../../components/Page";
 import Iconify from "../../../components/Iconify";
 import LotService from "../../../services/lot.service";
 import authService from "../../../services/auth.service";
 import activityService from "../../../services/activity.service";
 import triplogService from "../../../services/triplog.service";
+import moment from "moment";
+
+const SliderInput = styled(Input)`
+  width: 42px;
+`;
+
 // ----------------------------------------------------------------------
 
 const getColor = (props) => {
@@ -49,14 +60,6 @@ const getColor = (props) => {
   }
   return "#d7e0e0";
 };
-
-const RegisterStyle = MuiStyle(Paper)(({ theme }) => ({
-  maxWidth: 640,
-  padding: theme.spacing(2, 2),
-  alignItems: "center",
-  justifyContent: "space-between",
-  mb: 5,
-}));
 
 const ImageContainer = styled.div`
   flex: 1;
@@ -74,18 +77,37 @@ const ImageContainer = styled.div`
   transition: border 0.24s ease-in-out;
 `;
 
-export default function LotForm() {
+export default function LotForm({ load, catchId }) {
   const navigate = useNavigate();
   const [message, setMessage] = useState(false);
-  const [tripLog, setTripLog] = useState({});
   const [copen, setCopen] = useState(false);
   const [cover, setCover] = useState(null);
 
   const uid = authService.getCurrentUser().uid;
+  const [startDate, setStartDate] = useState(moment());
+  const [endDate, setEndDate] = useState(moment());
+
+  const [value, setValue] = useState(30);
+
+  const handleSliderChange = (event, newValue) => {
+    setValue(newValue);
+  };
+
+  const handleInputChange = (event) => {
+    setValue(event.target.value === "" ? "" : Number(event.target.value));
+  };
+
+  const handleBlur = () => {
+    if (value < 0) {
+      setValue(0);
+    } else if (value > 100) {
+      setValue(100);
+    }
+  };
 
   const formik = useFormik({
     initialValues: {
-      LotTitle: "",
+      LotTitle: load.FishType + " - " + load.FishSubType,
       LotCover: "",
       LotUnitPrice: "",
       LotSize: "",
@@ -93,6 +115,7 @@ export default function LotForm() {
       LotStartDate: "",
       LotEndDate: "",
     },
+    enableReinitialize: true,
     onSubmit: (data, actions) => {
       if (!cover) {
         setCopen(!copen);
@@ -111,7 +134,7 @@ export default function LotForm() {
         CurrentBid: data.CurrentBid,
         LotStartDate: data.LotStartDate,
         LotEndDate: data.LotEndDate,
-        OwnerId: tripLog.ownerOwnerId,
+        CatchId: catchId,
       })
         .then(
           (lot) => {
@@ -163,121 +186,138 @@ export default function LotForm() {
   });
 
   return (
-    <Page title="Dashboard: Notices">
-      <Container>
-        <Typography variant="h4" gutterBottom>
-          Generate An Auction Lot
-        </Typography>
-        <RegisterStyle>
-          <FormikProvider value={formik}>
-            <Form autoComplete="off" noValidate onSubmit={handleSubmit}>
-              <Stack spacing={3}>
-                <TextField
-                  fullWidth="true"
-                  required="true"
-                  autoComplete="username"
-                  type="email"
-                  label="Title"
-                  variant="standard"
-                  {...getFieldProps("NoticeTitle")}
-                />
-                <FormControl variant="standard" sx={{ m: 1, minWidth: 120 }}>
-                  <InputLabel id="demo-simple-select-standard-label">
-                    Catagory
-                  </InputLabel>
-                  <Select
-                    required="true"
-                    labelId="demo-simple-select-standard-label"
-                    id="demo-simple-select-standard"
-                    {...getFieldProps("NoticeCat")}
-                    label="Catagory"
-                  >
-                    <MenuItem value={"Notice"}>Notice</MenuItem>
-                    <MenuItem value={"Article"}>Article</MenuItem>
-                  </Select>
-                </FormControl>
-                <ImageContainer
-                  {...getRootProps({ isDragAccept, isFocused, isDragReject })}
-                >
-                  <input {...getInputProps()} />
-                  <Typography paragraph>
-                    Drag and drop to upload Cover Image here, or click to select
-                    Image
-                  </Typography>
-                  <IconButton
-                    size="large"
-                    color="inherit"
-                    aria-label="upload picture"
-                    component="label"
-                    onClick={open}
-                  >
-                    <PhotoCamera fontSize="inherit" />
-                  </IconButton>
-                </ImageContainer>
+    <Container>
+      <Typography variant="subtitle1" gutterBottom>
+        {load.FishType} - {load.FishSubType}
+      </Typography>
+      <FormikProvider value={formik}>
+        <LocalizationProvider dateAdapter={AdapterDateFns}>
+          <Form autoComplete="off" noValidate onSubmit={handleSubmit}>
+            <Stack spacing={3}>
+              <TextField
+                fullWidth="true"
+                required="true"
+                label="Unit Price"
+                variant="standard"
+                {...getFieldProps("LotUnitPrice")}
+              />
 
-                <TextField
-                  fullwidth="true"
-                  required="true"
-                  id="standard-textarea"
-                  label="Text Content"
-                  placeholder="Write here..."
-                  {...getFieldProps("NoticeText")}
-                  multiline
-                  rows={10}
-                  variant="standard"
-                />
-                <LoadingButton
-                  fullWidth
+              <Grid container spacing={2} alignItems="center">
+                <Grid item xs>
+                  <Typography id="input-slider" gutterBottom>
+                    Lot Size
+                  </Typography>
+                  <Slider
+                    value={typeof value === "number" ? value : 0}
+                    onChange={handleSliderChange}
+                    aria-labelledby="input-slider"
+                  />
+                </Grid>
+                <Grid item>
+                  <SliderInput
+                    required={true}
+                    value={value}
+                    size="small"
+                    onChange={handleInputChange}
+                    onBlur={handleBlur}
+                    inputProps={{
+                      step: 10,
+                      min: 0,
+                      max: load.Weight,
+                      type: "number",
+                      "aria-labelledby": "input-slider",
+                    }}
+                  />
+                </Grid>
+              </Grid>
+
+              <ImageContainer
+                {...getRootProps({ isDragAccept, isFocused, isDragReject })}
+              >
+                <input {...getInputProps()} />
+                <Typography paragraph>
+                  Drag and drop to upload Cover Image here, or click to select
+                  Image
+                </Typography>
+                <IconButton
                   size="large"
-                  type="submit"
-                  variant="contained"
-                  loading={isSubmitting}
+                  color="inherit"
+                  aria-label="upload picture"
+                  component="label"
+                  onClick={open}
                 >
-                  Create
-                </LoadingButton>
-              </Stack>
-            </Form>
-          </FormikProvider>
-          {message && (
-            <Alert severity="error" sx={{ width: "100%" }}>
-              {message}
-            </Alert>
-          )}
-          <Dialog
-            open={copen}
-            onClose={() => {
+                  <PhotoCamera fontSize="inherit" />
+                </IconButton>
+              </ImageContainer>
+
+              <DateTimePicker
+                label="Auction Start Date and Time"
+                value={startDate}
+                onChange={(value) => {
+                  setStartDate(value);
+                }}
+                renderInput={(params) => <TextField {...params} />}
+              />
+
+              <DateTimePicker
+                label="Auction End Date and Time"
+                value={endDate}
+                onChange={(value) => {
+                  setEndDate(value);
+                }}
+                renderInput={(params) => <TextField {...params} />}
+              />
+              <LoadingButton
+                fullWidth
+                size="large"
+                type="submit"
+                variant="contained"
+                loading={isSubmitting}
+              >
+                Create
+              </LoadingButton>
+            </Stack>
+          </Form>
+        </LocalizationProvider>
+      </FormikProvider>
+      {message && (
+        <Alert severity="error" sx={{ width: "100%" }}>
+          {message}
+        </Alert>
+      )}
+      <Dialog
+        open={copen}
+        onClose={() => {
+          setCopen(!copen);
+        }}
+        aria-labelledby="alert-dialog-title"
+        aria-describedby="alert-dialog-description"
+      >
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            If you don't add cover image to your post, System will show standard
+            image accordingly.
+          </DialogContentText>
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={() => {
+              setCover("auto");
               setCopen(!copen);
             }}
-            aria-labelledby="alert-dialog-title"
-            aria-describedby="alert-dialog-description"
           >
-            <DialogContent>
-              <DialogContentText id="alert-dialog-description">
-                If you don't add cover image to your post, System will show
-                standard image accordingly.
-              </DialogContentText>
-            </DialogContent>
-            <DialogActions>
-              <Button
-                onClick={() => {
-                  setCover("auto");
-                  setCopen(!copen);
-                }}
-              >
-                Skip
-              </Button>
-              <Button
-                onClick={() => {
-                  setCopen(!copen);
-                }}
-                autoFocus
-              >
-                Add cover
-              </Button>
-            </DialogActions>
-          </Dialog>
-        </RegisterStyle>
-      </Container>
-    </Page>
+            Skip
+          </Button>
+          <Button
+            onClick={() => {
+              setCopen(!copen);
+            }}
+            autoFocus
+          >
+            Add cover
+          </Button>
+        </DialogActions>
+      </Dialog>
+    </Container>
   );
 }

@@ -2,6 +2,8 @@ import * as Yup from "yup";
 import { useState, useEffect } from "react";
 import { useFormik, Form, FormikProvider } from "formik";
 import { useNavigate } from "react-router-dom";
+import { Link as RouterLink } from "react-router-dom";
+
 import {
   TextField,
   FormControlLabel,
@@ -15,11 +17,13 @@ import {
   Typography,
   Fab,
   Divider,
+  IconButton,
 } from "@mui/material";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DesktopDatePicker, TimePicker } from "@mui/x-date-pickers";
 import EditIcon from "@mui/icons-material/Edit";
+import Inventory2OutlinedIcon from "@mui/icons-material/Inventory2Outlined";
 import { LoadingButton } from "@mui/lab";
 // component
 import Iconify from "../../components/Iconify";
@@ -83,9 +87,12 @@ export default function ElogBookForm({ id }) {
               ELogBook Record No.{id.tripId}
             </Typography>
             <Divider />
-            <Box>
+            <Stack
+              direction={"row"}
+              alignItems="flex-end"
+              justifyContent={"space-between"}
+            >
               <Fab
-                sx={{ m: 3, alignSelf: "right" }}
                 onClick={() => {
                   setEdit(!edit);
                 }}
@@ -94,7 +101,18 @@ export default function ElogBookForm({ id }) {
               >
                 <EditIcon />
               </Fab>
-            </Box>
+              <IconButton
+                color="primary"
+                sx={{ border: "1px solid", borderRadius: 2 }}
+                component={RouterLink}
+                to={"/dashboard/lot/generate/" + id.tripId}
+              >
+                <Inventory2OutlinedIcon />
+                <Typography varient="subtitle2">
+                  Generate Auction Lot
+                </Typography>
+              </IconButton>
+            </Stack>
             <Box p={2} border="1px solid #E2E8F0" borderRadius={1}>
               <Typography mb={2} variant="subtitle1">
                 Departure Details

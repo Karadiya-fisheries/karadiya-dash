@@ -17,8 +17,8 @@ const navConfig = [
     icon: getIcon("eva:people-fill"),
   },
   {
-    title: "Sale",
-    path: "/dashboard/sales",
+    title: "Auction",
+    path: "/dashboard/auction",
     icon: getIcon("eva:shopping-bag-fill"),
   },
   {
