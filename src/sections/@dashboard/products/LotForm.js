@@ -87,35 +87,23 @@ export default function LotForm({ load, catchId }) {
   const [startDate, setStartDate] = useState(moment());
   const [endDate, setEndDate] = useState(moment());
 
-  const [value, setValue] = useState(30);
-
-  const handleSliderChange = (event, newValue) => {
-    setValue(newValue);
-  };
-
-  const handleInputChange = (event) => {
-    setValue(event.target.value === "" ? "" : Number(event.target.value));
-  };
-
-  const handleBlur = () => {
-    if (value < 0) {
-      setValue(0);
-    } else if (value > 100) {
-      setValue(100);
-    }
-  };
+  const LotSchema = Yup.object().shape({
+    LotSize: Yup.number()
+      .max(load.Weight, "Lot size can't exceed the harvest")
+      .required("Lot Size is Required"),
+    LotUnitPrice: Yup.number().required("Unit Price is Required"),
+  });
 
   const formik = useFormik({
     initialValues: {
       LotTitle: load.FishType + " - " + load.FishSubType,
-      LotCover: "",
-      LotUnitPrice: "",
-      LotSize: "",
-      CurrentBid: "",
+      LotUnitPrice: 600,
+      LotSize: load.Weight,
       LotStartDate: "",
       LotEndDate: "",
     },
     enableReinitialize: true,
+    validationSchema: LotSchema,
     onSubmit: (data, actions) => {
       if (!cover) {
         setCopen(!copen);
@@ -123,19 +111,19 @@ export default function LotForm({ load, catchId }) {
         return null;
       }
 
+      const list = {
+        LotTitle: data.LotTitle,
+        LotUnitPrice: data.LotUnitPrice,
+        LotSize: data.LotSize,
+        LotStartDate: startDate,
+        LotEndDate: endDate,
+        CatchId: catchId,
+      };
+
       setTimeout(() => {
         actions.setSubmitting(false);
       }, 10000);
-      LotService.createNotice({
-        LotTitle: data.LotTitle,
-        LotCover: data.LotCover,
-        LotUnitPrice: data.LotUnitPrice,
-        LotSize: data.LotSize,
-        CurrentBid: data.CurrentBid,
-        LotStartDate: data.LotStartDate,
-        LotEndDate: data.LotEndDate,
-        CatchId: catchId,
-      })
+      LotService.createLot(list)
         .then(
           (lot) => {
             setMessage("Auction Lot created successfull!");
@@ -187,7 +175,7 @@ export default function LotForm({ load, catchId }) {
 
   return (
     <Container>
-      <Typography variant="subtitle1" gutterBottom>
+      <Typography variant="subtitle2" gutterBottom>
         {load.FishType} - {load.FishSubType}
       </Typography>
       <FormikProvider value={formik}>
@@ -195,41 +183,24 @@ export default function LotForm({ load, catchId }) {
           <Form autoComplete="off" noValidate onSubmit={handleSubmit}>
             <Stack spacing={3}>
               <TextField
-                fullWidth="true"
-                required="true"
-                label="Unit Price"
+                fullWidth={true}
+                required={true}
+                label="Unit Price - Price Per Kg"
                 variant="standard"
                 {...getFieldProps("LotUnitPrice")}
+                error={Boolean(touched.LotUnitPrice && errors.LotUnitPrice)}
+                helperText={touched.LotUnitPrice && errors.LotUnitPrice}
               />
 
-              <Grid container spacing={2} alignItems="center">
-                <Grid item xs>
-                  <Typography id="input-slider" gutterBottom>
-                    Lot Size
-                  </Typography>
-                  <Slider
-                    value={typeof value === "number" ? value : 0}
-                    onChange={handleSliderChange}
-                    aria-labelledby="input-slider"
-                  />
-                </Grid>
-                <Grid item>
-                  <SliderInput
-                    required={true}
-                    value={value}
-                    size="small"
-                    onChange={handleInputChange}
-                    onBlur={handleBlur}
-                    inputProps={{
-                      step: 10,
-                      min: 0,
-                      max: load.Weight,
-                      type: "number",
-                      "aria-labelledby": "input-slider",
-                    }}
-                  />
-                </Grid>
-              </Grid>
+              <TextField
+                fullWidth={true}
+                required={true}
+                label="Lot Size - Weight in Kg"
+                variant="standard"
+                {...getFieldProps("LotSize")}
+                error={Boolean(touched.LotSize && errors.LotSize)}
+                helperText={touched.LotSize && errors.LotSize}
+              />
 
               <ImageContainer
                 {...getRootProps({ isDragAccept, isFocused, isDragReject })}

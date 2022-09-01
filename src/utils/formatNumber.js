@@ -4,9 +4,7 @@ import numeral from "numeral";
 // ----------------------------------------------------------------------
 
 export function fCurrency(number) {
-  return numeral(number).format(
-    Number.isInteger(number) ? "LKR0,0" : "LKR0,0.00"
-  );
+  return numeral(number).format(Number.isInteger(number) ? "0" : "0,0.");
 }
 
 export function fPercent(number) {
@@ -18,7 +16,7 @@ export function fNumber(number) {
 }
 
 export function fShortenNumber(number) {
-  return replace(numeral(number).format("0.00a"), ".00", "");
+  return replace(numeral(number).format("0.a"), ".00", "");
 }
 
 export function fData(number) {
