@@ -1,7 +1,7 @@
 import axios from "axios";
 import authHeader from "./auth-header";
 
-const API_URL = "https://serene-woodland-83390.herokuapp.com/api/test/";
+const API_URL = "http://localhost:5000/api/test/";
 
 class UserService {
   getPublicContent() {
@@ -20,7 +20,7 @@ class UserService {
     return axios.get(API_URL + "admin", { headers: authHeader() });
   }
   getUserDetails(fullname) {
-    return axios.get("https://serene-woodland-83390.herokuapp.com/fishermen/get/" + fullname, {
+    return axios.get("http://localhost:5000/fishermen/get/" + fullname, {
       headers: authHeader(),
     });
   }

@@ -32,6 +32,7 @@ import Fishermen from "./pages/Fishermen";
 import DepartureView from "./sections/Departure/DepartureView";
 import Activity from "./pages/Activity";
 import Chat from "./pages/Chat";
+import LotCreate from "./sections/@dashboard/products/LotCreate";
 // ----------------------------------------------------------------------
 
 export default function App() {
@@ -59,7 +60,8 @@ export default function App() {
           <Route path="notices" element={<Blog />} />
           <Route path="notices/view/:id" element={<BlogPost />} />
           <Route path="notices/create" element={<BlogCreate />} />
-          <Route path="sales" element={<Products />} />
+          <Route path="lot/generate/:tid" element={<LotCreate />} />
+          <Route path="auction" element={<Products />} />
           <Route path="profile" element={<ProfieIndex />} />
           <Route path="owner/profile" element={<OwnerProfile />} />
           <Route path="editprofile" element={<EditProfile />} />
