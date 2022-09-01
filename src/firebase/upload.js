@@ -2,6 +2,8 @@ import storage from "./firebaseConfig.js";
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import profileService from "../services/profile.service.js";
 import noticeService from "../services/notice.service.js";
+import lotService from "../services/lot.service.js";
+
 class StorageService {
   profileUploadHandler = (id, file) => {
     if (!file) {
@@ -58,6 +60,38 @@ class StorageService {
 
         getDownloadURL(uploadTask.snapshot.ref).then((url) => {
           noticeService.setCover(id, { NoticeCover: url });
+        });
+      }
+    );
+  };
+  lotCoverUploadHandler = (id, file) => {
+    if (!file) {
+      return null;
+    }
+
+    if (file === "auto") {
+      lotService.setCover(id, { LotCover: "auto" });
+      return null;
+    }
+
+    const storageRef = ref(storage, `/Lot/${file.name}`);
+
+    // progress can be paused and resumed. It also exposes progress updates.
+    // Receives the storage reference and the file to upload.
+    const uploadTask = uploadBytesResumable(storageRef, file);
+    uploadTask.on(
+      "state_changed",
+      (snapshot) => {
+        const percent = Math.round(
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100
+        );
+      },
+      (err) => console.log(err),
+      () => {
+        // download url
+
+        getDownloadURL(uploadTask.snapshot.ref).then((url) => {
+          lotService.setCover(id, { LotCover: url });
         });
       }
     );
