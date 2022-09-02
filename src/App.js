@@ -31,6 +31,7 @@ import Fishermen from "./pages/Fishermen";
 import DepartureView from "./sections/Departure/DepartureView";
 import Activity from "./pages/Activity";
 import Chat from "./pages/Chat";
+import ElogBookDoc from './sections/ElogBook/ElogBookDoc';
 // ----------------------------------------------------------------------
 
 export default function App() {
@@ -74,6 +75,8 @@ export default function App() {
           <Route path="login" element={<Login />} />
           <Route path="register" element={<Register />} />
           <Route path="owner/profile" element={<OwnerProfile />} />
+          <Route path="elogbookdoc" element={<ElogBookDoc />} />
+          
         </Route>
       </Routes>
     </ThemeProvider>
