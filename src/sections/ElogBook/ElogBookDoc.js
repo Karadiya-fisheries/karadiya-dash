@@ -10,6 +10,7 @@ import { fDate } from "../../utils/formatTime";
 import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import { useTheme } from "@mui/material/styles";
+import ElogBookForm from '../ElogBook/ElogBookForm';
 
 import EditIcon from "@mui/icons-material/Edit";
 import FileDownload from "@mui/icons-material/FileDownload";
@@ -27,6 +28,7 @@ export default function SimplePaper() {
   useEffect(() => {
     triplogService.getTripLogById(id).then((result) => {
       setElogbook(result.data);
+      console.log(result.data);
     });
   }, []);
   return (
@@ -36,7 +38,7 @@ export default function SimplePaper() {
         flexWrap: "wrap",
         "& > :not(style)": {
           m: 5,
-          width: 700,
+          width: 800,
           height: 1000,
         },
         alignItems: "center",
@@ -46,7 +48,7 @@ export default function SimplePaper() {
     >
        <Stack spacing={3} direction="column">
           <Typography variant="h4">
-            ElogBook Record ID(#{elogbook.ElogbookId})
+            ElogBook Record ID(#{elogbook.tripId})
           </Typography>
           <Stack
             direction={"row"}
@@ -76,7 +78,7 @@ export default function SimplePaper() {
                   pdf.text(
                     6,
                     6,
-                    "Departure Approval Request." + elogbook.ElogbookId
+                    "Departure Approval Request." + elogbook.tripId
                   );
                   const imgProperties = pdf.getImageProperties(data);
                   const pdfWidth = pdf.internal.pageSize.getWidth();
@@ -92,10 +94,13 @@ export default function SimplePaper() {
             </Box>
           </Stack>
           <Divider sx={{ color: theme.palette.divider }} />
-          
-      <Paper elevation={3} sx={{border:1}} >
-      <Typography variant="h3" component="h2" sx={{textAlign:'center',m:4}}>
+          {edit ? (
+      <Paper elevation={3} sx={{border:1}}  ref={printRef} >
+      <Typography variant="h3" component="h2" sx={{textAlign:'center',mt:4,marginBottom:0}}>
        ElogBook Record ID
+      </Typography>
+      <Typography variant="h5" component="h5" sx={{textAlign:'center',m:1}}>
+      Current record Details
       </Typography>
       <Divider sx={{width:'100%',borderBottomWidth: 3}} />
       
@@ -108,6 +113,9 @@ export default function SimplePaper() {
   <ElogBookOneRecord/>
 
       </Paper>
+       ) : (
+        <ElogBookForm id={elogbook} edit={edit} />
+      )}
       </Stack>
     </Box>
   );

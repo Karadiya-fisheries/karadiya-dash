@@ -122,10 +122,10 @@ export default function CustomPaginationActionsTable() {
       const data = result.data
       console.log(data)
       const list = [
-        createData('Departure Harbor',  data.Harbor),
-        createData('Skipper ID Number', data.SkipperID ),
-        createData('Wessel ID Number', data.WesselID),
-        createData('Departure Date', data.DepartureDate),
+        createData('Relevant Departure Harbor',  data.Harbor),
+        createData('Skipper Identity Number', data.SkipperID ),
+        createData('Wessel Identity Number', data.WesselID),
+        createData('Departure Date(year/Month/Date)', data.DepartureDate),
         createData('Departure Time', data.DepartureTime),
         createData('Gear Type', data.GearType),
         createData('Main Line', data.MainLine),
