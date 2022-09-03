@@ -13,6 +13,16 @@ class LotService {
     });
   }
 
+  getCreatedLots(item) {
+    console.log(item);
+    return axios.post(BASE_URL + "catch/load", item);
+  }
+
+  getSpendLotSize(item) {
+    console.log(item);
+    return axios.post(BASE_URL + "catch/load/sum", item);
+  }
+
   getLotWeekly() {
     return axios.get(BASE_URL + "weekly");
   }

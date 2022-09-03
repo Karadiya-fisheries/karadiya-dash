@@ -63,7 +63,7 @@ const getStatus = (startDate, endDate) => {
   else return { status: "", date: moment(), color: "" };
 };
 export default function ShopProductCard({ product }) {
-  const { name, cover, price, start, end, owner, size } = product;
+  const { name, cover, price, start, end, owner, size, id } = product;
   const color = getStatus(start, end).color;
 
   const date = getStatus(start, end).date;
@@ -105,7 +105,7 @@ export default function ShopProductCard({ product }) {
 
         <Stack spacing={2} sx={{ p: 3 }}>
           <TitleStyle
-            to="#"
+            to={{ pathname: "/dashboard/lot/view/" + id, replace: true }}
             color="inherit"
             underline="hover"
             component={RouterLink}
@@ -135,7 +135,7 @@ export default function ShopProductCard({ product }) {
               variant="caption"
               sx={{ color: "text.disabled", display: "block" }}
             >
-              {moment().toNow(date)}
+              {fToNow(date)}
             </Typography>
             <Typography variant="subtitle1">
               &nbsp; LKR.{fCurrency(price)}

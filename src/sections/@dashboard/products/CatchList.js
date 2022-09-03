@@ -1,21 +1,30 @@
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
-import Accordion from "@mui/material/Accordion";
-import AccordionDetails from "@mui/material/AccordionDetails";
-import AccordionSummary from "@mui/material/AccordionSummary";
-import Typography from "@mui/material/Typography";
-import InputLabel from "@mui/material/InputLabel";
-import MenuItem from "@mui/material/MenuItem";
-import FormControl from "@mui/material/FormControl";
-import Select from "@mui/material/Select";
-import * as React from "react";
+import { useEffect, useState } from "react";
 import LotForm from "./LotForm";
-import { alpha } from "@mui/material";
-import { Card, Paper, Stack } from "@mui/material";
+import {
+  alpha,
+  ListItem,
+  Card,
+  Paper,
+  Stack,
+  List,
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  Typography,
+  InputLabel,
+  FormControl,
+  MenuItem,
+  Select,
+  ListItemText,
+  Divider,
+} from "@mui/material";
 import { styled as MuiStyle } from "@mui/material/styles";
 import { fDate } from "../../../utils/formatTime";
+import lotService from "../../../services/lot.service";
 
 const RegisterStyle = MuiStyle(Paper)(({ theme }) => ({
-  maxWidth: 640,
+  maxWidth: 720,
   padding: theme.spacing(2, 2),
   alignItems: "center",
   justifyContent: "space-between",
@@ -24,7 +33,7 @@ const RegisterStyle = MuiStyle(Paper)(({ theme }) => ({
 }));
 
 export default function CatchList({ catchRecords }) {
-  const [expanded, setExpanded] = React.useState(false);
+  const [expanded, setExpanded] = useState(false);
 
   const handleChange = (panel) => (event, isExpanded) => {
     setExpanded(isExpanded ? panel : false);
@@ -48,7 +57,8 @@ export default function CatchList({ catchRecords }) {
 }
 
 const Lot = ({ expanded, handleChange, CatchRecord, id }) => {
-  const [load, setLoad] = React.useState(0);
+  const [load, setLoad] = useState(0);
+
   return (
     <Accordion
       expanded={expanded === "panel" + id}
@@ -90,12 +100,45 @@ const Lot = ({ expanded, handleChange, CatchRecord, id }) => {
         </Stack>
 
         <RegisterStyle elevation={5}>
+          <LotList loadIndex={load} catchId={CatchRecord.CatchId} />
+          <Divider sx={{ mb: 1 }} />
           <LotForm
             load={CatchRecord.Catch[load]}
+            loadIndex={load}
             catchId={CatchRecord.CatchId}
           />
         </RegisterStyle>
       </AccordionDetails>
     </Accordion>
+  );
+};
+
+const LotList = ({ catchId, loadIndex }) => {
+  const [lots, setLots] = useState([]);
+  const query = {
+    catchId: parseInt(catchId),
+    loadIndex: parseInt(loadIndex),
+  };
+  useEffect(() => {
+    lotService.getCreatedLots(query).then((res) => {
+      setLots(res.data);
+    });
+  }, [loadIndex]);
+  return (
+    <List sx={{ borderTop: "1px solid black" }}>
+      {lots.map((bid, index) => (
+        <ListItem key={index} sx={{ borderBottom: "1px solid black", m: 1 }}>
+          <Stack direction={"row"} spacing={3}>
+            <Typography variant="subtitle2">
+              Auction Lot - #{bid.LotId} -
+            </Typography>
+
+            <ListItemText>Lot Title - {bid.LotTitle}</ListItemText>
+            <ListItemText>Lot Size - {bid.LotSize} kg</ListItemText>
+            <ListItemText>Unit Price - {bid.LotUnitPrice} lkr</ListItemText>
+          </Stack>
+        </ListItem>
+      ))}
+    </List>
   );
 };

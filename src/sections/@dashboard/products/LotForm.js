@@ -15,6 +15,7 @@ import {
   Container,
   Button,
   IconButton,
+  Snackbar,
   FormControl,
   InputLabel,
   Select,
@@ -41,6 +42,7 @@ import authService from "../../../services/auth.service";
 import activityService from "../../../services/activity.service";
 import triplogService from "../../../services/triplog.service";
 import moment from "moment";
+import lotService from "../../../services/lot.service";
 
 const SliderInput = styled(Input)`
   width: 42px;
@@ -77,11 +79,13 @@ const ImageContainer = styled.div`
   transition: border 0.24s ease-in-out;
 `;
 
-export default function LotForm({ load, catchId }) {
+export default function LotForm({ load, catchId, loadIndex }) {
   const navigate = useNavigate();
   const [message, setMessage] = useState(false);
   const [copen, setCopen] = useState(false);
   const [cover, setCover] = useState(null);
+  const [weight, setWeight] = useState(load.Weight);
+  const [sopen, setSOpen] = useState(false);
 
   const uid = authService.getCurrentUser().uid;
   const [startDate, setStartDate] = useState(moment());
@@ -94,11 +98,22 @@ export default function LotForm({ load, catchId }) {
     LotUnitPrice: Yup.number().required("Unit Price is Required"),
   });
 
+  useEffect(() => {
+    const query = {
+      catchId: parseInt(catchId),
+      loadIndex: parseInt(loadIndex),
+    };
+    lotService.getSpendLotSize(query).then((value) => {
+      const spentSize = parseInt(value.data);
+      setWeight(load.Weight - spentSize);
+    });
+  }, [loadIndex]);
+
   const formik = useFormik({
     initialValues: {
       LotTitle: load.FishType + " - " + load.FishSubType,
       LotUnitPrice: 600,
-      LotSize: load.Weight,
+      LotSize: weight,
       LotStartDate: "",
       LotEndDate: "",
     },
@@ -118,6 +133,7 @@ export default function LotForm({ load, catchId }) {
         LotStartDate: startDate,
         LotEndDate: endDate,
         CatchId: catchId,
+        loadIndex: loadIndex,
       };
 
       setTimeout(() => {
@@ -126,7 +142,6 @@ export default function LotForm({ load, catchId }) {
       LotService.createLot(list)
         .then(
           (lot) => {
-            setMessage("Auction Lot created successfull!");
             StorageService.lotCoverUploadHandler(lot.data.LotId, cover);
             activityService
               .createActivity({
@@ -134,9 +149,7 @@ export default function LotForm({ load, catchId }) {
                 ActivityTitle: "Placed a Auction Lot(#" + lot.data.LotId + ")",
               })
               .catch((err) => setMessage(err.message));
-            navigate("/dashboard/auction", {
-              replace: true,
-            });
+            setSOpen(true);
           },
           (error) => {
             const message =
@@ -145,7 +158,7 @@ export default function LotForm({ load, catchId }) {
                 error.response.data.message) ||
               error.message ||
               error.toString();
-            console.log(message);
+            setMessage(message);
           }
         )
         .catch((error) => {
@@ -175,8 +188,10 @@ export default function LotForm({ load, catchId }) {
 
   return (
     <Container>
-      <Typography variant="subtitle2" gutterBottom>
-        {load.FishType} - {load.FishSubType}
+      <Typography variant="subtitle1" gutterBottom>
+        {load.FishSubType
+          ? load.FishType + " - " + load.FishSubType
+          : load.FishType}
       </Typography>
       <FormikProvider value={formik}>
         <LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -256,6 +271,15 @@ export default function LotForm({ load, catchId }) {
           {message}
         </Alert>
       )}
+      <Snackbar
+        open={sopen}
+        autoHideDuration={3000}
+        anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+      >
+        <Alert severity="success" sx={{ width: "100%" }}>
+          Auction Lot Successfully Created!
+        </Alert>
+      </Snackbar>
       <Dialog
         open={copen}
         onClose={() => {

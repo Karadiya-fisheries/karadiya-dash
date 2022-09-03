@@ -12,7 +12,7 @@ export default function ProductList({ ...other }) {
   useEffect(() => {
     lotService.getLots().then((lots) => {
       const products = lots.data.map((lot, index) => ({
-        id: lot.index,
+        id: lot.LotId,
         name: lot.LotTitle,
         cover: lot.LotCover,
         price: lot.LotUnitPrice,

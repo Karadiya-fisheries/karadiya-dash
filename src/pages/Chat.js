@@ -34,6 +34,7 @@ import { SocketContext } from "../services/socket.context";
 import statService from "../services/stat.service";
 import { fDateTime } from "../utils/formatTime";
 import { parseISO } from "date-fns";
+import moment from "moment";
 
 // ----------------------------------------------------------------------
 
@@ -107,7 +108,7 @@ export default function Chat() {
         ...messageList,
         {
           message: data.chat,
-          date: new Date(),
+          date: moment(),
           align: "right",
         },
       ]);
@@ -148,20 +149,34 @@ export default function Chat() {
                     </ListItemIcon>
                     <ListItemText primary={user.fullname}></ListItemText>
                   </ListItem>
+                  <ListItem>
+                    <ListItemText
+                      primary={user.phone}
+                      secondary={"Tel/Phone"}
+                    ></ListItemText>
+                  </ListItem>
+                  <ListItem>
+                    <ListItemText
+                      primary={user.email}
+                      secondary={"E-mail"}
+                    ></ListItemText>
+                  </ListItem>
                 </List>
               </Grid>
-              <Grid item xs={9}>
-                <List sx={{ height: "70vh", overflowY: "auto" }}>
-                  {messageList.map((m) => (
-                    <ChatItem item={m} />
-                  ))}
-                  {console.log(messageList)}
-                </List>
+              <Grid item xs={9} component={Card}>
+                <CardContent>
+                  <List sx={{ height: "70vh", overflowY: "auto" }}>
+                    {messageList.map((m) => (
+                      <ChatItem item={m} />
+                    ))}
+                    {console.log(messageList)}
+                  </List>
+                </CardContent>
                 <Divider />
                 <FormikProvider value={formik}>
                   <Form autoComplete="off" noValidate onSubmit={handleSubmit}>
                     <Grid container style={{ padding: "20px" }}>
-                      <Grid item xs={11}>
+                      <Grid item xs={10}>
                         <TextField
                           id="outlined-basic-email"
                           label="Type Something"
@@ -170,7 +185,7 @@ export default function Chat() {
                           {...getFieldProps("chat")}
                         />
                       </Grid>
-                      <Grid xs={1} align="right">
+                      <Grid xs={1} align="right" ml={2}>
                         <Fab color="primary" aria-label="add" type="submit">
                           <SendRounded />
                         </Fab>
@@ -189,7 +204,7 @@ export default function Chat() {
 
 const ChatItem = (item) => {
   const { align, message, date } = item.item;
-  console.log(message);
+  console.log(date);
   return (
     <ListItem key="3">
       <Grid container>
