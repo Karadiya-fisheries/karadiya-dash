@@ -14,8 +14,7 @@ import {
   IconButton,
   Divider,
 } from "@mui/material";
-import EditIcon from "@mui/icons-material/Edit";
-import FileDownload from "@mui/icons-material/FileDownload";
+
 // components
 import Page from "../../components/Page";
 import Iconify from "../../components/Iconify";
@@ -27,6 +26,8 @@ import html2canvas from "html2canvas";
 import jsPDF from "jspdf";
 import { useTheme } from "@mui/material/styles";
 import DepartureForm from "./DepartureFrom";
+import EditIcon from "@mui/icons-material/Edit";
+import FileDownload from "@mui/icons-material/FileDownload";
 import parseISO from "date-fns/parseISO";
 // ----------------------------------------------------------------------
 

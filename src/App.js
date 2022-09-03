@@ -70,12 +70,13 @@ export default function App() {
           <Route path="departure/view/:id" element={<DepartureView />} />
           <Route path="myactivity" element={<Activity />} />
           <Route path="chat/:id" element={<Chat />} />
+          <Route path="elogbookdoc/view/:id" element={<ElogBookDoc />} />
         </Route>
         <Route path="/" element={<LogoOnlyLayout />}>
           <Route path="login" element={<Login />} />
           <Route path="register" element={<Register />} />
           <Route path="owner/profile" element={<OwnerProfile />} />
-          <Route path="elogbookdoc" element={<ElogBookDoc />} />
+          
           
         </Route>
       </Routes>

@@ -1,7 +1,7 @@
 import { filter } from "lodash";
 import { sentenceCase } from "change-case";
 import { useState, useEffect } from "react";
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink,useNavigate } from "react-router-dom";
 // material
 import {
   Card,
@@ -123,7 +123,7 @@ const type = {
 
 export default function ELogBook() {
   const [USERLIST, setUserList] = useState([]);
-
+  const navigate = useNavigate();
   const [page, setPage] = useState(0);
 
   const [order, setOrder] = useState("asc");
@@ -142,7 +142,7 @@ export default function ELogBook() {
   useEffect(() => {
     TripLogService.getTripLogs().then((triplogs) => {
       const userlist = triplogs.data.map((triplog, index) => ({
-        id: triplog.tripId,
+        tripId: triplog.tripId,
         SkipperID: triplog.SkipperID,
         isVerified: triplog.confirm,
         WesselID: triplog.WesselID,
@@ -265,7 +265,7 @@ export default function ELogBook() {
                       )
                       .map((row) => {
                         const {
-                          id,
+                          tripId,
                           SkipperID,
                           WesselID,
                           Harbor,
@@ -277,16 +277,17 @@ export default function ELogBook() {
                           isVerified,
                           record,
                         } = row;
-                        const isItemSelected = selected.indexOf(id) !== -1;
+                        const isItemSelected = selected.indexOf(tripId) !== -1;
 
                         return (
                           <TableRow
                             hover
                             onClick={() => {
-                              setKey(record);
-                              setOpen(true);
+                              navigate(
+                                "/dashboard/elogbookdoc/view/" + tripId
+                              );
                             }}
-                            key={id}
+                            key={tripId}
                             tabIndex={-1}
                             role="checkbox"
                             selected={isItemSelected}
@@ -295,7 +296,7 @@ export default function ELogBook() {
                             <TableCell padding="checkbox">
                               <Checkbox
                                 checked={isItemSelected}
-                                onChange={(event) => handleClick(event, id)}
+                                onChange={(event) => handleClick(event, tripId)}
                               />
                             </TableCell>
                             <TableCell
@@ -309,7 +310,7 @@ export default function ELogBook() {
                                 spacing={2}
                               >
                                 <Typography variant="subtitle2" noWrap>
-                                  {id}
+                                  { tripId}
                                 </Typography>
                               </Stack>
                             </TableCell>
