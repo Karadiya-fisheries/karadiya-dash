@@ -39,22 +39,22 @@ const navConfig = [
   {
     title: "Departure Approvals",
     path: "/dashboard/departure",
-    icon: getIcon("eva:file-text-fill"),
+    icon: getIcon("ic:baseline-directions-boat"),
   },
   {
     title: "E-logBook",
     path: "/dashboard/elogBook",
-    icon: getIcon("eva:file-text-fill"),
+    icon: getIcon("map:ice-fishing"),
   },
   {
     title: "Fishermen",
     path: "/dashboard/fishermen",
-    icon: getIcon("eva:file-text-fill"),
+    icon: getIcon("map:fishing-pier"),
   },
   {
     title: "Add Officer",
     path: "/dashboard/add_officer",
-    icon: getIcon("eva:file-text-fill"),
+    icon: getIcon("wpf:add-user"),
   },
   {
     title: "login",
@@ -66,11 +66,11 @@ const navConfig = [
     path: "/register",
     icon: getIcon("eva:person-add-fill"),
   },
-  {
-    title: "register",
-    path: "/elogbookdoc",
-    icon: getIcon("eva:person-add-fill"),
-  },
+  // {
+  //   title: "register",
+  //   path: "/elogbookdoc",
+  //   icon: getIcon("eva:person-add-fill"),
+  // },
 ];
 
 export default navConfig;
