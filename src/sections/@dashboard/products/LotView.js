@@ -50,9 +50,11 @@ import { Container, useTheme } from "@mui/system";
 import AppWidgetSummary from "../app/AppWidgetSummary";
 import {
   AddCardOutlined,
+  CallEndOutlined,
   ChatRounded,
   PhoneBluetoothSpeakerSharp,
   PlusOneOutlined,
+  StartRounded,
 } from "@mui/icons-material";
 import { theme } from "@chakra-ui/react";
 // ----------------------------------------------------------------------
@@ -70,6 +72,7 @@ const RegisterStyle = styled(Card)(({ theme }) => ({
   color: theme.palette.info,
   alignItems: "center",
   mb: 5,
+  boxShadow: 5,
 }));
 const ClockStyle = styled(Box)(({ theme, clockColor }) => ({
   p: 4,
@@ -108,6 +111,7 @@ export default function LotView() {
   const { id } = useParams();
   const theme = useTheme();
   const user = AuthService.getCurrentUser();
+  const socket = useContext(SocketContext);
   const [isBidder, setIsBidder] = useState(user.roles[1] === "ROLE_BIDDER");
   const [isOwner, setIsOwner] = useState(false);
   const [post, setPost] = useState({
@@ -127,12 +131,14 @@ export default function LotView() {
       },
     },
   });
-  const color = getStatus(post.LotStartDate, post.LotEndDate, theme).color;
-  const label = getStatus(post.LotStartDate, post.LotEndDate, theme).label;
-  const date = getStatus(post.LotStartDate, post.LotEndDate, theme).date;
-  const status = getStatus(post.LotStartDate, post.LotEndDate, theme).status;
-
   const [currentPrice, setCurrentPrice] = useState(0);
+  const [startDate, setStartDate] = useState();
+  const [endDate, setEndDate] = useState();
+
+  const color = getStatus(startDate, endDate, theme).color;
+  const date = getStatus(startDate, endDate, theme).date;
+  const status = getStatus(startDate, endDate, theme).status;
+  const label = getStatus(startDate, endDate, theme).label;
   const latestPostLarge = false;
   const latestPost = false;
 
@@ -142,6 +148,8 @@ export default function LotView() {
     LotService.getLotById(id).then((Lot) => {
       setPost(Lot.data);
       setCurrentPrice(Lot.data.CurrentBid);
+      setStartDate(Lot.data.LotStartDate);
+      setEndDate(Lot.data.LotEndDate);
       setIsOwner(user.uid === Lot.data.owner.user.uid);
       if (!Lot.data.LotCover) {
         setCover("");
@@ -151,6 +159,18 @@ export default function LotView() {
       } else {
         setCover(Lot.data.LotCover);
       }
+    });
+  }, []);
+
+  useEffect(() => {
+    socket.on("StartedBid", (arg) => {
+      console.log(arg);
+      setStartDate(arg.date);
+    });
+
+    socket.on("EndedBid", (arg) => {
+      console.log(arg);
+      setEndDate(arg.date);
     });
   }, []);
 
@@ -227,13 +247,31 @@ export default function LotView() {
                 justifyContent={"space-around"}
               >
                 <Typography variant="overline" textAlign={"left"}>
-                  Bidding Starting at {fDateTime(post.LotStartDate)}
+                  Bidding Starting at {fDateTime(startDate)}
                 </Typography>
                 <Typography variant="overline" textAlign={"right"}>
-                  Bidding Ending at {fDateTime(post.LotEndDate)}
+                  Bidding Ending at {fDateTime(endDate)}
                 </Typography>
               </Stack>
               <Typography variant="subtitle1">Bidding Clock</Typography>
+              {status === "live" && (
+                <Typography
+                  variant="subtitle1"
+                  color={color.main}
+                  sx={{ display: "overlay" }}
+                >
+                  Time To End Bidding - {fToNow(date)}
+                </Typography>
+              )}
+              {status === "pending" && (
+                <Typography
+                  variant="subtitle1"
+                  color={color.main}
+                  sx={{ display: "overlay" }}
+                >
+                  Time To Start Bidding - {fToNow(date)}
+                </Typography>
+              )}
               <ClockStyle clockColor={color}>
                 {(status === "pending" || status === "live") && (
                   <Countdown color={color} eventTime={date} interval={1000} />
@@ -308,8 +346,10 @@ export default function LotView() {
             setPrice={setCurrentPrice}
             oid={post.owner.user.uid}
             isOwner={isOwner}
+            status={status}
             disabledStatus={status === "pending" || status === "auctioned"}
             color={color}
+            label={label}
           />
         </RegisterStyle>
       </Container>
@@ -337,7 +377,13 @@ const Countdown = ({ eventTime, interval, color }) => {
   return (
     <Box
       color={color.dark}
-      sx={{ border: "2px solid", m: 3 }}
+      sx={{
+        border: "2px solid",
+        m: 3,
+        boxShadow: 5,
+        borderStartStartRadius: 10,
+        borderEndEndRadius: 10,
+      }}
       justifyContent="center"
     >
       <Typography variant="h4" color={color.dark} textAlign="center">
@@ -348,7 +394,16 @@ const Countdown = ({ eventTime, interval, color }) => {
   );
 };
 
-const BidList = ({ oid, setPrice, price, isOwner, disabledStatus, color }) => {
+const BidList = ({
+  oid,
+  setPrice,
+  price,
+  isOwner,
+  disabledStatus,
+  color,
+  status,
+  label,
+}) => {
   const [bid, setBid] = useState([]);
   const [BidMap, setBidMap] = useState(new Map());
   const { id } = useParams();
@@ -357,6 +412,14 @@ const BidList = ({ oid, setPrice, price, isOwner, disabledStatus, color }) => {
 
   const sendMessage = (socket, packet) => {
     socket.emit("MakeABid", packet);
+  };
+
+  const startTheBid = (socket, packet) => {
+    socket.emit("StartABid", packet);
+  };
+
+  const endTheBid = (socket, packet) => {
+    socket.emit("EndABid", packet);
   };
 
   useEffect(() => {
@@ -378,7 +441,6 @@ const BidList = ({ oid, setPrice, price, isOwner, disabledStatus, color }) => {
 
   useEffect(() => {
     socket.on("RecieveABid", (arg) => {
-      console.log(arg);
       const bid = arg.bid;
       const price = arg.CurrentPrice;
       setPrice(price);
@@ -415,19 +477,83 @@ const BidList = ({ oid, setPrice, price, isOwner, disabledStatus, color }) => {
           />
         </Grid>
       )}
-      <Grid item xs={12} sm={6} md={6}>
-        {BidMap.get(price) && (
-          <CurrentBidder userid={uid} item={BidMap.get(price)} color={color} />
-        )}
-      </Grid>
+      {isOwner && (
+        <Grid item xs={12} sm={6} md={6}>
+          <StartOrEndBid
+            setStart={startTheBid}
+            socket={socket}
+            setEnd={endTheBid}
+            id={id}
+            status={status}
+            label={label}
+            color={color}
+          />
+        </Grid>
+      )}
       <Grid container>
-        {[...BidMap.values()].map((bid) => (
+        {[...BidMap.values()].reverse().map((bid, index) => (
           <Grid item xs={12} sm={6} md={12}>
-            <BidItem item={bid} />
+            <BidItem key={index} id={index} item={bid} />
           </Grid>
         ))}
       </Grid>
     </Grid>
+  );
+};
+
+const StartOrEndBid = ({
+  id,
+  socket,
+  setStart,
+  setEnd,
+  status,
+  label,
+  color,
+}) => {
+  console.log(status);
+  return (
+    <Box>
+      {status === "pending" && (
+        <IconButton
+          size="large"
+          color={"success"}
+          onClick={(e) => {
+            setStart(socket, {
+              lotId: id,
+              startdate: moment(),
+            });
+          }}
+          sx={{
+            border: "1px solid",
+            borderRadius: 2,
+            bgcolor: alpha(color.main, 0.4),
+          }}
+        >
+          Start The Bidding
+          <StartRounded fontSize="large" sx={{ ml: 1 }} />
+        </IconButton>
+      )}
+      {status === "live" && (
+        <IconButton
+          size="large"
+          color={"error"}
+          onClick={(e) => {
+            setEnd(socket, {
+              lotId: id,
+              enddate: moment(),
+            });
+          }}
+          sx={{
+            border: "1px solid",
+            borderRadius: 2,
+            bgcolor: alpha(color.main, 0.4),
+          }}
+        >
+          End The Bidding
+          <StartRounded fontSize="large" sx={{ ml: 1 }} />
+        </IconButton>
+      )}
+    </Box>
   );
 };
 
@@ -441,7 +567,7 @@ const IconWrapperStyle = styled("div")(({ theme }) => ({
   justifyContent: "center",
 }));
 
-const CurrentBidder = ({ userid, item, color, icon }) => {
+const CurrentBidder = ({ userid, item, color, icon, price }) => {
   const {
     phone,
     email,
@@ -452,6 +578,8 @@ const CurrentBidder = ({ userid, item, color, icon }) => {
     avatar,
     uid,
   } = item;
+  console.log(" hello current " + item);
+  console.log(" hello current " + price);
   return (
     <Card
       sx={{
@@ -478,9 +606,11 @@ const CurrentBidder = ({ userid, item, color, icon }) => {
               )} 0%, ${alpha(theme.palette["info"].dark, 0.5)} 100%)`,
           }}
         >
-          <Iconify icon={icon} width={28} height={28} />
+          <Iconify icon={icon} width={33} height={33} />
         </IconWrapperStyle>
-
+        <Typography variant="subtitle2" sx={{ opacity: 0.8 }}>
+          {price}
+        </Typography>
         <Typography variant="subtitle2" sx={{ opacity: 0.8 }}>
           Current Bid Winner
         </Typography>
@@ -504,7 +634,16 @@ const CurrentBidder = ({ userid, item, color, icon }) => {
   );
 };
 
-const BidItem = ({ item }) => {
+const BidderAccordianStyle = styled(Accordion)(({ theme, bidcolor }) => ({
+  padding: theme.spacing(2, 2),
+  backgroundColor: alpha(bidcolor, 0.5),
+  borderColor: bidcolor,
+  alignItems: "center",
+  mb: 5,
+}));
+
+const BidItem = ({ item, id }) => {
+  console.log(id);
   const {
     bidPrice,
     phone,
@@ -521,7 +660,8 @@ const BidItem = ({ item }) => {
     setExpanded(isExpanded ? panel : false);
   };
   return (
-    <Accordion
+    <BidderAccordianStyle
+      bidcolor={id !== 0 ? "#fff" : "#74CAFF"}
       expanded={expanded === "panel1"}
       onChange={handleChange("panel1")}
     >
@@ -531,10 +671,15 @@ const BidItem = ({ item }) => {
         id="panel1bh-header"
       >
         <Avatar sx={{ mr: 1 }} src={avatar} alt={fullname} />
+        {id === 0 && (
+          <Typography variant="subtitle1" sx={{ width: "33%", flexShrink: 0 }}>
+            Current Bid Winner
+          </Typography>
+        )}
         <Typography variant="subtitle1" sx={{ width: "33%", flexShrink: 0 }}>
           {fullname}
         </Typography>
-        <Typography variant="subtitle2" sx={{ color: "text.secondary" }}>
+        <Typography variant="subtitle1" sx={{ color: "text.secondary" }}>
           Bidding Price : Rs.{bidPrice}
         </Typography>
       </AccordionSummary>
@@ -559,7 +704,7 @@ const BidItem = ({ item }) => {
           </ListItem>
         </List>
       </AccordionDetails>
-    </Accordion>
+    </BidderAccordianStyle>
   );
 };
 

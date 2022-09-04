@@ -55,11 +55,11 @@ const getStatus = (startDate, endDate) => {
   const start = parseISO(startDate);
   const end = parseISO(endDate);
   if (moment().isBetween(start, end))
-    return { status: "live", date: end, color: "info" };
+    return { status: "live", date: end, color: "success" };
   else if (moment().isAfter(end))
     return { status: "auctioned", date: end, color: "error" };
   else if (moment().isBefore(start))
-    return { status: "pending", date: start, color: "success" };
+    return { status: "pending", date: start, color: "info" };
   else return { status: "", date: moment(), color: "" };
 };
 export default function ShopProductCard({ product }) {
