@@ -29,7 +29,7 @@ export default function EcommerceShop() {
     <Page title="Dashboard: Products">
       <Container>
         <Typography variant="h4" sx={{ mb: 5 }}>
-          Sales
+          Auction
         </Typography>
 
         <Stack
