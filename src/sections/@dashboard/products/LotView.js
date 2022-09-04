@@ -461,7 +461,7 @@ const BidList = ({
   }, []);
 
   return (
-    <Grid container>
+    <Grid container spacing={1}>
       {!isOwner && (
         <Grid item xs={12} sm={6} md={6}>
           <JoinBid
@@ -512,7 +512,7 @@ const StartOrEndBid = ({
 }) => {
   console.log(status);
   return (
-    <Box>
+    <Box m={1}>
       {status === "pending" && (
         <IconButton
           size="large"
