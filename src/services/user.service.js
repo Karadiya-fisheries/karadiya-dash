@@ -20,9 +20,12 @@ class UserService {
     return axios.get(API_URL + "admin", { headers: authHeader() });
   }
   getUserDetails(fullname) {
-    return axios.get("https://serene-woodland-83390.herokuapp.com/fishermen/get/" + fullname, {
-      headers: authHeader(),
-    });
+    return axios.get(
+      "https://serene-woodland-83390.herokuapp.com/fishermen/get/" + fullname,
+      {
+        headers: authHeader(),
+      }
+    );
   }
 }
 

@@ -120,9 +120,13 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
           PaperProps={{
             sx: {
               width: DRAWER_WIDTH,
-              bgcolor: (theme) => {
-                return theme.palette.info.lighter;
-              },
+              backgroundImage: (theme) =>
+                `linear-gradient(90deg, ${alpha(
+                  theme.palette.info.lighter,
+                  0.5
+                )} 25%, ${alpha(theme.palette.info.main, 0.5)} 100%)`,
+              borderRightWidth: 2,
+              borderRightStyle: "dashed",
             },
           }}
         >

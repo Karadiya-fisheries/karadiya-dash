@@ -1,4 +1,4 @@
-import { Route, Routes, useNavigate } from "react-router-dom";
+import { Route, Routes, useNavigate, useParams } from "react-router-dom";
 
 // layouts
 import DashboardLayout from "./layouts/dashboard";
@@ -31,13 +31,17 @@ import Fishermen from "./pages/Fishermen";
 import DepartureView from "./sections/Departure/DepartureView";
 import Activity from "./pages/Activity";
 import Chat from "./pages/Chat";
-import ElogBookDoc from './sections/ElogBook/ElogBookDoc';
+import LotCreate from "./sections/@dashboard/products/LotCreate";
+import PrintViewLayout from "./layouts/PrintViewLayut";
+import LotView from "./sections/@dashboard/products/LotView";
 // ----------------------------------------------------------------------
 
 export default function App() {
   const [current, setCurrent] = useState(null);
   const navigate = useNavigate();
   const user = useContext(AuthContext);
+  const { id } = useParams();
+  console.log(id);
 
   useEffect(() => {
     setCurrent(user);
@@ -58,8 +62,10 @@ export default function App() {
           <Route path="user" element={<User />} />
           <Route path="notices" element={<Blog />} />
           <Route path="notices/view/:id" element={<BlogPost />} />
+          <Route path="lot/view/:id" element={<LotView />} />
           <Route path="notices/create" element={<BlogCreate />} />
-          <Route path="sales" element={<Products />} />
+          <Route path="lot/generate/:tid" element={<LotCreate />} />
+          <Route path="auction" element={<Products />} />
           <Route path="profile" element={<ProfieIndex />} />
           <Route path="owner/profile" element={<OwnerProfile />} />
           <Route path="editprofile" element={<EditProfile />} />
@@ -71,12 +77,13 @@ export default function App() {
           <Route path="myactivity" element={<Activity />} />
           <Route path="chat/:id" element={<Chat />} />
         </Route>
+        <Route path="/view" element={<PrintViewLayout />}>
+          <Route path="departure/:id" element={<DepartureView />} />
+        </Route>
         <Route path="/" element={<LogoOnlyLayout />}>
           <Route path="login" element={<Login />} />
           <Route path="register" element={<Register />} />
           <Route path="owner/profile" element={<OwnerProfile />} />
-          <Route path="elogbookdoc" element={<ElogBookDoc />} />
-          
         </Route>
       </Routes>
     </ThemeProvider>

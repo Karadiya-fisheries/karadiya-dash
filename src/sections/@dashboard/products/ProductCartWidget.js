@@ -1,18 +1,18 @@
 // material
-import { styled } from '@mui/material/styles';
-import { Badge } from '@mui/material';
+import { styled } from "@mui/material/styles";
+import { Badge } from "@mui/material";
 // component
-import Iconify from '../../../components/Iconify';
+import Iconify from "../../../components/Iconify";
 
 // ----------------------------------------------------------------------
 
-const RootStyle = styled('div')(({ theme }) => ({
+const RootStyle = styled("div")(({ theme }) => ({
   zIndex: 999,
   right: 0,
-  display: 'flex',
-  cursor: 'pointer',
-  position: 'fixed',
-  alignItems: 'center',
+  display: "flex",
+  cursor: "pointer",
+  position: "fixed",
+  alignItems: "center",
   top: theme.spacing(16),
   height: theme.spacing(5),
   paddingLeft: theme.spacing(2),
@@ -23,8 +23,8 @@ const RootStyle = styled('div')(({ theme }) => ({
   backgroundColor: theme.palette.background.paper,
   borderTopLeftRadius: Number(theme.shape.borderRadius) * 2,
   borderBottomLeftRadius: Number(theme.shape.borderRadius) * 2,
-  transition: theme.transitions.create('opacity'),
-  '&:hover': { opacity: 0.72 }
+  transition: theme.transitions.create("opacity"),
+  "&:hover": { opacity: 0.72 },
 }));
 
 // ----------------------------------------------------------------------

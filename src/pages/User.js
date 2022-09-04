@@ -18,6 +18,7 @@ import {
   Typography,
   TableContainer,
   TablePagination,
+  IconButton,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 // components
@@ -34,6 +35,8 @@ import {
 import { sample } from "lodash";
 import { SocketContext } from "../services/socket.context";
 import StatService from "../services/stat.service";
+import { useId } from "@chakra-ui/react";
+import authService from "../services/auth.service";
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
@@ -48,9 +51,11 @@ const TABLE_HEAD = [
 
 // ----------------------------------------------------------------------
 
-const StyledBadge = styled(Badge)(({ theme }) => ({
+const StyledBadge = styled(Badge)(({ theme, badgeColor }) => ({
   "& .MuiBadge-badge": {
     boxShadow: `0 0 0 2px ${theme.palette.background.paper}`,
+    backgroundColor: badgeColor,
+    color: badgeColor,
     "&::after": {
       position: "absolute",
       top: 0,
@@ -108,8 +113,9 @@ function applySortFilter(array, comparator, query) {
 }
 
 export default function User() {
+  const uid = authService.getCurrentUser().uid;
   const [USERLIST, setUserList] = useState([]);
-  const [online, setOnline] = useState([]);
+  const [online, setOnline] = useState([uid]);
 
   const [page, setPage] = useState(0);
 
@@ -128,7 +134,9 @@ export default function User() {
   useEffect(() => {
     socket.on("checkOnline", (arg) => {
       console.log(arg);
-      setOnline(arg);
+      if (arg !== undefined) {
+        setOnline((online) => [...online, arg]);
+      }
     });
     StatService.getAllUsers().then((users) => {
       const userlist = users.data.map((user, index) => ({
@@ -145,8 +153,19 @@ export default function User() {
           : "Fishery Officer",
       }));
       setUserList(userlist);
+      console.log(USERLIST);
     });
-  }, [socket, online]);
+  }, []);
+
+  useEffect(() => {
+    socket.on("joinedUser", (arg) => {
+      console.log(arg);
+      if (arg !== undefined) {
+        setOnline((online) => [...online, arg]);
+      }
+    });
+  }, [socket]);
+
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === "asc";
     setOrder(isAsc ? "desc" : "asc");
@@ -267,7 +286,6 @@ export default function User() {
                         isVerified,
                       } = row;
                       const isItemSelected = selected.indexOf(name) !== -1;
-
                       return (
                         <TableRow
                           hover
@@ -290,9 +308,9 @@ export default function User() {
                               spacing={2}
                             >
                               <StyledBadge
-                                sx={{
-                                  color: "#44b700",
-                                }}
+                                badgeColor={
+                                  online.includes(id) ? "#44b700" : "red"
+                                }
                                 overlap="circular"
                                 anchorOrigin={{
                                   vertical: "bottom",
@@ -320,8 +338,15 @@ export default function User() {
                             {isVerified ? "Yes" : "No"}
                           </TableCell>
 
-                          <TableCell align="right">
-                            <UserMoreMenu id={id} />
+                          <TableCell
+                            component={RouterLink}
+                            to={"/dashboard/chat/" + id}
+                            sx={{ color: "text.secondary" }}
+                            align="right"
+                          >
+                            <IconButton size={"small"}>
+                              <Iconify icon="bi:send" width={24} height={24} />
+                            </IconButton>
                           </TableCell>
                         </TableRow>
                       );

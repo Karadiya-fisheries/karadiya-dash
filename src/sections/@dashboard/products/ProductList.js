@@ -1,21 +1,37 @@
-import PropTypes from 'prop-types';
+import { useState, useEffect } from "react";
+import PropTypes from "prop-types";
 // material
-import { Grid } from '@mui/material';
-import ShopProductCard from './ProductCard';
+import { Grid } from "@mui/material";
+import ShopProductCard from "./ProductCard";
+import lotService from "../../../services/lot.service";
 
 // ----------------------------------------------------------------------
 
-ProductList.propTypes = {
-  products: PropTypes.array.isRequired
-};
+export default function ProductList({ ...other }) {
+  const [products, setProducts] = useState([]);
+  useEffect(() => {
+    lotService.getLots().then((lots) => {
+      const products = lots.data.map((lot, index) => ({
+        id: lot.LotId,
+        name: lot.LotTitle,
+        cover: lot.LotCover,
+        price: lot.LotUnitPrice,
+        start: lot.LotStartDate,
+        end: lot.LotEndDate,
+        size: lot.LotSize,
+        owner: {
+          name: lot.owner.user.fullname,
+          avatarUrl: lot.owner.user.profileUrl,
+        },
+      }));
+      setProducts(products);
+    });
+  }, []);
 
-export default function ProductList({ products, ...other }) {
   return (
     <Grid container spacing={3} {...other}>
       {products.map((product) => (
-        <Grid key={product.id} item xs={12} sm={6} md={3}>
-          <ShopProductCard product={product} />
-        </Grid>
+        <ShopProductCard key={product.id} product={product} />
       ))}
     </Grid>
   );
