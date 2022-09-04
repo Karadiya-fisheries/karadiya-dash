@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = "http://localhost:5000/triplog/";
+const BASE_URL = "https://serene-woodland-83390.herokuapp.com/triplog/";
 class TripLogService {
   getTripLogs() {
     return axios.get(BASE_URL);

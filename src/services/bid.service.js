@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const BASE_URL = "http://localhost:5000/bidder/";
+const BASE_URL = "https://serene-woodland-83390.herokuapp.com/bidder/";
 class BidService {
   getBidders() {
     return axios.get(BASE_URL);

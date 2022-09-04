@@ -1,7 +1,7 @@
 import axios from "axios";
 import authHeader from "./auth-header";
 
-const BASE_URL = "http://localhost:5000/lot/";
+const BASE_URL = "https://serene-woodland-83390.herokuapp.com/lot/";
 class LotService {
   getLots() {
     return axios.get(BASE_URL);
