@@ -1,6 +1,11 @@
-import { useState, useEffect, useRef, useCallback } from "react";
+import * as Yup from "yup";
+import { useState, useEffect, useRef, useContext, useCallback } from "react";
 import { Link as RouterLink, useParams, useNavigate } from "react-router-dom";
 // material
+import SendRounded from "@mui/icons-material/SendRounded";
+// hooks
+// components
+import { Form, FormikProvider, useFormik } from "formik";
 import { alpha, styled } from "@mui/material/styles";
 import {
   Box,
@@ -13,29 +18,43 @@ import {
   ListItemIcon,
   ListItemText,
   ListItem,
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
   Grid,
   Card,
+  Fab,
+  TextField,
   CardContent,
   CardHeader,
   CardMedia,
   Divider,
 } from "@mui/material";
-
-import ChatBubble from "@mui/icons-material/ChatBubble";
+import ExpandMoreIcon from "@mui/icons-material/ExpandMore";
+import ChatSharp from "@mui/icons-material/ChatSharp";
 // components
 // components
 import Label from "../../../components/Label";
 import Page from "../../../components/Page";
 import Iconify from "../../../components/Iconify";
 import LotService from "../../../services/lot.service";
-import authService from "../../../services/auth.service";
+import AuthService from "../../../services/auth.service";
+import BidService from "../../../services/bid.service";
+import { SocketContext } from "../../../services/socket.context";
 // utils
-import { fToNow, fDateTime } from "../../../utils/formatTime";
-import { fShortenNumber } from "../../../utils/formatNumber";
+import { fToNow, fDateTime, fDate } from "../../../utils/formatTime";
+import { fCurrency, fShortenNumber } from "../../../utils/formatNumber";
 import { isAfter, isBefore, parseISO } from "date-fns";
 import moment from "moment";
 import { Container, useTheme } from "@mui/system";
 import AppWidgetSummary from "../app/AppWidgetSummary";
+import {
+  AddCardOutlined,
+  ChatRounded,
+  PhoneBluetoothSpeakerSharp,
+  PlusOneOutlined,
+} from "@mui/icons-material";
+import { theme } from "@chakra-ui/react";
 // ----------------------------------------------------------------------
 
 const SORT_OPTIONS = [
@@ -46,7 +65,7 @@ const SORT_OPTIONS = [
 
 // ----------------------------------------------------------------------
 const RegisterStyle = styled(Card)(({ theme }) => ({
-  maxWidth: 720,
+  maxWidth: 800,
   padding: theme.spacing(2, 2),
   color: theme.palette.info,
   alignItems: "center",
@@ -88,6 +107,9 @@ export default function LotView() {
   const navigate = useNavigate();
   const { id } = useParams();
   const theme = useTheme();
+  const user = AuthService.getCurrentUser();
+  const [isBidder, setIsBidder] = useState(user.roles[1] === "ROLE_BIDDER");
+  const [isOwner, setIsOwner] = useState(false);
   const [post, setPost] = useState({
     id: "",
     name: "",
@@ -109,6 +131,8 @@ export default function LotView() {
   const label = getStatus(post.LotStartDate, post.LotEndDate, theme).label;
   const date = getStatus(post.LotStartDate, post.LotEndDate, theme).date;
   const status = getStatus(post.LotStartDate, post.LotEndDate, theme).status;
+
+  const [currentPrice, setCurrentPrice] = useState(0);
   const latestPostLarge = false;
   const latestPost = false;
 
@@ -117,6 +141,8 @@ export default function LotView() {
   useEffect(() => {
     LotService.getLotById(id).then((Lot) => {
       setPost(Lot.data);
+      setCurrentPrice(Lot.data.CurrentBid);
+      setIsOwner(user.uid === Lot.data.owner.user.uid);
       if (!Lot.data.LotCover) {
         setCover("");
         return;
@@ -126,8 +152,6 @@ export default function LotView() {
         setCover(Lot.data.LotCover);
       }
     });
-
-    console.log(cover);
   }, []);
 
   return (
@@ -190,67 +214,72 @@ export default function LotView() {
                     component={RouterLink}
                     to={"/dashboard/chat/" + post.owner.user.uid}
                   >
-                    <ChatBubble />
+                    <ChatSharp />
                     Chat
                   </IconButton>
                 </ListItem>
               </List>
             </Grid>
             <Grid item xs={9} sx={{ borderRight: "1px solid #e0e0e0", p: 1 }}>
+              <Stack
+                sx={{ my: 1 }}
+                direction="row"
+                justifyContent={"space-around"}
+              >
+                <Typography variant="overline" textAlign={"left"}>
+                  Bidding Starting at {fDateTime(post.LotStartDate)}
+                </Typography>
+                <Typography variant="overline" textAlign={"right"}>
+                  Bidding Ending at {fDateTime(post.LotEndDate)}
+                </Typography>
+              </Stack>
+              <Typography variant="subtitle1">Bidding Clock</Typography>
               <ClockStyle clockColor={color}>
                 {(status === "pending" || status === "live") && (
                   <Countdown color={color} eventTime={date} interval={1000} />
                 )}
               </ClockStyle>
-              {status === "live" && (
-                <Typography
-                  variant="subtitle1"
-                  sx={{ display: "overlay", color: "primary" }}
-                >
-                  Bidding Ending in - {fToNow(date)}
-                </Typography>
-              )}
-              {status === "pending" && (
-                <Typography
-                  variant="subtitle1"
-                  sx={{ display: "overlay", color: "primary" }}
-                >
-                  Bidding Starting in - {fToNow(date)}
-                </Typography>
-              )}
+              <Typography variant="subtitle1">
+                Auction Lot Information
+              </Typography>
               {status === "auctioned" && (
                 <Typography
                   variant="subtitle1"
-                  sx={{ display: "overlay", color: "primary" }}
+                  color={color.main}
+                  sx={{ display: "overlay" }}
                 >
                   Bidding Ended - {fToNow(date)}
                 </Typography>
               )}
 
-              <Stack direction={"row"} justifyContent="space-between">
-                <AppWidgetSummary
-                  sx={{ width: "100px" }}
-                  icon="eos-icons:container"
-                  color={"primary"}
-                  title={"Lot Size"}
-                  total={post.LotSize}
-                />
+              <Grid container columnGap={6}>
+                <Grid item xs={12} sm={6} md={3}>
+                  <AppWidgetSummary
+                    icon="eos-icons:container"
+                    color={"primary"}
+                    title={"Lot Size in kg"}
+                    total={post.LotSize}
+                  />
+                </Grid>
 
-                <AppWidgetSummary
-                  sx={{ width: "100px" }}
-                  title={"Lot Unit Price"}
-                  icon={"entypo:price-tag"}
-                  color={"primary"}
-                  total={post.LotUnitPrice}
-                />
-
-                <AppWidgetSummary
-                  sx={{ width: "100px" }}
-                  title={"Lot Current Bid"}
-                  icon={"simple-icons:leaderprice"}
-                  total={post.CurrentBid}
-                />
-              </Stack>
+                <Grid item xs={12} sm={6} md={3}>
+                  <AppWidgetSummary
+                    title={"Lot Unit Price:per kg"}
+                    icon={"entypo:price-tag"}
+                    color={"primary"}
+                    total={post.LotUnitPrice}
+                  />
+                </Grid>
+                <Grid item xs={12} sm={6} md={3}>
+                  <AppWidgetSummary
+                    title={"Lot Current Bid"}
+                    icon={"simple-icons:leaderprice"}
+                    total={currentPrice}
+                    type="currentBid"
+                    color={"success"}
+                  />
+                </Grid>
+              </Grid>
               <CardContent>
                 {status && (
                   <Label
@@ -271,21 +300,26 @@ export default function LotView() {
             </Grid>
           </Grid>
           <Divider />
-          <Typography variant="h5">Bids</Typography>
+          <Typography variant="h5" gutterBottom sx={{ mx: 1 }}>
+            Bids
+          </Typography>
+          <BidList
+            price={currentPrice}
+            setPrice={setCurrentPrice}
+            oid={post.owner.user.uid}
+            isOwner={isOwner}
+            disabledStatus={status === "pending" || status === "auctioned"}
+            color={color}
+          />
         </RegisterStyle>
       </Container>
     </Page>
   );
 }
 
-const calculateDuration = (eventTime) =>
-  moment.duration(
-    Math.max(eventTime - Math.floor(Date.now() / 1000), 0),
-    "seconds"
-  );
+const calculateDuration = (eventTime) => moment.duration(eventTime - moment());
 
 const Countdown = ({ eventTime, interval, color }) => {
-  console.log(color);
   const [duration, setDuration] = useState(calculateDuration(eventTime));
   const timerRef = useRef(0);
   const timerCallback = useCallback(() => {
@@ -301,11 +335,337 @@ const Countdown = ({ eventTime, interval, color }) => {
   }, [eventTime]);
 
   return (
-    <>
-      <Typography variant="h3" color={color.dark}>
-        {duration.days()} Day : {duration.hours()} Hour : {duration.minutes()}{" "}
-        Minute : {duration.seconds()} Second
+    <Box
+      color={color.dark}
+      sx={{ border: "2px solid", m: 3 }}
+      justifyContent="center"
+    >
+      <Typography variant="h4" color={color.dark} textAlign="center">
+        {duration.days()} Days {duration.hours()} Hours {duration.minutes()}{" "}
+        Minutes {duration.seconds()} Seconds
       </Typography>
-    </>
+    </Box>
+  );
+};
+
+const BidList = ({ oid, setPrice, price, isOwner, disabledStatus, color }) => {
+  const [bid, setBid] = useState([]);
+  const [BidMap, setBidMap] = useState(new Map());
+  const { id } = useParams();
+  const uid = AuthService.getCurrentUser().uid;
+  const socket = useContext(SocketContext);
+
+  const sendMessage = (socket, packet) => {
+    socket.emit("MakeABid", packet);
+  };
+
+  useEffect(() => {
+    LotService.getBidsById(id).then((bids) => {
+      const list = bids.data.map((bid) => ({
+        bidPrice: bid.bid.BidPrice,
+        phone: bid.user.phone,
+        email: bid.user.email,
+        uid: bid.user.uid,
+        fullname: bid.user.fullname,
+        bussiness: bid.BusinessName,
+        district: bid.District,
+        createdAt: bid.bid.createdAt,
+      }));
+      const bmap = new Map(list.map((i) => [parseInt(i.bidPrice), i]));
+      setBidMap(bmap);
+    });
+  }, []);
+
+  useEffect(() => {
+    socket.on("RecieveABid", (arg) => {
+      console.log(arg);
+      const bid = arg.bid;
+      const price = arg.CurrentPrice;
+      setPrice(price);
+      setBidMap(
+        BidMap.set(parseInt(price), {
+          bidPrice: price,
+          phone: bid.user.phone,
+          email: bid.user.email,
+          uid: bid.user.uid,
+          fullname: bid.user.fullname,
+          avatar: bid.user.profileUrl,
+          bussiness: bid.BusinessName,
+          district: bid.District,
+          createdAt: bid.bid.createdAt,
+        })
+      );
+    });
+  }, []);
+
+  return (
+    <Grid container>
+      {!isOwner && (
+        <Grid item xs={12} sm={6} md={6}>
+          <JoinBid
+            sendMessage={sendMessage}
+            setBidMap={setBidMap}
+            socket={socket}
+            uid={uid}
+            id={id}
+            oid={oid}
+            CurrentPrice={price}
+            color={color}
+            status={disabledStatus}
+          />
+        </Grid>
+      )}
+      <Grid item xs={12} sm={6} md={6}>
+        {BidMap.get(price) && (
+          <CurrentBidder userid={uid} item={BidMap.get(price)} color={color} />
+        )}
+      </Grid>
+      <Grid container>
+        {[...BidMap.values()].map((bid) => (
+          <Grid item xs={12} sm={6} md={12}>
+            <BidItem item={bid} />
+          </Grid>
+        ))}
+      </Grid>
+    </Grid>
+  );
+};
+
+const IconWrapperStyle = styled("div")(({ theme }) => ({
+  margin: "auto",
+  display: "flex",
+  borderRadius: "50%",
+  alignItems: "center",
+  width: theme.spacing(8),
+  height: theme.spacing(8),
+  justifyContent: "center",
+}));
+
+const CurrentBidder = ({ userid, item, color, icon }) => {
+  const {
+    phone,
+    email,
+    fullname,
+    bussiness,
+    district,
+    createdAt,
+    avatar,
+    uid,
+  } = item;
+  return (
+    <Card
+      sx={{
+        mx: 1,
+        mb: 1,
+        boxShadow: 3,
+        bgcolor: (theme) => alpha(theme.palette["info"].lighter, 0.5),
+        textAlign: "center",
+      }}
+    >
+      <CardHeader
+        avatar={<Avatar alt={fullname} src={avatar} />}
+        title={fullname}
+        subheader={fDateTime(createdAt)}
+      ></CardHeader>
+      <CardContent>
+        <IconWrapperStyle
+          sx={{
+            color: (theme) => theme.palette["info"].darker,
+            backgroundImage: (theme) =>
+              `linear-gradient(135deg, ${alpha(
+                theme.palette["info"].dark,
+                0
+              )} 0%, ${alpha(theme.palette["info"].dark, 0.5)} 100%)`,
+          }}
+        >
+          <Iconify icon={icon} width={28} height={28} />
+        </IconWrapperStyle>
+
+        <Typography variant="subtitle2" sx={{ opacity: 0.8 }}>
+          Current Bid Winner
+        </Typography>
+        {uid !== userid && (
+          <IconButton
+            size="small"
+            color="primary"
+            sx={{
+              border: "1px solid",
+              borderRadius: 2,
+            }}
+            component={RouterLink}
+            to={"/dashboard/chat/" + uid}
+          >
+            <ChatRounded />
+            Send A Message
+          </IconButton>
+        )}
+      </CardContent>
+    </Card>
+  );
+};
+
+const BidItem = ({ item }) => {
+  const {
+    bidPrice,
+    phone,
+    email,
+    fullname,
+    bussiness,
+    district,
+    createdAt,
+    avatar,
+  } = item;
+  const [expanded, setExpanded] = useState(false);
+
+  const handleChange = (panel) => (event, isExpanded) => {
+    setExpanded(isExpanded ? panel : false);
+  };
+  return (
+    <Accordion
+      expanded={expanded === "panel1"}
+      onChange={handleChange("panel1")}
+    >
+      <AccordionSummary
+        expandIcon={<ExpandMoreIcon />}
+        aria-controls="panel1bh-content"
+        id="panel1bh-header"
+      >
+        <Avatar sx={{ mr: 1 }} src={avatar} alt={fullname} />
+        <Typography variant="subtitle1" sx={{ width: "33%", flexShrink: 0 }}>
+          {fullname}
+        </Typography>
+        <Typography variant="subtitle2" sx={{ color: "text.secondary" }}>
+          Bidding Price : Rs.{bidPrice}
+        </Typography>
+      </AccordionSummary>
+      <AccordionDetails>
+        <List>
+          <ListItem>
+            <ListItemText>
+              Bidding time: {fDateTime(parseISO(createdAt))}
+            </ListItemText>
+          </ListItem>
+          <ListItem>
+            <ListItemText>Phone : {phone}</ListItemText>
+          </ListItem>
+          <ListItem>
+            <ListItemText>E-mail: {email}</ListItemText>
+          </ListItem>
+          <ListItem>
+            <ListItemText>District: {district}</ListItemText>
+          </ListItem>
+          <ListItem>
+            <ListItemText>Business Name: {bussiness}</ListItemText>
+          </ListItem>
+        </List>
+      </AccordionDetails>
+    </Accordion>
+  );
+};
+
+const JoinBidStyle = styled(Card)(({ theme, bidcolor }) => ({
+  padding: theme.spacing(2, 2),
+  backgroundColor: bidcolor.lighter,
+  alignItems: "center",
+  mb: 5,
+}));
+
+const JoinAccordianStyle = styled(Accordion)(({ theme, bidcolor }) => ({
+  padding: theme.spacing(2, 2),
+  backgroundColor: bidcolor.light,
+  alignItems: "center",
+  mb: 5,
+}));
+
+const JoinBid = ({
+  sendMessage,
+  setBidList,
+  setBidMap,
+  socket,
+  uid,
+  id,
+  oid,
+  CurrentPrice,
+  color,
+  status,
+}) => {
+  const [expanded, setExpanded] = useState(false);
+
+  const handleChange = (panel) => (event, isExpanded) => {
+    setExpanded(isExpanded ? panel : false);
+  };
+  const BidSchema = Yup.object().shape({
+    bid: Yup.number()
+      .min(CurrentPrice, "Bidding price must be more than The current bid")
+      .required("Lot Size is Required"),
+  });
+
+  const formik = useFormik({
+    initialValues: {
+      bid: 0,
+    },
+    validationSchema: BidSchema,
+    onSubmit: (data, actions) => {
+      console.log(data);
+      sendMessage(socket, {
+        lotId: id,
+        bidderUid: uid,
+        bidPrice: data.bid,
+        ownerId: oid,
+      });
+      setTimeout(() => {
+        actions.resetForm();
+        actions.setSubmitting(false);
+      }, 1000);
+    },
+  });
+
+  const { errors, touched, values, isSubmitting, handleSubmit, getFieldProps } =
+    formik;
+
+  return (
+    <JoinBidStyle bidcolor={color}>
+      <JoinAccordianStyle
+        bidcolor={color}
+        disabled={status}
+        expanded={expanded === "panel1"}
+        onChange={handleChange("panel1")}
+      >
+        <AccordionSummary
+          expandIcon={<AddCardOutlined />}
+          aria-controls="panel1bh-content"
+          id="panel1bh-header"
+        >
+          <Typography variant="subtitle1" sx={{ width: "33%", flexShrink: 0 }}>
+            Join Bidding
+          </Typography>
+        </AccordionSummary>
+        <AccordionDetails>
+          <Typography>Enter the price that you wished to bid</Typography>
+          <FormikProvider value={formik}>
+            <Form autoComplete="off" noValidate onSubmit={handleSubmit}>
+              <Grid container style={{ padding: "20px" }}>
+                <Grid item xs={10}>
+                  <TextField
+                    id="outlined-basic-email"
+                    label="Type Bidding Price"
+                    fullWidth
+                    type="bid"
+                    {...getFieldProps("bid")}
+                    error={Boolean(touched.bid && errors.bid)}
+                    helperText={touched.bid && errors.bid}
+                  />
+                </Grid>
+                <Grid xs={1} align="right" ml={2}>
+                  <Fab color="primary" aria-label="add" type="submit">
+                    <SendRounded />
+                  </Fab>
+                </Grid>
+              </Grid>
+            </Form>
+          </FormikProvider>
+        </AccordionDetails>
+      </JoinAccordianStyle>
+    </JoinBidStyle>
   );
 };

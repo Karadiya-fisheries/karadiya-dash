@@ -13,8 +13,11 @@ class LotService {
     });
   }
 
+  getBidsById(id) {
+    return axios.get(BASE_URL + "bids/" + id);
+  }
+
   getCreatedLots(item) {
-    console.log(item);
     return axios.post(BASE_URL + "catch/load", item);
   }
 

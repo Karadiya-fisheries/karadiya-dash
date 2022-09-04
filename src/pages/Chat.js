@@ -208,7 +208,7 @@ const ChatItem = (item) => {
   return (
     <ListItem key="3">
       <Grid container>
-        <Grid item xs={12}>
+        <Grid item xs={12} color={align === "right" ? "#1890FF" : "#54D62C"}>
           <ListItemText align={align} primary={message}></ListItemText>
         </Grid>
         <Grid item xs={12}>

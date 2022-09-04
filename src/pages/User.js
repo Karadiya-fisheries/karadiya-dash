@@ -18,6 +18,7 @@ import {
   Typography,
   TableContainer,
   TablePagination,
+  IconButton,
 } from "@mui/material";
 import { styled } from "@mui/material/styles";
 // components
@@ -337,8 +338,15 @@ export default function User() {
                             {isVerified ? "Yes" : "No"}
                           </TableCell>
 
-                          <TableCell align="right">
-                            <UserMoreMenu id={id} />
+                          <TableCell
+                            component={RouterLink}
+                            to={"/dashboard/chat/" + id}
+                            sx={{ color: "text.secondary" }}
+                            align="right"
+                          >
+                            <IconButton size={"small"}>
+                              <Iconify icon="bi:send" width={24} height={24} />
+                            </IconButton>
                           </TableCell>
                         </TableRow>
                       );

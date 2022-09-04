@@ -3,7 +3,7 @@ import PropTypes from "prop-types";
 import { alpha, styled } from "@mui/material/styles";
 import { Card, Typography } from "@mui/material";
 // utils
-import { fShortenNumber } from "../../../utils/formatNumber";
+import { fCurrency, fShortenNumber } from "../../../utils/formatNumber";
 // components
 import Iconify from "../../../components/Iconify";
 
@@ -60,11 +60,14 @@ export default function AppWidgetSummary({
             )} 0%, ${alpha(theme.palette[color].darker, 0.5)} 100%)`,
         }}
       >
-        <Iconify icon={icon} width={24} height={24} />
+        <Iconify icon={icon} width={28} height={28} />
       </IconWrapperStyle>
 
-      <Typography variant="h3">{fShortenNumber(total)}</Typography>
-
+      {other.type === "currentBid" ? (
+        <Typography variant="h3">Rs.{fCurrency(total)}</Typography>
+      ) : (
+        <Typography variant="h3">{fShortenNumber(total)}</Typography>
+      )}
       <Typography variant="subtitle2" sx={{ opacity: 0.8 }}>
         {title}
       </Typography>
