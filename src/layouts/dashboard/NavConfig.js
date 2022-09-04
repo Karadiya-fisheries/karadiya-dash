@@ -66,6 +66,11 @@ const navConfig = [
     path: "/register",
     icon: getIcon("eva:person-add-fill"),
   },
+  {
+    title: "register",
+    path: "/elogbookdoc",
+    icon: getIcon("eva:person-add-fill"),
+  },
 ];
 
 export default navConfig;
