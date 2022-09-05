@@ -45,17 +45,32 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
   const [profile, setProfile] = useState(null);
   const isDesktop = useResponsive("up", "lg");
   const user = AuthService.getCurrentUser();
+  var roles = "";
+  if (user) {
+    const role = user.roles[1];
+    if (role === "ROLE_OWNER") {
+      roles = "Boat Owner";
+    } else if (role === "ROLE_OFFICER") {
+      roles = "Fishery Officer";
+    } else if (role === "ROLE_BIDDER") {
+      roles = "Bidder";
+    }
+  } else {
+    roles = "Fishermen";
+  }
+
   useEffect(() => {
     ProfileService.getProfileById(user.uid).then((profile) => {
       setProfile(profile.data);
     });
     console.log(profile);
   }, [profile, user.uid]);
+
   const account = {
     displayName: user.fullname,
     email: user.email,
     photoURL: profile,
-    role: user.roles[1] === "ROLE_OWNER" ? "Boat Owner" : "Fishery Officer",
+    role: roles,
   };
 
   useEffect(() => {
