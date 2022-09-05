@@ -10,6 +10,14 @@ class DepartureService {
     return axios.post(BASE_URL, departure);
   }
 
+  acceptDeparture(id) {
+    return axios.patch(BASE_URL + "/accept/" + id, { confirm: 1 });
+  }
+
+  rejectDeparture(id) {
+    return axios.patch(BASE_URL + "/reject/" + id, { confirm: 3 });
+  }
+
   getDepartureById(departureId) {
     return axios.get(`${BASE_URL}/${departureId}`);
   }

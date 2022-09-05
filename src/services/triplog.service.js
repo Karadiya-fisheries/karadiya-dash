@@ -9,6 +9,13 @@ class TripLogService {
   createTripLog(TripLog) {
     return axios.post(BASE_URL, TripLog);
   }
+  acceptTripLog(id) {
+    return axios.patch(BASE_URL + "accept/" + id, { confirm: 1 });
+  }
+
+  rejectTripLog(id) {
+    return axios.patch(BASE_URL + "reject/" + id, { confirm: 3 });
+  }
 
   getTripLogById(TripLogId) {
     return axios.get(BASE_URL + TripLogId);

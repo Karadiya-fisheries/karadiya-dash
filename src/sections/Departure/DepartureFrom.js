@@ -15,6 +15,8 @@ import {
   Typography,
   Fab,
   Divider,
+  Snackbar,
+  Alert,
 } from "@mui/material";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -23,12 +25,18 @@ import EditIcon from "@mui/icons-material/Edit";
 import { LoadingButton } from "@mui/lab";
 // component
 import Iconify from "../../components/Iconify";
+import triplogService from "../../services/triplog.service";
+import DepartureService from "../../services/DepartureService";
 
 // ----------------------------------------------------------------------
 
 export default function ElogBookForm({ id, edit }) {
   const navigate = useNavigate();
   const [log, setLog] = useState(null);
+  const [sopen, setSopen] = useState({
+    status: false,
+    msg: "",
+  });
   const RegisterSchema = Yup.object().shape({
     Harbor: Yup.string().required("Boat Name required"),
     BoatRg: Yup.string().required("Boat Registraion No required"),
@@ -340,7 +348,7 @@ export default function ElogBookForm({ id, edit }) {
                 size="large"
                 type="submit"
                 variant="contained"
-                loading={isSubmitting}
+                onClick={(e) => {}}
               >
                 Modify
               </LoadingButton>
@@ -351,7 +359,24 @@ export default function ElogBookForm({ id, edit }) {
                 size="large"
                 type="submit"
                 variant="contained"
-                loading={isSubmitting}
+                onClick={(e) => {
+                  DepartureService.rejectDeparture(id.DepartureId)
+                    .then(() => {
+                      setSopen({
+                        status: true,
+                        msg: "Departure Request Successfully Denied !!",
+                      });
+                      navigate("/dashboard/departure", {
+                        replace: true,
+                      });
+                    })
+                    .catch((err) => {
+                      setSopen({
+                        status: true,
+                        msg: err.message,
+                      });
+                    });
+                }}
               >
                 Reject
               </LoadingButton>
@@ -362,12 +387,38 @@ export default function ElogBookForm({ id, edit }) {
                 size="large"
                 type="submit"
                 variant="contained"
-                loading={isSubmitting}
+                onClick={(e) => {
+                  DepartureService.acceptDeparture(id.DepartureId)
+                    .then(() => {
+                      setSopen({
+                        status: true,
+                        msg: "Departure Request Successfully Granted !!",
+                      });
+                      navigate("/dashboard/departure", {
+                        replace: true,
+                      });
+                    })
+                    .catch((err) => {
+                      setSopen({
+                        status: true,
+                        msg: err.message,
+                      });
+                    });
+                }}
               >
                 Accept
               </LoadingButton>
             </Stack>
           </Stack>
+          <Snackbar
+            open={sopen.status}
+            autoHideDuration={3000}
+            anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+          >
+            <Alert severity="success" sx={{ width: "100%" }}>
+              {sopen.msg}
+            </Alert>
+          </Snackbar>
         </Form>
       </LocalizationProvider>
     </FormikProvider>

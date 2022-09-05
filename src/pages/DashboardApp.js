@@ -200,7 +200,7 @@ export default function DashboardApp() {
             />
           </Grid>
           <Divider />
-          <Grid item xs={12} md={6} lg={8}>
+          {/* <Grid item xs={12} md={6} lg={8}>
             <AppWebsiteVisits
               title="Fishing Trips"
               subheader="(-5%) than last year"
@@ -297,7 +297,7 @@ export default function DashboardApp() {
                 () => theme.palette.text.secondary
               )}
             />
-          </Grid>
+          </Grid> */}
         </Grid>
       </Container>
     </Page>

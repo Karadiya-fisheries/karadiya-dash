@@ -10,6 +10,7 @@ import {
   Stack,
   Typography,
   CardContent,
+  ownerDocument,
 } from "@mui/material";
 // utils
 import { fDate, fToNow } from "../../../utils/formatTime";
@@ -18,7 +19,9 @@ import { isToday } from "date-fns";
 //
 import SvgIconStyle from "../../../components/SvgIconStyle";
 import Iconify from "../../../components/Iconify";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import ownerService from "../../../services/owner.service";
+import authService from "../../../services/auth.service";
 
 // ----------------------------------------------------------------------
 
@@ -29,44 +32,71 @@ const CardMediaStyle = styled("div")({
 
 // ----------------------------------------------------------------------
 
-BoatCard.propTypes = {
-  boat: PropTypes.object.isRequired,
-  index: PropTypes.number,
-};
-
-export default function BoatCard({ boat, index }) {
-  const { boatId, BoatName, BoatCat, BoatRg, createdAt } = boat;
+const BoatCard = ({ boat, index }) => {
+  const { boatId, BoatName, InsuaranceNO, FOpType, BoatRg, createdAt } = boat;
 
   return (
-    <Grid item xs={12}>
-      <Card sx={{ position: "relative" }}>
-        <CardContent>
-          <Typography
-            gutterBottom
-            variant="caption"
-            sx={{ color: "text.disabled", display: "block" }}
-          >
-            {fDate(createdAt)}
-          </Typography>
+    <Card
+      sx={{ position: "relative", backgroundColor: "#D1E9FC", boxShadow: 4 }}
+    >
+      <CardContent>
+        <Typography
+          gutterBottom
+          variant="caption"
+          sx={{ color: "text.disabled", display: "block" }}
+        >
+          {fDate(createdAt)}
+        </Typography>
 
-          <Typography color="inherit" variant="subtitle2" underline="hover">
-            BoatName: {BoatName} #{boatId}
+        <Typography color="inherit" variant="subtitle2" underline="hover">
+          BoatName: {BoatName} #{boatId}
+        </Typography>
+        <Stack>
+          <Typography
+            color="inherit"
+            paragraph="true"
+            variant="subtitle2"
+            underline="hover"
+          >
+            Registration NO: {BoatRg}
           </Typography>
-          <Stack>
-            <Typography
-              color="inherit"
-              paragraph="true"
-              variant="subtitle2"
-              underline="hover"
-            >
-              Registration NO: {BoatRg}
-            </Typography>
-            <Typography color="inherit" paragraph="true" underline="hover">
-              BoatCatagory: {BoatCat}
-            </Typography>
-          </Stack>
-        </CardContent>
-      </Card>
-    </Grid>
+          <Typography
+            color="inherit"
+            paragraph="true"
+            variant="subtitle2"
+            underline="hover"
+          >
+            Insuarance No: {InsuaranceNO}
+          </Typography>
+          <Typography
+            color="inherit"
+            paragraph="true"
+            variant="subtitle2"
+            underline="hover"
+          >
+            Fishing Operation Type: {FOpType}
+          </Typography>
+        </Stack>
+      </CardContent>
+    </Card>
+  );
+};
+
+export default function BoatList() {
+  const [boatlist, setBoatlist] = useState([]);
+  const uid = authService.getCurrentUser().uid;
+  useEffect(() => {
+    ownerService.getOwnerById(uid).then((value) => {
+      console.log(value);
+      setBoatlist(value.data.boats);
+    });
+  }, []);
+
+  return (
+    <Box>
+      {boatlist.map((boat, index) => (
+        <BoatCard key={index} boat={boat} />
+      ))}
+    </Box>
   );
 }

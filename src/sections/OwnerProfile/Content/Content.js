@@ -15,12 +15,16 @@ import { useEffect, useState } from "react";
 import boatService from "../../../services/boat.service";
 import ownerService from "../../../services/owner.service";
 import authService from "../../../services/auth.service";
+import BoatList from "./BoatCard";
+import Profile from "./Profile";
+import { IconButton } from "@mui/material";
 
 const Content = () => {
-  const tabs = ["Profile", "Registered Boats"];
+  const tabs = ["Profile", "Register A Boat", "Registered Boats"];
   const [owner, setOwner] = useState({
     OwnerId: "",
   });
+  const [open, setOpen] = useState(true);
 
   const uid = authService.getCurrentUser().uid;
 
@@ -68,7 +72,11 @@ const Content = () => {
 
         <TabPanels px={3} mt={5}>
           <TabPanel>
-            <ProfileForm data={owner} />
+            {!owner.OwnerId || open ? (
+              <ProfileForm setOpen={setOpen} data={owner} />
+            ) : (
+              <Profile setOpen={setOpen} />
+            )}
           </TabPanel>
           <TabPanel>
             {/* {boat[0] && (
@@ -79,6 +87,9 @@ const Content = () => {
               </Grid>
             )} */}
             <BoatForm id={owner.OwnerId} data={owner.boats} />
+          </TabPanel>
+          <TabPanel>
+            <BoatList />
           </TabPanel>
         </TabPanels>
       </Tabs>
