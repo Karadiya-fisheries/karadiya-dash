@@ -34,6 +34,9 @@ import Chat from "./pages/Chat";
 import LotCreate from "./sections/@dashboard/products/LotCreate";
 import PrintViewLayout from "./layouts/PrintViewLayut";
 import LotView from "./sections/@dashboard/products/LotView";
+import ElogBookRec from "./sections/ElogBook/ElogBookDoc";
+import ElogBookForm from "./sections/ElogBook/ElogBookForm";
+import ElogBookOneRecord from "./sections/ElogBook/ElogbookOnerecord";
 // ----------------------------------------------------------------------
 
 export default function App() {
@@ -74,6 +77,7 @@ export default function App() {
           <Route path="fishermen" element={<Fishermen />} />
           <Route path="add_officer" element={<AddOfficer />} />
           <Route path="departure/view/:id" element={<DepartureView />} />
+          <Route path="triplog/view/:id" element={<ElogBookOneRecord />} />
           <Route path="myactivity" element={<Activity />} />
           <Route path="chat/:id" element={<Chat />} />
         </Route>

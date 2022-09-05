@@ -118,6 +118,12 @@ const type = {
   },
 };
 
+const getStatus = (status) => {
+  if (status === 0) return "Viewed";
+  if (status === 1) return "Accepted";
+  if (status === 3) return "Rejected";
+};
+
 export default function DepartureApproval() {
   const navigate = useNavigate();
   const [USERLIST, setUserList] = useState([]);
@@ -146,7 +152,7 @@ export default function DepartureApproval() {
         SkipperName: departure.SkipperName,
         DepartingPort: departure.DepartingPort,
         FishingZone: departure.FishingZone,
-        status: sample(["viewed", "modified", "submitted"]),
+        status: getStatus(departure.confirm),
       }));
       setUserList(userlist);
     });
@@ -311,7 +317,7 @@ export default function DepartureApproval() {
                             <Label
                               variant="ghost"
                               color={
-                                (status === "banned" && "error") || "success"
+                                (status === "Rejected" && "error") || "success"
                               }
                             >
                               {sentenceCase(status)}

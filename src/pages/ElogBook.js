@@ -1,7 +1,7 @@
 import { filter } from "lodash";
 import { sentenceCase } from "change-case";
 import { useState, useEffect } from "react";
-import { Link as RouterLink } from "react-router-dom";
+import { Link as RouterLink, useNavigate } from "react-router-dom";
 // material
 import {
   Card,
@@ -38,6 +38,7 @@ import { sample } from "lodash";
 import TripLogService from "../services/triplog.service";
 import ColorPreview from "../components/color-utils/ColorPreview";
 import ColorManyPicker from "../components/color-utils/ColorManyPicker";
+import { getStaticWrapperUtilityClass } from "@mui/x-date-pickers/internals/components/PickerStaticWrapper";
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
@@ -121,6 +122,12 @@ const type = {
   },
 };
 
+const getStatus = (status) => {
+  if (status === 0) return "Viewed";
+  if (status === 1) return "Accepted";
+  if (status === 3) return "Rejected";
+};
+
 export default function ELogBook() {
   const [USERLIST, setUserList] = useState([]);
 
@@ -139,6 +146,7 @@ export default function ELogBook() {
   const [open, setOpen] = useState(false);
   const [key, setKey] = useState(null);
 
+  const navigate = useNavigate();
   useEffect(() => {
     TripLogService.getTripLogs().then((triplogs) => {
       const userlist = triplogs.data.map((triplog, index) => ({
@@ -149,10 +157,11 @@ export default function ELogBook() {
         Harbor: triplog.Harbor,
         DepartureDate: triplog.DepartureDate,
         DepartureTime: triplog.DepartureTime,
-        status: sample(["viewed", "modified", "submitted"]),
+        status: getStatus(triplog.confirm),
         record: triplog,
       }));
       setUserList(userlist);
+      console.log(USERLIST);
     });
   }, []);
   const handleRequestSort = (event, property) => {
@@ -285,6 +294,7 @@ export default function ELogBook() {
                             onClick={() => {
                               setKey(record);
                               setOpen(true);
+                              navigate("/dashboard/triplog/view/" + id);
                             }}
                             key={id}
                             tabIndex={-1}
@@ -325,7 +335,8 @@ export default function ELogBook() {
                               <Label
                                 variant="ghost"
                                 color={
-                                  (status === "banned" && "error") || "success"
+                                  (status === "Rejected" && "error") ||
+                                  "success"
                                 }
                               >
                                 {sentenceCase(status)}

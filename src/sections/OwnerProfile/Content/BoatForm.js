@@ -172,15 +172,11 @@ export default function BoatForm({ id, data }) {
             </Alert>
           )}
 
-          <Snackbar
-            open={sopen}
-            autoHideDuration={3000}
-            anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
-          >
+          {sopen && (
             <Alert severity="success" sx={{ width: "100%" }}>
               Boat Successfully Created!
             </Alert>
-          </Snackbar>
+          )}
         </Form>
       </FormikProvider>
     </>

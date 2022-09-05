@@ -31,12 +31,12 @@ import { LoadingButton } from "@mui/lab";
 import Iconify from "../../components/Iconify";
 import TripLogService from "../../services/triplog.service";
 import triplogService from "../../services/triplog.service";
+import authService from "../../services/auth.service";
 
 // ----------------------------------------------------------------------
 
-export default function ElogBookForm({ id }) {
+export default function ElogBookForm({ setEdit, id, edit }) {
   const navigate = useNavigate();
-  const [edit, setEdit] = useState(true);
   const [log, setLog] = useState(null);
   const [sopen, setSopen] = useState({
     status: false,
@@ -49,6 +49,7 @@ export default function ElogBookForm({ id }) {
     InsuaranceNo: Yup.string().required("Insuarance No required"),
     FOpType: Yup.array().required("Fishery Operation required"),
   });
+  const isOfficer = authService.getCurrentUser().roles[1] === "ROLE_OFFICER";
 
   useEffect(() => {
     console.log(id);
@@ -99,15 +100,14 @@ export default function ElogBookForm({ id }) {
               alignItems="flex-end"
               justifyContent={"space-between"}
             >
-              <Fab
-                onClick={() => {
+              <IconButton
+                size="small"
+                onClick={(e) => {
                   setEdit(!edit);
                 }}
-                color={edit ? "default" : "primary"}
-                aria-label="edit"
               >
                 <EditIcon />
-              </Fab>
+              </IconButton>
               <IconButton
                 color="primary"
                 sx={{ border: "1px solid", borderRadius: 2 }}
@@ -384,71 +384,74 @@ export default function ElogBookForm({ id }) {
                 </Box>
               </Stack>
             </Box>
-            <Stack direction="row" justifyContent="space-between" spacing={3}>
-              <LoadingButton
-                fullWidth
-                disabled={edit}
-                color={"info"}
-                size="large"
-                type="submit"
-                variant="contained"
-                loading={isSubmitting}
-              >
-                Modify
-              </LoadingButton>
-              <LoadingButton
-                fullWidth
-                disabled={edit}
-                color={"warning"}
-                size="large"
-                type="submit"
-                variant="contained"
-                onClick={(e) => {
-                  triplogService
-                    .rejectTripLog(id.tripId)
-                    .then(() => {
-                      setSopen({
-                        status: true,
-                        msg: "E-Log report Successfully Rejected !!",
+            {isOfficer && (
+              <Stack direction="row" justifyContent="space-between" spacing={3}>
+                <LoadingButton
+                  fullWidth
+                  disabled={edit}
+                  color={"info"}
+                  size="large"
+                  type="submit"
+                  variant="contained"
+                  loading={isSubmitting}
+                >
+                  Modify
+                </LoadingButton>
+                <LoadingButton
+                  fullWidth
+                  disabled={edit}
+                  color={"warning"}
+                  size="large"
+                  type="submit"
+                  variant="contained"
+                  onClick={(e) => {
+                    triplogService
+                      .rejectTripLog(id.tripId)
+                      .then(() => {
+                        setSopen({
+                          status: true,
+                          msg: "E-Log report Successfully Rejected !!",
+                        });
+                        navigate("/dashboard/elogBook", {
+                          replace: true,
+                        });
+                      })
+                      .catch((err) => {
+                        console.log(err);
                       });
-                      navigate("/dashboard/elogBook", {
-                        replace: true,
+                  }}
+                >
+                  Reject
+                </LoadingButton>
+                <LoadingButton
+                  fullWidth
+                  disabled={edit}
+                  color={"primary"}
+                  size="large"
+                  type="submit"
+                  variant="contained"
+                  onClick={(e) => {
+                    triplogService
+                      .acceptTripLog(id.tripId)
+                      .then(() => {
+                        setSopen({
+                          status: true,
+                          msg: "E-Log Report Successfully Accepted !!",
+                        });
+                        console.log(sopen);
+                        navigate("/dashboard/elogBook", {
+                          replace: true,
+                        });
+                      })
+                      .catch((err) => {
+                        console.log(err);
                       });
-                    })
-                    .catch((err) => {
-                      console.log(err);
-                    });
-                }}
-              >
-                Reject
-              </LoadingButton>
-              <LoadingButton
-                fullWidth
-                disabled={edit}
-                color={"primary"}
-                size="large"
-                type="submit"
-                variant="contained"
-                onClick={(e) => {
-                  triplogService
-                    .acceptTripLog(id.tripId)
-                    .then(() => {
-                      setSopen({
-                        status: true,
-                        msg: "E-Log Report Successfully Accepted !!",
-                      });
-                      navigate("/dashboard/elogBook", {
-                        replace: true,
-                      });
-                    })
-                    .catch((err) => {
-                      console.log(err);
-                    });
-                }}
-              >
-                Accept
-              </LoadingButton>
-            </Stack>
+                  }}
+                >
+                  Accept
+                </LoadingButton>
+              </Stack>
+            )}
           </Stack>
           <Snackbar
             open={sopen.status}

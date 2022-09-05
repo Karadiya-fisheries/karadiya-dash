@@ -11,6 +11,18 @@ class StatService {
     return axios.get(API_URL + "/query/pending/triplog/count");
   }
 
+  getDailyTriplogCount() {
+    return axios.get(API_URL + "/query/daily/triplog");
+  }
+
+  getDailyCatchCount() {
+    return axios.get(API_URL + "/query/daily/catch");
+  }
+
+  getDailyDepartureCount() {
+    return axios.get(API_URL + "/query/daily/departure");
+  }
+
   getIfOwner(uid) {
     return axios.get(API_URL + "/query/user/" + uid);
   }
