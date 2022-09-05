@@ -18,6 +18,8 @@ import {
   Fab,
   Divider,
   IconButton,
+  Snackbar,
+  Alert,
 } from "@mui/material";
 import { AdapterDateFns } from "@mui/x-date-pickers/AdapterDateFns";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
@@ -28,6 +30,7 @@ import { LoadingButton } from "@mui/lab";
 // component
 import Iconify from "../../components/Iconify";
 import TripLogService from "../../services/triplog.service";
+import triplogService from "../../services/triplog.service";
 
 // ----------------------------------------------------------------------
 
@@ -35,6 +38,10 @@ export default function ElogBookForm({ id }) {
   const navigate = useNavigate();
   const [edit, setEdit] = useState(true);
   const [log, setLog] = useState(null);
+  const [sopen, setSopen] = useState({
+    status: false,
+    msg: "",
+  });
   const RegisterSchema = Yup.object().shape({
     Harbor: Yup.string().required("Boat Name required"),
     BoatRg: Yup.string().required("Boat Registraion No required"),
@@ -396,7 +403,22 @@ export default function ElogBookForm({ id }) {
                 size="large"
                 type="submit"
                 variant="contained"
-                loading={isSubmitting}
+                onClick={(e) => {
+                  triplogService
+                    .rejectTripLog(id.tripId)
+                    .then(() => {
+                      setSopen({
+                        status: true,
+                        msg: "E-Log report Successfully Rejected !!",
+                      });
+                      navigate("/dashboard/elogBook", {
+                        replace: true,
+                      });
+                    })
+                    .catch((err) => {
+                      console.log(err);
+                    });
+                }}
               >
                 Reject
               </LoadingButton>
@@ -407,12 +429,36 @@ export default function ElogBookForm({ id }) {
                 size="large"
                 type="submit"
                 variant="contained"
-                loading={isSubmitting}
+                onClick={(e) => {
+                  triplogService
+                    .acceptTripLog(id.tripId)
+                    .then(() => {
+                      setSopen({
+                        status: true,
+                        msg: "E-Log Report Successfully Accepted !!",
+                      });
+                      navigate("/dashboard/elogBook", {
+                        replace: true,
+                      });
+                    })
+                    .catch((err) => {
+                      console.log(err);
+                    });
+                }}
               >
                 Accept
               </LoadingButton>
             </Stack>
           </Stack>
+          <Snackbar
+            open={sopen.status}
+            autoHideDuration={3000}
+            anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+          >
+            <Alert severity="success" sx={{ width: "100%" }}>
+              {sopen.msg}
+            </Alert>
+          </Snackbar>
         </Form>
       </LocalizationProvider>
     </FormikProvider>

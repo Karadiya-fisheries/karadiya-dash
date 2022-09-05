@@ -20,6 +20,7 @@ import {
   Radio,
   RadioGroup,
   Alert,
+  IconButton,
 } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 // component
@@ -27,10 +28,11 @@ import Iconify from "../../../components/Iconify";
 import OwnerService from "../../../services/owner.service";
 import activityService from "../../../services/activity.service";
 import authService from "../../../services/auth.service";
+import { EditOutlined } from "@mui/icons-material";
 
 // ----------------------------------------------------------------------
 
-export default function ProfileForm({ data }) {
+export default function ProfileForm({ data, setOpen }) {
   const navigate = useNavigate();
   const [message, setMessage] = useState();
   const BoatCat = ["IMUL", "NTRB", "MTRB", "IDAY", "NBSB", "OFRP"];
@@ -116,6 +118,13 @@ export default function ProfileForm({ data }) {
   return (
     <FormikProvider value={formik}>
       <Form autoComplete="off" noValidate onSubmit={handleSubmit}>
+        <IconButton
+          onClick={(e) => {
+            setOpen(false);
+          }}
+        >
+          <EditOutlined />
+        </IconButton>
         <Stack spacing={3}>
           <Box p={2} borderRadius="md" borderWidth="1px">
             <Typography mb={2} variant="subtitle1">

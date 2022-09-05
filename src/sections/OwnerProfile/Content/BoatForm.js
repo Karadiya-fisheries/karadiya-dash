@@ -13,6 +13,7 @@ import {
   Radio,
   RadioGroup,
   Alert,
+  Snackbar,
 } from "@mui/material";
 import { LoadingButton } from "@mui/lab";
 // component
@@ -27,7 +28,7 @@ import authService from "../../../services/auth.service";
 export default function BoatForm({ id, data }) {
   const navigate = useNavigate();
   const [message, setMessage] = useState();
-
+  const [sopen, setSopen] = useState(false);
   const BoatType = ["IMUL", "NTRB", "MTRB", "IDAY", "NBSB", "OFRP"];
 
   const FOpType = [
@@ -65,7 +66,7 @@ export default function BoatForm({ id, data }) {
                 "Submitted A Boat's Details ID(#" + res.data.boatId + ")",
             })
             .catch((err) => setMessage(err.message));
-          setMessage("Boat Successfully created.");
+          setSopen(true);
         })
         .catch((err) => {
           setMessage(err.message);
@@ -170,6 +171,16 @@ export default function BoatForm({ id, data }) {
               {message}
             </Alert>
           )}
+
+          <Snackbar
+            open={sopen}
+            autoHideDuration={3000}
+            anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
+          >
+            <Alert severity="success" sx={{ width: "100%" }}>
+              Boat Successfully Created!
+            </Alert>
+          </Snackbar>
         </Form>
       </FormikProvider>
     </>
