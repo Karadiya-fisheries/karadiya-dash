@@ -27,6 +27,7 @@ import { LoadingButton } from "@mui/lab";
 import Iconify from "../../components/Iconify";
 import triplogService from "../../services/triplog.service";
 import DepartureService from "../../services/DepartureService";
+import authService from "../../services/auth.service";
 
 // ----------------------------------------------------------------------
 
@@ -44,7 +45,7 @@ export default function ElogBookForm({ id, edit }) {
     InsuaranceNo: Yup.string().required("Insuarance No required"),
     FOpType: Yup.array().required("Fishery Operation required"),
   });
-
+  const isOfficer = authService.getCurrentUser().roles[1] === "ROLE_OFFICER";
   useEffect(() => {
     console.log(id);
     setLog({
@@ -340,75 +341,77 @@ export default function ElogBookForm({ id, edit }) {
               </Stack>
             </Box>
 
-            <Stack direction="row" justifyContent="space-between" spacing={3}>
-              <LoadingButton
-                fullWidth
-                disabled={edit}
-                color={"info"}
-                size="large"
-                type="submit"
-                variant="contained"
-                onClick={(e) => {}}
-              >
-                Modify
-              </LoadingButton>
-              <LoadingButton
-                fullWidth
-                disabled={edit}
-                color={"warning"}
-                size="large"
-                type="submit"
-                variant="contained"
-                onClick={(e) => {
-                  DepartureService.rejectDeparture(id.DepartureId)
-                    .then(() => {
-                      setSopen({
-                        status: true,
-                        msg: "Departure Request Successfully Denied !!",
+            {isOfficer && (
+              <Stack direction="row" justifyContent="space-between" spacing={3}>
+                <LoadingButton
+                  fullWidth
+                  disabled={edit}
+                  color={"info"}
+                  size="large"
+                  type="submit"
+                  variant="contained"
+                  onClick={(e) => {}}
+                >
+                  Modify
+                </LoadingButton>
+                <LoadingButton
+                  fullWidth
+                  disabled={edit}
+                  color={"warning"}
+                  size="large"
+                  type="submit"
+                  variant="contained"
+                  onClick={(e) => {
+                    DepartureService.rejectDeparture(id.DepartureId)
+                      .then(() => {
+                        setSopen({
+                          status: true,
+                          msg: "Departure Request Successfully Denied !!",
+                        });
+                        navigate("/dashboard/departure", {
+                          replace: true,
+                        });
+                      })
+                      .catch((err) => {
+                        setSopen({
+                          status: true,
+                          msg: err.message,
+                        });
                       });
-                      navigate("/dashboard/departure", {
-                        replace: true,
+                  }}
+                >
+                  Reject
+                </LoadingButton>
+                <LoadingButton
+                  fullWidth
+                  disabled={edit}
+                  color={"primary"}
+                  size="large"
+                  type="submit"
+                  variant="contained"
+                  onClick={(e) => {
+                    DepartureService.acceptDeparture(id.DepartureId)
+                      .then(() => {
+                        setSopen({
+                          status: true,
+                          msg: "Departure Request Successfully Granted !!",
+                        });
+                        navigate("/dashboard/departure", {
+                          replace: true,
+                        });
+                      })
+                      .catch((err) => {
+                        setSopen({
+                          status: true,
+                          msg: err.message,
+                        });
                       });
-                    })
-                    .catch((err) => {
-                      setSopen({
-                        status: true,
-                        msg: err.message,
-                      });
-                    });
-                }}
-              >
-                Reject
-              </LoadingButton>
-              <LoadingButton
-                fullWidth
-                disabled={edit}
-                color={"primary"}
-                size="large"
-                type="submit"
-                variant="contained"
-                onClick={(e) => {
-                  DepartureService.acceptDeparture(id.DepartureId)
-                    .then(() => {
-                      setSopen({
-                        status: true,
-                        msg: "Departure Request Successfully Granted !!",
-                      });
-                      navigate("/dashboard/departure", {
-                        replace: true,
-                      });
-                    })
-                    .catch((err) => {
-                      setSopen({
-                        status: true,
-                        msg: err.message,
-                      });
-                    });
-                }}
-              >
-                Accept
-              </LoadingButton>
-            </Stack>
+                  }}
+                >
+                  Accept
+                </LoadingButton>
+              </Stack>
+            )}
           </Stack>
           <Snackbar
             open={sopen.status}

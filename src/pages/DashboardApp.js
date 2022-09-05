@@ -32,8 +32,9 @@ import { SocketContext } from "../services/socket.context";
 import { useNavigate } from "react-router-dom";
 import noticeService from "../services/notice.service";
 import activityService from "../services/activity.service";
-import { fDateTime } from "../utils/formatTime";
+import { fDate, fDateTime } from "../utils/formatTime";
 import { parseISO } from "date-fns";
+import { SetMealSharp } from "@mui/icons-material";
 
 // ----------------------------------------------------------------------
 
@@ -50,7 +51,9 @@ export default function DashboardApp() {
   const [IsOwner, setIsOwner] = useState(false);
   const [notice, setNotice] = useState([{ createdAt: "2000-01-01" }]);
   const [activity, setActivity] = useState([{ createdAt: "2000-01-01" }]);
-
+  const [dailytrip, setDailytrip] = useState(new Map());
+  const [dailycat, setDailycat] = useState(new Map());
+  const [dailyde, setDailyde] = useState(new Map());
   const uid = authService.getCurrentUser().uid;
   const socket = useContext(SocketContext);
   socket.on("notify", (arg) => {
@@ -84,6 +87,48 @@ export default function DashboardApp() {
     StatService.getPendingDepartureCount().then((res) =>
       setPendingDepartureCount(res.data)
     );
+    StatService.getDailyTriplogCount().then((res) => {
+      const list = res.data.map((value) => ({
+        date: fDate(parseISO(value.createdAt)),
+        count: value.count,
+      }));
+      [...list.values()].forEach((value) => {
+        if (dailytrip.get(value.date)) {
+          dailytrip.set(value.date, value.count + dailytrip.get(value.date));
+        } else {
+          dailytrip.set(value.date, value.count);
+        }
+      });
+      console.log(dailytrip);
+    });
+    StatService.getDailyDepartureCount().then((res) => {
+      const list = res.data.map((value) => ({
+        date: fDate(parseISO(value.createdAt)),
+        count: value.count,
+      }));
+      [...list.values()].forEach((value) => {
+        if (dailyde.get(value.date)) {
+          dailyde.set(value.date, value.count + dailyde.get(value.date));
+        } else {
+          dailyde.set(value.date, value.count);
+        }
+      });
+      console.log(dailytrip);
+    });
+    StatService.getDailyCatchCount().then((res) => {
+      const list = res.data.map((value) => ({
+        date: fDate(parseISO(value.createdAt)),
+        count: value.count,
+      }));
+      [...list.values()].forEach((value) => {
+        if (dailycat.get(value.date)) {
+          dailycat.set(value.date, value.count + dailycat.get(value.date));
+        } else {
+          dailycat.set(value.date, value.count);
+        }
+      });
+      console.log(dailycat);
+    });
   }, []);
   return (
     <Page title="Dashboard">
@@ -200,45 +245,33 @@ export default function DashboardApp() {
             />
           </Grid>
           <Divider />
-          {/* <Grid item xs={12} md={6} lg={8}>
+          <Grid item xs={12} md={6} lg={8}>
             <AppWebsiteVisits
-              title="Fishing Trips"
-              subheader="(-5%) than last year"
-              chartLabels={[
-                "01/01/2022",
-                "02/01/2022",
-                "03/01/2022",
-                "04/01/2022",
-                "05/01/2022",
-                "06/01/2022",
-                "07/01/2022",
-                "08/01/2022",
-                "09/01/2022",
-                "10/01/2022",
-                "11/01/2022",
-              ]}
+              title="Fishing Reports"
+              chartLabels={[...dailytrip.keys()]}
               chartData={[
                 {
-                  name: "Western Province",
+                  name: "Submitted TripLogs",
                   type: "area",
                   fill: "gradient",
-                  data: [23, 11, 22, 27, 13, 22, 37, 21, 44, 22, 30],
+                  data: [...dailytrip.values()],
                 },
                 {
-                  name: "Southern Province",
+                  name: "Submitted Departure Requests",
                   type: "area",
                   fill: "gradient",
-                  data: [44, 55, 41, 67, 22, 43, 21, 41, 56, 27, 43],
+                  data: [...dailyde.values()],
                 },
                 {
-                  name: "Northern Province",
+                  name: "Submitted Catch Records",
                   type: "area",
                   fill: "gradient",
-                  data: [30, 25, 36, 30, 45, 35, 64, 52, 59, 36, 39],
+                  data: [...dailycat.values()],
                 },
               ]}
             />
           </Grid>
+          {/*
 
           <Grid item xs={12} md={6} lg={4}>
             <AppCurrentVisits
