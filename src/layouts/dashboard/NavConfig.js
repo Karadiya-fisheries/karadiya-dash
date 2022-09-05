@@ -124,13 +124,18 @@ const bidderConfig = [
     icon: getIcon("eva:person-add-fill"),
   },
 ];
-const role = authService.getCurrentUser().roles[1];
+const user = authService.getCurrentUser();
+if (user) {
+  const role = user.roles[1];
 
-var navconfig = [];
-if (role === "ROLE_OWNER") {
-  navconfig = ownerConfig;
-} else if (role === "ROLE_OFFICER") {
-  navconfig = officerConfig;
+  var navconfig = [];
+  if (role === "ROLE_OWNER") {
+    navconfig = ownerConfig;
+  } else if (role === "ROLE_OFFICER") {
+    navconfig = officerConfig;
+  } else {
+    navconfig = bidderConfig;
+  }
 } else {
   navconfig = bidderConfig;
 }
