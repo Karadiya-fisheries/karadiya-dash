@@ -112,6 +112,19 @@ function applySortFilter(array, comparator, query) {
   return stabilizedThis.map((el) => el[0]);
 }
 
+const getrole = (role) => {
+  if (!role) {
+    return "Fisherman";
+  }
+  if (role === "ROLE_OWNER") {
+    return "Boat Owner";
+  } else if (role === "ROLE_OFFICER") {
+    return "Fishery Officer";
+  } else if (role === "ROLE_BIDDER") {
+    return "Bidder";
+  }
+};
+
 export default function User() {
   const uid = authService.getCurrentUser().uid;
   const [USERLIST, setUserList] = useState([]);
@@ -146,11 +159,7 @@ export default function User() {
         email: user.email,
         phone: user.phone,
         isVerified: user.confirm,
-        role: !user.roles[1]
-          ? "Fisherman"
-          : user.roles[1].name === "owner"
-          ? "Boat Owner"
-          : "Fishery Officer",
+        role: getrole(user.roles[1].name),
       }));
       setUserList(userlist);
       console.log(USERLIST);
